@@ -1,0 +1,1404 @@
+叫分斗地主（FightTheLandlord2）是Botzone平台上的三人回合制非完全信息随机性纸牌游戏。
+
+== 与FightTheLandlord的区别 ==
+
+增加了叫分阶段，三名玩家将不在最开始就确定双方身份，而是通过叫分确定地主后组队。
+
+出错的玩家将不会导致游戏直接结束，而是被托管为躺平Bot。
+
+在被托管的玩家数目达到3的瞬间，游戏结束，所有人获得-1分。
+
+最终胜利者赢得的分数是叫分阶段的底分（包括翻倍），不再包括小分。
+
+== 简介 ==
+
+'''斗地主'''是一种中国人发明的扑克游戏。游戏用一副54张牌（有两只Joker），一般由3个玩家进行，通过叫分阶段决定一人为地主，另外两人为农民。双方出牌对战，地主先出牌，任何一方有一人出完牌时，该方获胜。该扑克游戏起源于华中，现在流行于中国全国。
+
+[https://zh.wikipedia.org/wiki/%E9%AC%A5%E5%9C%B0%E4%B8%BB 点击这里查看起源]
+
+本游戏为三人游戏。
+
+=== 人类玩家操作说明 ===
+在自己的回合，可以点击牌来选牌，也可以拖动来选择或不选择连续的一组牌。
+
+带有红边的牌是地主被明示的牌。
+
+=== 作者 ===
+播放器、C++样例程序：zhouhy
+
+裁判程序、Python样例程序：zhouys
+
+== 游戏规则 ==
+=== 叫分及确定地主 ===
+从0号玩家开始，每个玩家轮流选择不叫分或者叫一个比目前为止最高分高的分数（不超过3）。玩家叫3分或2号玩家决策结束后，叫分阶段结束。叫分最高的玩家成为地主，或在没有人叫分的情况下，0号玩家成为地主。
+
+=== 发牌与明牌 ===
+每人先发17张牌，留三张牌作为底牌，牌面朝下放在桌上。这三张牌在地主确定后被亮明，所有人都知道这三张牌是什么。然后这三张牌归地主所有。即出牌前地主拥有20张牌，两农民各17张牌。
+
+=== 出牌 ===
+游戏开始时由地主先出，可出任一牌型的牌，接着地主的下家农民甲出牌，然后农民甲的下家农民乙先后出牌，之后一直重复地主、农民甲、农民乙的出牌顺序，直到某一方出完手中所有牌。
+
+下家需要出比上家更大的牌，而且除了火箭和炸弹，牌的类型也要与上家相同。如果不出牌则选择“过”，由下一位玩家出牌。如果一玩家出牌后没有其他玩家打出更大的牌，则该玩家获得又一次任意出牌的机会。当一位玩家的手牌数为零时该方获胜，游戏结束。
+
+=== 牌型和大小 ===
+牌型有单张、一对、大于等于5张的连牌（顺子）、连对（至少三对）、三张、三张带一张、三张相同牌带一对牌、四张相同牌带任二张单牌或两对，炸弹（四张点数相同的牌），火箭（一对王，也就是一对Joker）。
+
+牌型大小为：
+
+火箭 ＞ 炸弹 ＞ 其他牌型
+
+火箭最大，可以打任何的牌
+
+炸弹按数值比大小，2最大，3最小
+
+单张，一对，三带，单顺，双顺，飞机，四带二等等，全部同等级，但不同牌型之间互相不能混打
+
+=== 异常处理和分数计算 ===
+
+出现非法操作（崩溃、超时等），则该玩家会被裁判托管。托管后的玩家的决策策略是：
+* 叫分阶段叫0分。
+* 出牌阶段如果可以跳过则跳过，否则出序号最小的一张牌。
+
+在被托管的玩家数目达到3的瞬间，游戏结束，所有人获得-1分。
+
+定义底分为 min(地主叫分, 1) ，此后底分在以下特殊情况会进行翻倍：
+# 任何一个玩家出了'''炸弹'''，每个炸弹都会使底分翻一倍。
+# 任何一个玩家出了'''火箭'''，则会使底分翻一倍。
+# 地主'''春天'''，也即两个农民一张牌都没有出，而地主全部出完，底分翻一倍。
+# 农民'''反春'''，也即地主除了第一手开牌之外，没有再出过牌，而其中一个农民全部出完，底分翻一倍。
+
+当一名玩家出完所有的牌之后，游戏结束，开始结算分数。
+* 如果农民方胜利，则每个农民获得底分，地主失去两倍底分。
+* 如果地主方胜利，则每个农民失去底分，地主获得两倍底分。
+
+== 牌型 ==
+=== 单张 ===
+: 大王（彩色Joker）>小王（黑白Joker）>2>A>K>Q>J>10>9>8...>3，不计花色，上家出3，下家必须出4或以上。
+
+=== 一对 ===
+: 22>AA>...>33，不计花色，上家出33，必须出44或以上。一对王称为火箭，下详解。
+
+=== 单顺 ===
+: 最少5张牌，不能有2，不计花色。
+: 例如：345678，78910JQ，345678910JQKA
+: 上家出6只，必须跟6只；上家出10只，必须跟10只，如此类推。
+
+=== 双顺 ===
+: 最少3对，不能有2，不计花色。
+: 例如：778899，445566，334455667788991010JJQQ
+: 上家出6对，必须跟6对；上家出3对，必须跟3对，如此类推。
+
+=== 三带 ===
+: 三带分3种，但大前提都是2>A>...>3，并只以三条的部分比大小。
+: 三不带（三带零），即三条，例如222，AAA，666，888等。
+: 三带一，即三条+一只，例如2223，AAAJ，6669等，带的牌不能和三条部分的牌重复，否则会被判为炸弹。
+: 三带二，即三条+一对，例如22233，AAAJJ等。
+: 上家出三带一，必须跟三带一；上家出三不带，必须出三不带。
+
+'''提醒'''：所带的单张牌也可以是大王、小王，但是大小王放在一起不算对子。下同。
+
+=== 四带二 ===
+: 四带分为两种，但大前提都是2>A>...>3，并只以四条的部分比大小。
+: 四条加两只（两只不可重复），或四条加两对（两对不可重复），即888857，2222QQAA
+: 如上家出四条加两只必须跟四条加两只，上家出四条加两对必须跟四条加两对。
+: 四带二效果不等同炸弹，只当作普通牌型使用。
+
+=== 飞机 ===
+: 飞机是两个或多个连续数字的三条，只以三条的部分比大小。
+: 飞机分三种，飞机不带翼，飞机带小翼，飞机带大翼。
+: 例如：333444，777888999101010JJJQQQ
+: 飞机不带翼，即纯粹飞机，例如：444555
+: 飞机带小翼，即连续多于一个三带一，'''所带的单牌不能出现重复'''，单牌不能和三条部分牌重复，否则会被判为其余牌型，或违规牌型
+: 飞机带大翼，即连续多于一个三带二，'''所带的对子不能出现重复'''
+: 例如：33344456，77788834，101010JJJQQQ335577，6667778883399JJ是合法牌型
+: 例如：33344455（违规），33344434（航天飞机），33344435（违规），3334446666（违规）是其余或违规牌型
+: 如上家出飞机不带翼必须跟飞机不带翼，如上家出飞机带翼必须跟飞机带翼
+: '''任何情况下，其三条部分都不能有2'''
+
+=== 航天飞机 ===
+此种牌型极少出现，但仍有理论上的可能性。
+
+航天飞机是两个或多个连续数字的四条，只以四条的部分比大小
+航天飞机分三种，不带翼，带小翼（各两只），带大翼（各两对）。
+同样，所有的只和对均不可重复。
+
+如：
+: 不带翼: 33334444
+: 带小翼: 44445555 37 JQ，333344445555 67 89 10J（18张牌，仅地主）
+: 带大翼: 44445555 3377 JJQQ，33334444 6677 8899
+: '''任何情况下，其四条部分都不能有2'''
+
+=== 炸弹 ===
+: 即四条，如：9999，QQQQ
+: 炸弹大于除火箭外的一切牌型。点数大的炸弹大于点数小的炸弹，如:4444>3333，最大的炸弹是2222
+
+=== 火箭 ===
+: 即大王+小王
+: 火箭大于所有牌型
+
+
+==游戏交互方式==
+
+===提示===
+'''如果你不能理解以下交互方式,可以直接看[[#游戏样例程序]]，修改其中'''
+ // 做出决策（你只需修改以下部分）
+'''到'''
+ // 决策结束，输出结果（你只需修改以上部分）
+'''之间的部分即可！'''
+
+本游戏与Botzone上其他游戏一样，使用相同的交互方式：[[Bot#交互]]
+
+'''请注意程序是有计算时间的限制的，每步要在1秒内完成！'''
+
+===具体交互内容===
+
+在交互中，叫分决策包括0-3共四个整数，分别表示不叫分、叫1分、叫2分、叫3分。
+
+在交互中，游戏中的所有牌使用0-53共54个正整数进行编号。对应关系如下：
+
+{| class="wikitable"
+|-
+! 牌号 !! 牌面 !! 牌号 !! 牌面 !! 牌号 !! 牌面 !! 牌号 !! 牌面 !! 牌号 !! 牌面 !! 牌号 !! 牌面
+|-
+| 0 || 红桃3 || 1 || 方块3 || 2 || 黑桃3 || 3 || 草花3 || 4 || 红桃4 || 5 || 方块4
+|-
+| 6 || 黑桃4 || 7 || 草花4 || 8 || 红桃5 || 9 || 方块5 || 10 || 黑桃5 || 11 || 草花5
+|-
+| 12 || 红桃6 || 13 || 方块6 || 14 || 黑桃6 || 15 || 草花6 || 16 || 红桃7 || 17 || 方块7
+|-
+| 18 || 黑桃7 || 19 || 草花7 || 20 || 红桃8 || 21 || 方块8 || 22 || 黑桃8 || 23 || 草花8
+|-
+| 24 || 红桃9 || 25 || 方块9 || 26 || 黑桃9 || 27 || 草花9 || 28 || 红桃10 || 29 || 方块10
+|-
+| 30 || 黑桃10 || 31 || 草花10 || 32 || 红桃J || 33 || 方块J || 34 || 黑桃J || 35 || 草花J
+|-
+| 36 || 红桃Q || 37 || 方块Q || 38 || 黑桃Q || 39 || 草花Q || 40 || 红桃K || 41 || 方块K
+|-
+| 42 || 黑桃K || 43 || 草花K || 44 || 红桃A || 45 || 方块A || 46 || 黑桃A || 47 || 草花A
+|-
+| 48 || 红桃2 || 49 || 方块2 || 50 || 黑桃2 || 51 || 草花2 || 52 || 小王 || 53 || 大王
+|}
+
+每回合只有一个Bot会收到request。[[Bot]]收到的request是一个[[JSON]]对象，表示之前的出牌或叫分情况。格式如下：
+
+'''叫分request'''
+<syntaxhighlight lang="javascript">
+{
+	"own": [0, 1, 2, 3, 4] // 自己最初拥有哪些牌
+	"bid": [0, 2] // 前面的玩家的叫分决策
+}
+</syntaxhighlight>
+对于bid数组：
+* 0号玩家得到空数组
+* 1号玩家得到长度为1的数组，是0号玩家的叫分决策
+* 2号玩家得到长度为2的数组，分别表示0号玩家和1号玩家的叫分决策。
+
+收到叫分request时，Bot所需要输出的response是一个数字，表示自己的叫分决策。
+
+'''第一个出牌request'''
+<syntaxhighlight lang="javascript">
+{
+	"history": [[0, 1, 2]/* 上上家 */, []/* 上家 */], // 总是两项，每一项都是数组，分别表示上上家和上家出的牌，空数组表示跳过回合或者还没轮到他。
+	"publiccard": [29, 8, 14], // 地主被公开的三张牌
+	"own": [0, 1, 2, 3, 4] // 自己最初拥有哪些牌
+	"landlord": 2, // 地主的玩家位置
+	"pos": 0, // Bot的玩家位置
+	"finalbid": 1 // 叫分阶段的底分
+}
+</syntaxhighlight>
+
+'''此后的出牌request'''
+<syntaxhighlight lang="javascript">
+{
+	"history": [[0, 1, 2]/* 上上家 */, []/* 上家 */], // 总是两项，每一项都是数组，分别表示上上家和上家出的牌，空数组表示跳过回合。
+}
+</syntaxhighlight>
+
+收到出牌request时，Bot所需要输出的response是一个[[JSON]]数组，表示自己要出的牌。空数组表示跳过回合。
+
+==游戏样例程序==
+
+'''请注意展开按钮在右侧！'''-----=====≡≡≡≡≡>
+=== C++版本 ===
+2021-05-23：修复了whoInHistory的更新。
+2021-05-08：去除了所有的isArray，并改成!isNull。jsoncpp的isArray在key不存在时也为true。
+本地编译方法请参见[[JSONCPP]]。
+
+<syntaxhighlight lang="cpp" class="mw-collapsible mw-collapsed">
+// 斗地主·改（FightTheLandlord2）样例程序
+// 无脑策略
+// 最后修改：2021-05-23，修复了whoInHistory的更新。
+// 2021-05-08，去除了有问题的isArray。
+// 作者：zhouhy
+// 游戏信息：http://www.botzone.org/games#FightTheLandlord2
+
+#include <iostream>
+#include <set>
+#include <string>
+#include <cassert>
+#include <cstring> // 注意memset是cstring里的
+#include <algorithm>
+#include "jsoncpp/json.h" // 在平台上，C++编译时默认包含此库
+
+using std::set;
+using std::sort;
+using std::string;
+using std::unique;
+using std::vector;
+
+constexpr int PLAYER_COUNT = 3;
+
+enum class Stage
+{
+	BIDDING, // 叫分阶段
+	PLAYING	 // 打牌阶段
+};
+
+enum class CardComboType
+{
+	PASS,		// 过
+	SINGLE,		// 单张
+	PAIR,		// 对子
+	STRAIGHT,	// 顺子
+	STRAIGHT2,	// 双顺
+	TRIPLET,	// 三条
+	TRIPLET1,	// 三带一
+	TRIPLET2,	// 三带二
+	BOMB,		// 炸弹
+	QUADRUPLE2, // 四带二（只）
+	QUADRUPLE4, // 四带二（对）
+	PLANE,		// 飞机
+	PLANE1,		// 飞机带小翼
+	PLANE2,		// 飞机带大翼
+	SSHUTTLE,	// 航天飞机
+	SSHUTTLE2,	// 航天飞机带小翼
+	SSHUTTLE4,	// 航天飞机带大翼
+	ROCKET,		// 火箭
+	INVALID		// 非法牌型
+};
+
+int cardComboScores[] = {
+	0,	// 过
+	1,	// 单张
+	2,	// 对子
+	6,	// 顺子
+	6,	// 双顺
+	4,	// 三条
+	4,	// 三带一
+	4,	// 三带二
+	10, // 炸弹
+	8,	// 四带二（只）
+	8,	// 四带二（对）
+	8,	// 飞机
+	8,	// 飞机带小翼
+	8,	// 飞机带大翼
+	10, // 航天飞机（需要特判：二连为10分，多连为20分）
+	10, // 航天飞机带小翼
+	10, // 航天飞机带大翼
+	16, // 火箭
+	0	// 非法牌型
+};
+
+#ifndef _BOTZONE_ONLINE
+string cardComboStrings[] = {
+	"PASS",
+	"SINGLE",
+	"PAIR",
+	"STRAIGHT",
+	"STRAIGHT2",
+	"TRIPLET",
+	"TRIPLET1",
+	"TRIPLET2",
+	"BOMB",
+	"QUADRUPLE2",
+	"QUADRUPLE4",
+	"PLANE",
+	"PLANE1",
+	"PLANE2",
+	"SSHUTTLE",
+	"SSHUTTLE2",
+	"SSHUTTLE4",
+	"ROCKET",
+	"INVALID"};
+#endif
+
+// 用0~53这54个整数表示唯一的一张牌
+using Card = short;
+constexpr Card card_joker = 52;
+constexpr Card card_JOKER = 53;
+
+// 除了用0~53这54个整数表示唯一的牌，
+// 这里还用另一种序号表示牌的大小（不管花色），以便比较，称作等级（Level）
+// 对应关系如下：
+// 3 4 5 6 7 8 9 10	J Q K	A	2	小王	大王
+// 0 1 2 3 4 5 6 7	8 9 10	11	12	13	14
+using Level = short;
+constexpr Level MAX_LEVEL = 15;
+constexpr Level MAX_STRAIGHT_LEVEL = 11;
+constexpr Level level_joker = 13;
+constexpr Level level_JOKER = 14;
+
+/**
+* 将Card变成Level
+*/
+constexpr Level card2level(Card card)
+{
+	return card / 4 + card / 53;
+}
+
+// 牌的组合，用于计算牌型
+struct CardCombo
+{
+	// 表示同等级的牌有多少张
+	// 会按个数从大到小、等级从大到小排序
+	struct CardPack
+	{
+		Level level;
+		short count;
+
+		bool operator<(const CardPack &b) const
+		{
+			if (count == b.count)
+				return level > b.level;
+			return count > b.count;
+		}
+	};
+	vector<Card> cards;		 // 原始的牌，未排序
+	vector<CardPack> packs;	 // 按数目和大小排序的牌种
+	CardComboType comboType; // 算出的牌型
+	Level comboLevel = 0;	 // 算出的大小序
+
+	/**
+						  * 检查个数最多的CardPack递减了几个
+						  */
+	int findMaxSeq() const
+	{
+		for (unsigned c = 1; c < packs.size(); c++)
+			if (packs[c].count != packs[0].count ||
+				packs[c].level != packs[c - 1].level - 1)
+				return c;
+		return packs.size();
+	}
+
+	/**
+	* 这个牌型最后算总分的时候的权重
+	*/
+	int getWeight() const
+	{
+		if (comboType == CardComboType::SSHUTTLE ||
+			comboType == CardComboType::SSHUTTLE2 ||
+			comboType == CardComboType::SSHUTTLE4)
+			return cardComboScores[(int)comboType] + (findMaxSeq() > 2) * 10;
+		return cardComboScores[(int)comboType];
+	}
+
+	// 创建一个空牌组
+	CardCombo() : comboType(CardComboType::PASS) {}
+
+	/**
+	* 通过Card（即short）类型的迭代器创建一个牌型
+	* 并计算出牌型和大小序等
+	* 假设输入没有重复数字（即重复的Card）
+	*/
+	template <typename CARD_ITERATOR>
+	CardCombo(CARD_ITERATOR begin, CARD_ITERATOR end)
+	{
+		// 特判：空
+		if (begin == end)
+		{
+			comboType = CardComboType::PASS;
+			return;
+		}
+
+		// 每种牌有多少个
+		short counts[MAX_LEVEL + 1] = {};
+
+		// 同种牌的张数（有多少个单张、对子、三条、四条）
+		short countOfCount[5] = {};
+
+		cards = vector<Card>(begin, end);
+		for (Card c : cards)
+			counts[card2level(c)]++;
+		for (Level l = 0; l <= MAX_LEVEL; l++)
+			if (counts[l])
+			{
+				packs.push_back(CardPack{l, counts[l]});
+				countOfCount[counts[l]]++;
+			}
+		sort(packs.begin(), packs.end());
+
+		// 用最多的那种牌总是可以比较大小的
+		comboLevel = packs[0].level;
+
+		// 计算牌型
+		// 按照 同种牌的张数 有几种 进行分类
+		vector<int> kindOfCountOfCount;
+		for (int i = 0; i <= 4; i++)
+			if (countOfCount[i])
+				kindOfCountOfCount.push_back(i);
+		sort(kindOfCountOfCount.begin(), kindOfCountOfCount.end());
+
+		int curr, lesser;
+
+		switch (kindOfCountOfCount.size())
+		{
+		case 1: // 只有一类牌
+			curr = countOfCount[kindOfCountOfCount[0]];
+			switch (kindOfCountOfCount[0])
+			{
+			case 1:
+				// 只有若干单张
+				if (curr == 1)
+				{
+					comboType = CardComboType::SINGLE;
+					return;
+				}
+				if (curr == 2 && packs[1].level == level_joker)
+				{
+					comboType = CardComboType::ROCKET;
+					return;
+				}
+				if (curr >= 5 && findMaxSeq() == curr &&
+					packs.begin()->level <= MAX_STRAIGHT_LEVEL)
+				{
+					comboType = CardComboType::STRAIGHT;
+					return;
+				}
+				break;
+			case 2:
+				// 只有若干对子
+				if (curr == 1)
+				{
+					comboType = CardComboType::PAIR;
+					return;
+				}
+				if (curr >= 3 && findMaxSeq() == curr &&
+					packs.begin()->level <= MAX_STRAIGHT_LEVEL)
+				{
+					comboType = CardComboType::STRAIGHT2;
+					return;
+				}
+				break;
+			case 3:
+				// 只有若干三条
+				if (curr == 1)
+				{
+					comboType = CardComboType::TRIPLET;
+					return;
+				}
+				if (findMaxSeq() == curr &&
+					packs.begin()->level <= MAX_STRAIGHT_LEVEL)
+				{
+					comboType = CardComboType::PLANE;
+					return;
+				}
+				break;
+			case 4:
+				// 只有若干四条
+				if (curr == 1)
+				{
+					comboType = CardComboType::BOMB;
+					return;
+				}
+				if (findMaxSeq() == curr &&
+					packs.begin()->level <= MAX_STRAIGHT_LEVEL)
+				{
+					comboType = CardComboType::SSHUTTLE;
+					return;
+				}
+			}
+			break;
+		case 2: // 有两类牌
+			curr = countOfCount[kindOfCountOfCount[1]];
+			lesser = countOfCount[kindOfCountOfCount[0]];
+			if (kindOfCountOfCount[1] == 3)
+			{
+				// 三条带？
+				if (kindOfCountOfCount[0] == 1)
+				{
+					// 三带一
+					if (curr == 1 && lesser == 1)
+					{
+						comboType = CardComboType::TRIPLET1;
+						return;
+					}
+					if (findMaxSeq() == curr && lesser == curr &&
+						packs.begin()->level <= MAX_STRAIGHT_LEVEL)
+					{
+						comboType = CardComboType::PLANE1;
+						return;
+					}
+				}
+				if (kindOfCountOfCount[0] == 2)
+				{
+					// 三带二
+					if (curr == 1 && lesser == 1)
+					{
+						comboType = CardComboType::TRIPLET2;
+						return;
+					}
+					if (findMaxSeq() == curr && lesser == curr &&
+						packs.begin()->level <= MAX_STRAIGHT_LEVEL)
+					{
+						comboType = CardComboType::PLANE2;
+						return;
+					}
+				}
+			}
+			if (kindOfCountOfCount[1] == 4)
+			{
+				// 四条带？
+				if (kindOfCountOfCount[0] == 1)
+				{
+					// 四条带两只 * n
+					if (curr == 1 && lesser == 2)
+					{
+						comboType = CardComboType::QUADRUPLE2;
+						return;
+					}
+					if (findMaxSeq() == curr && lesser == curr * 2 &&
+						packs.begin()->level <= MAX_STRAIGHT_LEVEL)
+					{
+						comboType = CardComboType::SSHUTTLE2;
+						return;
+					}
+				}
+				if (kindOfCountOfCount[0] == 2)
+				{
+					// 四条带两对 * n
+					if (curr == 1 && lesser == 2)
+					{
+						comboType = CardComboType::QUADRUPLE4;
+						return;
+					}
+					if (findMaxSeq() == curr && lesser == curr * 2 &&
+						packs.begin()->level <= MAX_STRAIGHT_LEVEL)
+					{
+						comboType = CardComboType::SSHUTTLE4;
+						return;
+					}
+				}
+			}
+		}
+
+		comboType = CardComboType::INVALID;
+	}
+
+	/**
+	* 判断指定牌组能否大过当前牌组（这个函数不考虑过牌的情况！）
+	*/
+	bool canBeBeatenBy(const CardCombo &b) const
+	{
+		if (comboType == CardComboType::INVALID || b.comboType == CardComboType::INVALID)
+			return false;
+		if (b.comboType == CardComboType::ROCKET)
+			return true;
+		if (b.comboType == CardComboType::BOMB)
+			switch (comboType)
+			{
+			case CardComboType::ROCKET:
+				return false;
+			case CardComboType::BOMB:
+				return b.comboLevel > comboLevel;
+			default:
+				return true;
+			}
+		return b.comboType == comboType && b.cards.size() == cards.size() && b.comboLevel > comboLevel;
+	}
+
+	/**
+	* 从指定手牌中寻找第一个能大过当前牌组的牌组
+	* 如果随便出的话只出第一张
+	* 如果不存在则返回一个PASS的牌组
+	*/
+	template <typename CARD_ITERATOR>
+	CardCombo findFirstValid(CARD_ITERATOR begin, CARD_ITERATOR end) const
+	{
+		if (comboType == CardComboType::PASS) // 如果不需要大过谁，只需要随便出
+		{
+			CARD_ITERATOR second = begin;
+			second++;
+			return CardCombo(begin, second); // 那么就出第一张牌……
+		}
+
+		// 然后先看一下是不是火箭，是的话就过
+		if (comboType == CardComboType::ROCKET)
+			return CardCombo();
+
+		// 现在打算从手牌中凑出同牌型的牌
+		auto deck = vector<Card>(begin, end); // 手牌
+		short counts[MAX_LEVEL + 1] = {};
+
+		unsigned short kindCount = 0;
+
+		// 先数一下手牌里每种牌有多少个
+		for (Card c : deck)
+			counts[card2level(c)]++;
+
+		// 手牌如果不够用，直接不用凑了，看看能不能炸吧
+		if (deck.size() < cards.size())
+			goto failure;
+
+		// 再数一下手牌里有多少种牌
+		for (short c : counts)
+			if (c)
+				kindCount++;
+
+		// 否则不断增大当前牌组的主牌，看看能不能找到匹配的牌组
+		{
+			// 开始增大主牌
+			int mainPackCount = findMaxSeq();
+			bool isSequential =
+				comboType == CardComboType::STRAIGHT ||
+				comboType == CardComboType::STRAIGHT2 ||
+				comboType == CardComboType::PLANE ||
+				comboType == CardComboType::PLANE1 ||
+				comboType == CardComboType::PLANE2 ||
+				comboType == CardComboType::SSHUTTLE ||
+				comboType == CardComboType::SSHUTTLE2 ||
+				comboType == CardComboType::SSHUTTLE4;
+			for (Level i = 1;; i++) // 增大多少
+			{
+				for (int j = 0; j < mainPackCount; j++)
+				{
+					int level = packs[j].level + i;
+
+					// 各种连续牌型的主牌不能到2，非连续牌型的主牌不能到小王，单张的主牌不能超过大王
+					if ((comboType == CardComboType::SINGLE && level > MAX_LEVEL) ||
+						(isSequential && level > MAX_STRAIGHT_LEVEL) ||
+						(comboType != CardComboType::SINGLE && !isSequential && level >= level_joker))
+						goto failure;
+
+					// 如果手牌中这种牌不够，就不用继续增了
+					if (counts[level] < packs[j].count)
+						goto next;
+				}
+
+				{
+					// 找到了合适的主牌，那么从牌呢？
+					// 如果手牌的种类数不够，那从牌的种类数就不够，也不行
+					if (kindCount < packs.size())
+						continue;
+
+					// 好终于可以了
+					// 计算每种牌的要求数目吧
+					short requiredCounts[MAX_LEVEL + 1] = {};
+					for (int j = 0; j < mainPackCount; j++)
+						requiredCounts[packs[j].level + i] = packs[j].count;
+					for (unsigned j = mainPackCount; j < packs.size(); j++)
+					{
+						Level k;
+						for (k = 0; k <= MAX_LEVEL; k++)
+						{
+							if (requiredCounts[k] || counts[k] < packs[j].count)
+								continue;
+							requiredCounts[k] = packs[j].count;
+							break;
+						}
+						if (k == MAX_LEVEL + 1) // 如果是都不符合要求……就不行了
+							goto next;
+					}
+
+					// 开始产生解
+					vector<Card> solve;
+					for (Card c : deck)
+					{
+						Level level = card2level(c);
+						if (requiredCounts[level])
+						{
+							solve.push_back(c);
+							requiredCounts[level]--;
+						}
+					}
+					return CardCombo(solve.begin(), solve.end());
+				}
+
+			next:; // 再增大
+			}
+		}
+
+	failure:
+		// 实在找不到啊
+		// 最后看一下能不能炸吧
+
+		for (Level i = 0; i < level_joker; i++)
+			if (counts[i] == 4 && (comboType != CardComboType::BOMB || i > packs[0].level)) // 如果对方是炸弹，能炸的过才行
+			{
+				// 还真可以啊……
+				Card bomb[] = {Card(i * 4), Card(i * 4 + 1), Card(i * 4 + 2), Card(i * 4 + 3)};
+				return CardCombo(bomb, bomb + 4);
+			}
+
+		// 有没有火箭？
+		if (counts[level_joker] + counts[level_JOKER] == 2)
+		{
+			Card rocket[] = {card_joker, card_JOKER};
+			return CardCombo(rocket, rocket + 2);
+		}
+
+		// ……
+		return CardCombo();
+	}
+
+	void debugPrint()
+	{
+#ifndef _BOTZONE_ONLINE
+		std::cout << "【" << cardComboStrings[(int)comboType] << "共" << cards.size() << "张，大小序" << comboLevel << "】";
+#endif
+	}
+};
+
+/* 状态 */
+
+// 我的牌有哪些
+set<Card> myCards;
+
+// 地主明示的牌有哪些
+set<Card> landlordPublicCards;
+
+// 大家从最开始到现在都出过什么
+vector<vector<Card>> whatTheyPlayed[PLAYER_COUNT];
+
+// 当前要出的牌需要大过谁
+CardCombo lastValidCombo;
+
+// 大家还剩多少牌
+short cardRemaining[PLAYER_COUNT] = {17, 17, 17};
+
+// 我是几号玩家（0-地主，1-农民甲，2-农民乙）
+int myPosition;
+
+// 地主位置
+int landlordPosition = -1;
+
+// 地主叫分
+int landlordBid = -1;
+
+// 阶段
+Stage stage = Stage::BIDDING;
+
+// 自己的第一回合收到的叫分决策
+vector<int> bidInput;
+
+namespace BotzoneIO
+{
+	using namespace std;
+	void read()
+	{
+		// 读入输入（平台上的输入是单行）
+		string line;
+		getline(cin, line);
+		Json::Value input;
+		Json::Reader reader;
+		reader.parse(line, input);
+
+		// 首先处理第一回合，得知自己是谁、有哪些牌
+		{
+			auto firstRequest = input["requests"][0u]; // 下标需要是 unsigned，可以通过在数字后面加u来做到
+			auto own = firstRequest["own"];
+			for (unsigned i = 0; i < own.size(); i++)
+				myCards.insert(own[i].asInt());
+			if (!firstRequest["bid"].isNull())
+			{
+				// 如果还可以叫分，则记录叫分
+				auto bidHistory = firstRequest["bid"];
+				myPosition = bidHistory.size();
+				for (unsigned i = 0; i < bidHistory.size(); i++)
+					bidInput.push_back(bidHistory[i].asInt());
+			}
+		}
+
+		// history里第一项（上上家）和第二项（上家）分别是谁的决策
+		int whoInHistory[] = {(myPosition - 2 + PLAYER_COUNT) % PLAYER_COUNT, (myPosition - 1 + PLAYER_COUNT) % PLAYER_COUNT};
+
+		int turn = input["requests"].size();
+		for (int i = 0; i < turn; i++)
+		{
+			auto request = input["requests"][i];
+			auto llpublic = request["publiccard"];
+			if (!llpublic.isNull())
+			{
+				// 第一次得知公共牌、地主叫分和地主是谁
+				landlordPosition = request["landlord"].asInt();
+				landlordBid = request["finalbid"].asInt();
+				myPosition = request["pos"].asInt();
+				whoInHistory[0] = (myPosition - 2 + PLAYER_COUNT) % PLAYER_COUNT;
+				whoInHistory[1] = (myPosition - 1 + PLAYER_COUNT) % PLAYER_COUNT;
+				cardRemaining[landlordPosition] += llpublic.size();
+				for (unsigned i = 0; i < llpublic.size(); i++)
+				{
+					landlordPublicCards.insert(llpublic[i].asInt());
+					if (landlordPosition == myPosition)
+						myCards.insert(llpublic[i].asInt());
+				}
+			}
+
+			auto history = request["history"]; // 每个历史中有上家和上上家出的牌
+			if (history.isNull())
+				continue;
+			stage = Stage::PLAYING;
+
+			// 逐次恢复局面到当前
+			int howManyPass = 0;
+			for (int p = 0; p < 2; p++)
+			{
+				int player = whoInHistory[p];	// 是谁出的牌
+				auto playerAction = history[p]; // 出的哪些牌
+				vector<Card> playedCards;
+				for (unsigned _ = 0; _ < playerAction.size(); _++) // 循环枚举这个人出的所有牌
+				{
+					int card = playerAction[_].asInt(); // 这里是出的一张牌
+					playedCards.push_back(card);
+				}
+				whatTheyPlayed[player].push_back(playedCards); // 记录这段历史
+				cardRemaining[player] -= playerAction.size();
+
+				if (playerAction.size() == 0)
+					howManyPass++;
+				else
+					lastValidCombo = CardCombo(playedCards.begin(), playedCards.end());
+			}
+
+			if (howManyPass == 2)
+				lastValidCombo = CardCombo();
+
+			if (i < turn - 1)
+			{
+				// 还要恢复自己曾经出过的牌
+				auto playerAction = input["responses"][i]; // 出的哪些牌
+				vector<Card> playedCards;
+				for (unsigned _ = 0; _ < playerAction.size(); _++) // 循环枚举自己出的所有牌
+				{
+					int card = playerAction[_].asInt(); // 这里是自己出的一张牌
+					myCards.erase(card);				// 从自己手牌中删掉
+					playedCards.push_back(card);
+				}
+				whatTheyPlayed[myPosition].push_back(playedCards); // 记录这段历史
+				cardRemaining[myPosition] -= playerAction.size();
+			}
+		}
+	}
+
+	/**
+	* 输出叫分（0, 1, 2, 3 四种之一）
+	*/
+	void bid(int value)
+	{
+		Json::Value result;
+		result["response"] = value;
+
+		Json::FastWriter writer;
+		cout << writer.write(result) << endl;
+	}
+
+	/**
+	* 输出打牌决策，begin是迭代器起点，end是迭代器终点
+	* CARD_ITERATOR是Card（即short）类型的迭代器
+	*/
+	template <typename CARD_ITERATOR>
+	void play(CARD_ITERATOR begin, CARD_ITERATOR end)
+	{
+		Json::Value result, response(Json::arrayValue);
+		for (; begin != end; begin++)
+			response.append(*begin);
+		result["response"] = response;
+
+		Json::FastWriter writer;
+		cout << writer.write(result) << endl;
+	}
+}
+
+int main()
+{
+	srand(time(nullptr));
+	BotzoneIO::read();
+
+	if (stage == Stage::BIDDING)
+	{
+		// 做出决策（你只需修改以下部分）
+
+		auto maxBidIt = std::max_element(bidInput.begin(), bidInput.end());
+		int maxBid = maxBidIt == bidInput.end() ? -1 : *maxBidIt;
+
+		int bidValue = rand() % (3 - maxBid) + maxBid + 1;
+
+		// 决策结束，输出结果（你只需修改以上部分）
+
+		BotzoneIO::bid(bidValue);
+	}
+	else if (stage == Stage::PLAYING)
+	{
+		// 做出决策（你只需修改以下部分）
+
+		// findFirstValid 函数可以用作修改的起点
+		CardCombo myAction = lastValidCombo.findFirstValid(myCards.begin(), myCards.end());
+
+		// 是合法牌
+		assert(myAction.comboType != CardComboType::INVALID);
+
+		assert(
+			// 在上家没过牌的时候过牌
+			(lastValidCombo.comboType != CardComboType::PASS && myAction.comboType == CardComboType::PASS) ||
+			// 在上家没过牌的时候出打得过的牌
+			(lastValidCombo.comboType != CardComboType::PASS && lastValidCombo.canBeBeatenBy(myAction)) ||
+			// 在上家过牌的时候出合法牌
+			(lastValidCombo.comboType == CardComboType::PASS && myAction.comboType != CardComboType::INVALID));
+
+		// 决策结束，输出结果（你只需修改以上部分）
+
+		BotzoneIO::play(myAction.cards.begin(), myAction.cards.end());
+	}
+}
+</syntaxhighlight>
+
+=== Python版本 ===
+
+其他版本请参见[https://www.botzone.org/user/5494f38eb28076851de1d78a zhouys账户]的sample开源代码
+
+<syntaxhighlight lang="python" class="mw-collapsible mw-collapsed">
+# 叫分斗地主（FightThelandlord2）样例程序
+# 无脑策略
+# 作者：zhouys
+# 游戏信息：http://www.botzone.org/games#FightThelandlord2
+
+import os
+import random
+import math
+import json
+from collections import Counter
+# 红桃 方块 黑桃 草花
+# 3 4 5 6 7 8 9 10 J Q K A 2 joker & Joker
+# (0-h3 1-d3 2-s3 3-c3) (4-h4 5-d4 6-s4 7-c4) …… 52-joker->16 53-Joker->17
+
+def evalAndBid(poker, maxScore):
+    evals = [i for i in range(maxScore+1, 4)]
+    evals += [0]
+    return random.choice(evals)
+
+def printBid(poker, bidHistory):
+    bidHistory += [0]
+    maxScore = max(bidHistory)
+    if len(full_input["requests"]) == 1:
+        print(json.dumps({
+            "response": str(evalAndBid(poker, maxScore))
+        }))
+
+def getPointFromSerial(x):
+    return int(x/4) + 3 + (x==53)
+
+def convertToPointList(poker):
+    return [getPointFromSerial(i) for i in poker]
+
+_online = os.environ.get("USER", "") == "root"
+
+if _online:
+    full_input = json.loads(input())
+else:
+    with open("botlogs.json") as fo:
+        full_input = json.load(fo)
+
+bid_info = full_input["requests"][0]
+if "bid" in bid_info and len(full_input["requests"]) == 1:
+    printBid(bid_info["own"], bid_info["bid"])
+    exit(0)
+
+if "bid" in bid_info and len(full_input["requests"]) > 1:
+    user_info = full_input["requests"][1]
+    my_history = full_input["responses"][1:]
+    others_history = full_input["requests"][2:]
+else:
+    user_info = bid_info
+    my_history = full_input["responses"]
+    others_history = full_input["requests"][1:]
+
+# 手牌，公共牌，地主位置，当前我的bot位置，最终叫牌底分
+poker, publiccard, landlordPos, currBotPos, finalBid = user_info["own"], \
+    user_info["publiccard"], user_info["landlord"], user_info["pos"], user_info["finalbid"]
+if landlordPos == currBotPos:
+    poker.extend(publiccard)
+
+history = user_info["history"]
+last_history = full_input["requests"][-1]["history"]
+
+start = (landlordPos + 3 - currBotPos) % 3
+history = history[(2 - start):]
+
+for i in range(len(my_history)):
+    history.append(my_history[i])
+    history.append(others_history[i]["history"])
+
+lenHistory = len(history)
+
+for tmp in my_history:
+    for j in tmp:
+        poker.remove(j)
+poker.sort() # 用0-53编号的牌
+
+def separateHands(poker): # 拆分手牌牌型并组成基本牌集合
+    res = []
+    if len(poker) == 0:
+        return res
+    serialPoker = [i for i in poker] # 序数牌，范围在[0,53]之间
+    pointPoker = convertToPointList(serialPoker) # 点数牌，范围在[3,17]之间
+    if 16 in pointPoker and 17 in pointPoker: # 单独列出火箭/小王、大王
+        pointPoker = pointPoker[:-2]
+        serialPoker = serialPoker[:-2]
+        res += [[16, 17]]
+    elif 16 in pointPoker or 17 in pointPoker:
+        res += [[pointPoker[-1]]]
+        pointPoker = pointPoker[:-1]
+        serialPoker = serialPoker[:-1]
+                
+    singlePointPoker = list(set(pointPoker)) # 都有哪些牌
+    singlePointPoker.sort()
+
+    for i in singlePointPoker:    # 分出炸弹，其实也可以不分，优化点之一
+        if pointPoker.count(i) == 4:
+            idx = pointPoker.index(i)
+            res += [ serialPoker[idx:idx+4] ]
+            pointPoker = pointPoker[0:idx] + pointPoker[idx+4:]
+            serialPoker = serialPoker[0:idx] + serialPoker[idx+4:]
+
+    # 为了简便处理带2的情形，先把2单独提出来
+    specialCnt, specialRes = 0, []
+    if 15 in pointPoker:
+        specialCnt = pointPoker.count(15)
+        idx = pointPoker.index(15)
+        specialRes = [15] * specialCnt
+        pointPoker, serialPoker = pointPoker[:-specialCnt], serialPoker[:-specialCnt]
+
+    def findLongestPointSeqList(pointPoker, dupTime, minLen): # 这里的pointPoker是点数牌，找最长的顺子，返回值为牌型组合
+        resSeq, tmpSeq = [], []
+        singlePointPoker = list(set(pointPoker))
+        singlePointPoker.sort()
+        for currPoker in singlePointPoker:
+            if pointPoker.count(currPoker) >= dupTime:
+                if len(tmpSeq) == 0:
+                    tmpSeq = [currPoker]
+                    continue
+                elif currPoker == (tmpSeq[-1] + 1):
+                    tmpSeq += [currPoker]
+                    continue
+            if len(tmpSeq) >= minLen:
+                tmpSeq = [i for i in tmpSeq for j in range(dupTime)]
+                resSeq += [tmpSeq]
+            tmpSeq = []
+        return resSeq
+
+    # 一定保证rmPointPoker是pointPoker的子集
+    def removeSeqPokerFromHands(serialPoker, pointPoker, rmPointPoker): 
+        singleP = list(set(rmPointPoker))
+        singleP.sort()
+        for currPoker in singleP:
+            idx = pointPoker.index(currPoker)
+            cntPoker = rmPointPoker.count(currPoker)
+            pointPoker = pointPoker[0:idx] + pointPoker[idx+cntPoker:]
+            serialPoker = serialPoker[0:idx] + serialPoker[idx+cntPoker:]
+        return serialPoker, pointPoker
+    
+    # 单顺：1，5；双顺：2，3；飞机：3，2；航天飞机：4，2。因为前面已经把炸弹全都提取出来，所以这里就不主动出航天飞机了
+    validParaIdx, paraList = [0,1,2], [[1,5],[2,3],[3,2]]
+    allSeq = [[], [], []] # 分别表示单顺、双顺、三顺（飞机不带翼）
+    while(True): # serialPoker，这里会找完所有的最长顺子
+        if len(pointPoker) == 0 or len(validParaIdx) == 0:
+            break
+        dupTime = random.choice(validParaIdx)
+        selectedPara = paraList[dupTime]
+        pointSeqList = findLongestPointSeqList(pointPoker, selectedPara[0], selectedPara[1])
+        allSeq[dupTime].extend(pointSeqList)
+        for pointSeq in pointSeqList:
+            serialPoker, pointPoker = removeSeqPokerFromHands(serialPoker, pointPoker, pointSeq)
+        if len(pointSeqList) == 0:
+            validParaIdx.remove(dupTime)
+    res += allSeq[0] + allSeq[1] # 对于单顺和双顺没必要去改变
+    planeWithoutWings = allSeq[2]
+
+    allRetail = [[], [], []] # 分别表示单张，对子，三张
+    singlePointPoker = list(set(pointPoker)) # 更新目前为止剩下的牌，pointPoker和serialPoker是一一对应的
+    singlePointPoker.sort()
+    for currPoker in singlePointPoker:
+        cntPoker = pointPoker.count(currPoker)
+        allRetail[cntPoker-1].append([currPoker for i in range(cntPoker)])
+
+    # 接下来整合有需要的飞机or三张 <-> 单张、对子。这时候的飞机和三张一定不会和单张、对子有重复。
+    # 如果和单张有重复，即为炸弹，而这一步已经在前面检测炸弹时被检测出
+    # 如果和对子有重复，则同一点数的牌有5张，超出了4张
+
+    # 先整合飞机
+    for triplePokerSeq in planeWithoutWings:
+        lenKind = int(len(triplePokerSeq) / 3)
+        for t in range(2): # 分别试探单张和对子的个数是否足够
+            retailPoker = allRetail[t]
+            if len(retailPoker) >= lenKind:
+                triplePokerSeq.extend([i[j] for i in retailPoker[0:lenKind] for j in range(t+1)])
+                allRetail[t] = allRetail[t][lenKind:]
+                break
+        res.extend([triplePokerSeq])
+
+    if specialCnt == 3:
+        allRetail[2] += [specialRes]
+    elif specialCnt > 0 and specialCnt <= 2:
+        allRetail[specialCnt - 1] += [specialRes]
+
+    # 之后整合三张
+    for currPoker in allRetail[2]:
+        for t in range(2):
+            retailPoker = allRetail[t]
+            if len(retailPoker) >= 1:
+                currPoker.extend(retailPoker[0])
+                allRetail[t] = allRetail[t][1:]
+                break
+        res.append(currPoker)
+    
+    res += allRetail[0] + allRetail[1]
+    return res
+
+# J,Q,K,A,2-11,12,13,14,15
+# 单张：1 一对：2 三带：零3、一4、二5 单顺：>=5 双顺：>=6
+# 四带二：6、8 飞机：>=6
+def checkPokerType(poker): # poker：list，表示一个人出牌的牌型
+    poker.sort()
+    lenPoker = len(poker)
+
+    ################################################# 0张 #################################################
+    if lenPoker == 0:
+        return "空", [], []
+
+    ################################################# 1张 #################################################
+    if lenPoker == 1:
+        return "单张", poker, []
+
+    ################################################# 2张 #################################################
+    if lenPoker == 2 and poker == [52, 53]:
+        return "火箭", poker, []
+    if lenPoker == 2 and getPointFromSerial(poker[0]) == getPointFromSerial(poker[1]):
+        return "一对", poker, []
+    if lenPoker == 2:
+        return "错误", poker, []
+
+    #################################### 转换成点数，剩下牌一定大于等于3张 ###################################
+    # 扑克牌点数
+    ptrOfPoker = [getPointFromSerial(i) for i in poker]
+    firstPtrOfPoker = ptrOfPoker[0]
+    # 计数 
+    cntPoker = Counter(ptrOfPoker)
+    keys, vals = list(cntPoker.keys()), list(cntPoker.values())
+
+    ################################################# 4张 #################################################
+    if lenPoker == 4 and vals.count(4) == 1:
+        return "炸弹", poker, []
+    
+    ############################################## >=5张 单顺 #############################################
+    singleSeq = [firstPtrOfPoker+i for i in range(lenPoker)]
+    if (lenPoker >= 5) and (15 not in singleSeq) and (ptrOfPoker == singleSeq):
+        return "单顺", poker, []
+    
+    ############################################## >=6张 双顺 #############################################
+    pairSeq = [firstPtrOfPoker+i for i in range(int(lenPoker / 2))]
+    pairSeq = [j for j in pairSeq for i in range(2)]
+    if (lenPoker >= 6) and (lenPoker % 2 == 0) and (15 not in pairSeq) and (ptrOfPoker == pairSeq):
+        return "双顺", poker, []
+    
+    ################################################# 3张带 ################################################
+    if (lenPoker <= 5) and (vals.count(3) == 1):
+        if vals.count(1) == 2:
+            return "错误", poker, [] 
+        specialPoker = keys[vals.index(3)]
+        triplePoker = [i for i in poker if getPointFromSerial(i) == specialPoker]
+        restPoker = [i for i in poker if i not in triplePoker]
+        tripleNames = ["三带零", "三带一", "三带二"]
+        return tripleNames[lenPoker - 3], triplePoker, restPoker
+
+    ############################################## 6张 四带二只 ############################################
+    if (lenPoker == 6) and (vals.count(4) == 1) and (vals.count(1) == 2):
+        specialPoker = keys[vals.index(4)]
+        quadruplePoker = [i for i in poker if getPointFromSerial(i) == specialPoker]
+        restPoker = [i for i in poker if i not in quadruplePoker]
+        return "四带两只", quadruplePoker, restPoker        
+
+    ############################################## 8张 四带二对 ############################################
+    if (lenPoker == 8) and (vals.count(4) == 1) and (vals.count(2) == 2):
+        specialPoker = keys[vals.index(4)]
+        quadruplePoker = [i for i in poker if getPointFromSerial(i) == specialPoker]
+        restPoker = [i for i in poker if i not in quadruplePoker]
+        return "四带两对", quadruplePoker, restPoker        
+ 
+    # 分别表示张数有0、1、2、3张的是什么点数的牌
+    keyList = [[], [], [], [], []]
+    for idx in range(len(vals)):
+        keyList[vals[idx]] += [keys[idx]]
+    lenKeyList = [len(i) for i in keyList]
+    ################################################## 飞机 ################################################ 
+    if lenKeyList[3] > 1 and 15 not in keyList[3] and \
+        (keyList[3] == [keyList[3][0] + i for i in range(lenKeyList[3])]):
+        if lenKeyList[3] * 3 == lenPoker:
+            return "飞机不带翼", poker, []
+        triplePoker = [i for i in poker if getPointFromSerial(i) in keyList[3]]
+        restPoker = [i for i in poker if i not in triplePoker]
+        if (lenKeyList[3] == lenKeyList[1]) and (lenKeyList[1] * 4 == lenPoker):
+            return "飞机带小翼", triplePoker, restPoker
+        if (lenKeyList[3] == lenKeyList[2]) and (lenKeyList[2] * 5 == lenPoker):
+            return "飞机带大翼", triplePoker, restPoker
+        
+    ################################################# 航天飞机 ############################################## 
+    if lenKeyList[4] > 1 and lenKeyList[3] == 0 and 15 not in keyList[4] and \
+        (keyList[4] == [keyList[4][0] + i for i in range(lenKeyList[4])]):
+        if lenKeyList[4] * 4 == lenPoker:
+            return "航天飞机不带翼", poker, []
+        quadruplePoker = [i for i in poker if getPointFromSerial(i) in keyList[4]]
+        restPoker = [i for i in poker if i not in quadruplePoker]
+        if (lenKeyList[4] == lenKeyList[1]) and (lenKeyList[1] * 5 == lenPoker):
+            return "航天飞机带小翼", quadruplePoker, restPoker
+        if (lenKeyList[4] == lenKeyList[2]) and (lenKeyList[2] * 6 == lenPoker):
+            return "航天飞机带大翼", quadruplePoker, restPoker
+    
+    return "错误", poker, []
+        
+def recover(history): # 只考虑倒数3个，返回最后一个有效牌型及主从牌，且返回之前有几个人选择了pass；id是为了防止某一出牌人在某一牌局后又pass，然后造成连续pass
+    lenHistory = len(history)
+    typePoker, mainPoker, restPoker, cntPass = "任意牌", [], [], 0
+
+    while(lenHistory > 0):
+        lastPoker = history[lenHistory - 1]
+        typePoker, mainPoker, restPoker = checkPokerType(lastPoker)
+        if typePoker == "空":
+            cntPass += 1
+            lenHistory -= 1
+            continue
+        break
+    return typePoker, mainPoker, restPoker, cntPass
+
+def searchCard(poker, objType, objMP, objSP): # 搜索自己有没有大过这些牌的牌
+    if objType == "火箭": # 火箭是最大的牌
+        return []
+    # poker.sort() # 要求poker是有序的，使得pointPoker一般也是有序的
+    pointPoker = convertToPointList(poker)
+    singlePointPoker = list(set(pointPoker)) # 都有哪些牌
+    singlePointPoker.sort()
+    countPoker = [pointPoker.count(i) for i in singlePointPoker] # 这些牌都有几张
+    
+    res = []
+    idx = [[i for i in range(len(countPoker)) if countPoker[i] == k] for k in range(5)] # 分别有1,2,3,4的牌在singlePoker中的下标
+    quadPoker = [singlePointPoker[i] for i in idx[4]]
+    flag = 0
+    if len(poker) >= 2:
+        if poker[-2] == 52 and poker[-1] == 53:
+            flag = 1
+
+    if objType == "炸弹":
+        for currPoker in quadPoker:
+            if currPoker > newObjMP[0]:
+                res += [[(currPoker-3)*4+j for j in range(4)]]
+        if flag:
+            res += [[52,53]]
+        return res
+
+    newObjMP, lenObjMP = convertToPointList(objMP), len(objMP)
+    singleObjMP = list(set(newObjMP)) # singleObjMP为超过一张的牌的点数
+    singleObjMP.sort()
+    countObjMP, maxObjMP = newObjMP.count(singleObjMP[0]), singleObjMP[-1]
+    # countObjMP虽取首元素在ObjMP中的个数，但所有牌count应相同；countObjMP * len(singleObjMP) == lenObjMP
+
+    newObjSP, lenObjSP = convertToPointList(objSP), len(objSP) # 只算点数的对方拥有的主牌; 对方拥有的主牌数
+    singleObjSP = list(set(newObjSP)) 
+    singleObjSP.sort()
+    countObjSP = 0
+    if len(objSP) > 0: # 有可能没有从牌，从牌的可能性为单张或双张
+        countObjSP = newObjSP.count(singleObjSP[0])
+
+    tmpMP, tmpSP = [], []
+
+    for j in range(1, 16 - maxObjMP):
+        tmpMP, tmpSP = [i + j for i in singleObjMP], []
+        if all([pointPoker.count(i) >= countObjMP for i in tmpMP]): # 找到一个匹配的更大解
+            if j == (15 - maxObjMP) and countObjMP != lenObjMP: # 与顺子有关，则解中不能出现2（15）
+                break
+            if lenObjSP != 0:
+                tmpSP = list(set(singlePointPoker)-set(tmpMP))
+                tmpSP.sort()
+                tmpSP = [i for i in tmpSP if pointPoker.count(i) >= countObjSP] # 作为从牌有很多组合方式，是优化点
+                species = int(lenObjSP/countObjSP)
+                if len(tmpSP) < species: # 剩余符合从牌特征的牌种数少于目标要求的牌种数，比如334455->lenObjSP=6,countObjSP=2,tmpSP = [8,9]
+                    continue
+                tmp = [i for i in tmpSP if pointPoker.count(i) == countObjSP]
+                if len(tmp) >= species: # 剩余符合从牌特征的牌种数少于目标要求的牌种数，比如334455->lenObjSP=6,countObjSP=2,tmpSP = [8,9]
+                    tmpSP = tmp
+                tmpSP = tmpSP[0:species]
+            tmpRes = []
+            idxMP = [pointPoker.index(i) for i in tmpMP]
+            idxMP = [i+j for i in idxMP for j in range(countObjMP)]
+            idxSP = [pointPoker.index(i) for i in tmpSP]
+            idxSP = [i+j for i in idxSP for j in range(countObjSP)]
+            idxAll = idxMP + idxSP
+            tmpRes = [poker[i] for i in idxAll]
+            res += [tmpRes]
+    
+    if objType == "单张": # 以上情况少了上家出2，本家可出大小王的情况
+        if 52 in poker and objMP[0] < 52:
+            res += [[52]]
+        if 53 in poker:
+            res += [[53]]
+
+    for currPoker in quadPoker: # 把所有炸弹先放进返回解
+        res += [[(currPoker-3)*4+j for j in range(4)]]
+    if flag:
+        res += [[52,53]]
+    return res
+
+lastTypeP, lastMP, lastSP, countPass = recover(last_history)
+
+def randomOut(poker):
+    sepRes, res = separateHands(poker), []
+    lenRes = len(sepRes)
+    idx = random.randint(0, lenRes-1)
+    tmp = sepRes[idx] # 只包含点数
+    pointPoker, singleTmp = convertToPointList(poker), list(set(tmp))
+    singleTmp.sort()
+    for currPoker in singleTmp:
+        tmpCount = tmp.count(currPoker)
+        idx = pointPoker.index(currPoker)
+        res += [poker[idx + j] for j in range(tmpCount)]
+    #tmpCount = pointPoker.count(pointPoker[0])
+    #res = [[poker[i] for i in range(tmpCount)]]
+    return res
+    
+if countPass == 2: # 长度为0，自己是地主，随便出；在此之前已有两个pass，上一个轮是自己占大头，不能pass，否则出错失败
+    # 有单张先出单张
+    res = randomOut(poker)
+    print(json.dumps({
+        "response": res
+    }))
+    exit(0)
+
+if currBotPos == 1 and countPass == 1: # 上一轮是农民乙出且地主选择pass，为了不压过队友选择pass
+    print(json.dumps({
+        "response": []
+    }))
+    exit()
+
+res = searchCard(poker, lastTypeP, lastMP, lastSP)
+lenRes = len(res)
+
+if lenRes == 0: # 应当输出pass
+    print(json.dumps({
+        "response": []
+    }))
+else:
+    pokerOut, typeP = [], "空"
+    for i in range(lenRes):
+        pokerOut = res[i]
+        typeP, _, _ = checkPokerType(pokerOut)
+        if typeP != "火箭" and typeP != "炸弹":
+            break
+
+    if (currBotPos == 2 and countPass == 0) or (currBotPos == 1 and countPass == 1): # 两个农民不能起内讧，起码不能互相炸
+        if typeP == "火箭" or typeP == "炸弹":
+            pokerOut = []
+    else: # 其他情况是一定要怼的
+        pokerOut = res[0]
+
+    print(json.dumps({
+        "response": pokerOut
+    }))
+
+</syntaxhighlight>
