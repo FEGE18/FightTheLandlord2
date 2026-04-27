@@ -871,6 +871,7 @@ int getMinHandCount(const vector<Card> &hand)
 
 // [我们要自己实现的核心函数] 评估整手牌强度，主要用于叫分决策和后续参数调优。
 //如果只看我自己这手牌，不看当前桌面动作，这手牌到底强不强
+//
 double evaluateHandStrength(const vector<Card> &hand)
 {
 	double score = 0.0;
