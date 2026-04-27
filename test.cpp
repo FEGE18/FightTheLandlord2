@@ -587,21 +587,21 @@ struct GameState
 // 单文件骨架：基础工具
 // ==================================================
 
-// [我们实现] 按等级优先、牌号次之对手牌排序，统一后续枚举、输出和调试行为。
-// todo
+// [我们实现] 按等级优先、牌号次之对手牌排序，统一后续枚举、输出和调试行为
+// todo_done
 void sortCards(vector<Card> &cards)
 {
 	sort(cards.begin(), cards.end(), [](Card left, Card right) {
 		Level leftLevel = card2level(left);
 		Level rightLevel = card2level(right);
 		if (leftLevel == rightLevel)
-			return left < right;
+			return left < right;	//升序排列
 		return leftLevel < rightLevel;
 	});
 }
 
 // [我们实现] 从一手牌里删掉已经打出的具体牌，返回删除后的新手牌副本。
-// todo
+// todo_done
 vector<Card> removeCardsFromHand(vector<Card> hand, const vector<Card> &played)
 {
 	for (Card card : played)
@@ -615,10 +615,10 @@ vector<Card> removeCardsFromHand(vector<Card> hand, const vector<Card> &played)
 }
 
 // [我们实现] 按等级把手牌分组，方便做对子、三条、炸弹等统计和枚举。
-// todo
-vector<vector<Card>> groupCardsByLevel(const vector<Card> &hand)
+// todo_done
+vector<vector<Card> > groupCardsByLevel(const vector<Card> &hand)
 {
-	vector<vector<Card>> grouped(MAX_LEVEL);
+	vector<vector<Card> > grouped(MAX_LEVEL);
 	for (Card card : hand)
 		grouped[card2level(card)].push_back(card);
 	return grouped;
