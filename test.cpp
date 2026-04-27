@@ -116,16 +116,21 @@ constexpr Level card2level(Card card)
 }
 
 // 牌的组合，用于计算牌型
+//某一次打出去的一组牌：一张 7、一个顺子 34567
 struct CardCombo
 {
 	// 表示同等级的牌有多少张
 	// 会按个数从大到小、等级从大到小排序
+	//===把“同一个点数的牌”打包成一条统计记录===
 	struct CardPack
 	{
+		//这个集合是什么点数，比如 3、4、A、2、王
 		Level level;
+		// 这个点数一共有几张
 		short count;
 
 		// [示例程序提供，可直接复用] 定义牌种排序规则：先按张数降序，再按等级降序。
+		//===张数多的排前面，如果张数一样，大点数排前面===
 		bool operator<(const CardPack &b) const
 		{
 			if (count == b.count)
@@ -175,6 +180,7 @@ struct CardCombo
 	*/
 	template <typename CARD_ITERATOR>
 	// [示例程序提供，可直接复用] 根据一组具体牌自动识别牌型、主牌等级和内部牌种结构。
+	//构造函数，输入一组牌，自动识别牌型
 	CardCombo(CARD_ITERATOR begin, CARD_ITERATOR end)
 	{
 		// 特判：空
@@ -535,18 +541,29 @@ struct HandPlan
 	int handCount = 0;
 };
 
+/// 当前整局局面
+//这个结构表示的是，当前整盘游戏轮到我时的完整局面
 struct GameState
 {
 	Stage stage = Stage::BIDDING;
+	//我是 0/1/2 号位里的谁
 	int myPosition = 0;
+	//地主是谁
 	int landlordPosition = -1;
 	int finalBid = -1;
+	//前面玩家是怎么叫分的
 	vector<int> bidHistory;
+	//我现在手里还剩哪些牌
 	vector<Card> myCards;
+	//地主的三张明牌
 	vector<Card> publicCards;
+	//当前桌面上需要压过的牌
 	CardCombo lastValidCombo;
+	//三个玩家各自还剩几张牌
 	int cardRemaining[PLAYER_COUNT] = {17, 17, 17};
+	//每个人历史上出过什么
 	vector<vector<Card>> playHistory[PLAYER_COUNT];
+	//记牌器基础数据
 	bool cardPlayed[54] = {};
 	short levelRemaining[MAX_LEVEL] = {};
 
@@ -588,9 +605,11 @@ struct GameState
 // ==================================================
 
 // [我们实现] 按等级优先、牌号次之对手牌排序，统一后续枚举、输出和调试行为。
+
 void sortCards(vector<Card> &cards)
 {
-	sort(cards.begin(), cards.end(), [](Card left, Card right) {
+	sort(cards.begin(), cards.end(), [](Card left, Card right) 
+	{
 		Level leftLevel = card2level(left);
 		Level rightLevel = card2level(right);
 		if (leftLevel == rightLevel)
@@ -620,6 +639,7 @@ vector<vector<Card>> groupCardsByLevel(const vector<Card> &hand)
 		grouped[card2level(card)].push_back(card);
 	return grouped;
 }
+
 
 // ==================================================
 // 单文件骨架：IO / 状态恢复
@@ -762,6 +782,7 @@ void outputPlay(const vector<Card> &cards)
 // ==================================================
 
 // [我们要自己实现的核心函数] 枚举当前局面下所有合法出牌，后续会逐步替换掉 findFirstValid 的贪心行为。
+//把“我现在合法能出的牌”列出来：如果上家出一对 9，我手里有：一对 J，一对 K，炸弹 AAAA
 vector<CardCombo> enumAllValidPlays(const vector<Card> &hand, const CardCombo &lastCombo)
 {
 	vector<CardCombo> plays;
@@ -807,6 +828,7 @@ CardCombo selectAttachment(const vector<Card> &, const CardCombo &mainCombo, Car
 	return mainCombo;
 }
 
+
 // ==================================================
 // 单文件骨架：拆分层
 // ==================================================
@@ -848,6 +870,7 @@ int getMinHandCount(const vector<Card> &hand)
 // ==================================================
 
 // [我们要自己实现的核心函数] 评估整手牌强度，主要用于叫分决策和后续参数调优。
+//如果只看我自己这手牌，不看当前桌面动作，这手牌到底强不强
 double evaluateHandStrength(const vector<Card> &hand)
 {
 	double score = 0.0;
@@ -867,6 +890,8 @@ double evaluateHandStrength(const vector<Card> &hand)
 }
 
 // [我们要自己实现的核心函数] 评估某一手候选出牌对局面的收益，供出牌策略比较多个选项。
+//看“出这一手之后”局面有没有变好
+//输入的是 出牌前手牌，你打算出的这一手，当前局面
 double evaluatePlayGain(const vector<Card> &handBefore, const CardCombo &play, const GameState &)
 {
 	if (play.comboType == CardComboType::PASS)
@@ -887,6 +912,7 @@ double evaluatePlayGain(const vector<Card> &handBefore, const CardCombo &play, c
 // ==================================================
 
 // [我们要自己实现的核心函数] 根据手牌强度和前序叫分结果决定本轮是否叫分、叫几分。
+//这个函数不是自己瞎算所有东西，它应该建立在 evaluateHandStrength 之上
 int decideBid(const vector<Card> &hand, const vector<int> &bidHistory)
 {
 	int maxBid = bidHistory.empty() ? -1 : *std::max_element(bidHistory.begin(), bidHistory.end());
@@ -905,6 +931,7 @@ int decideBid(const vector<Card> &hand, const vector<int> &bidHistory)
 }
 
 // [我们要自己实现的核心函数] 在所有合法出牌中选出当前最优的一手，是后续策略升级的主入口。
+//依赖于evaluatePlayGain
 CardCombo decidePlay(const GameState &state, const vector<CardCombo> &validPlays)
 {
 	if (validPlays.empty())
