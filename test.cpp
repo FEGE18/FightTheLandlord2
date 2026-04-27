@@ -588,6 +588,7 @@ struct GameState
 // ==================================================
 
 // [我们实现] 按等级优先、牌号次之对手牌排序，统一后续枚举、输出和调试行为。
+// todo
 void sortCards(vector<Card> &cards)
 {
 	sort(cards.begin(), cards.end(), [](Card left, Card right) {
@@ -600,6 +601,7 @@ void sortCards(vector<Card> &cards)
 }
 
 // [我们实现] 从一手牌里删掉已经打出的具体牌，返回删除后的新手牌副本。
+// todo
 vector<Card> removeCardsFromHand(vector<Card> hand, const vector<Card> &played)
 {
 	for (Card card : played)
@@ -613,6 +615,7 @@ vector<Card> removeCardsFromHand(vector<Card> hand, const vector<Card> &played)
 }
 
 // [我们实现] 按等级把手牌分组，方便做对子、三条、炸弹等统计和枚举。
+// todo
 vector<vector<Card>> groupCardsByLevel(const vector<Card> &hand)
 {
 	vector<vector<Card>> grouped(MAX_LEVEL);
@@ -762,6 +765,7 @@ void outputPlay(const vector<Card> &cards)
 // ==================================================
 
 // [我们要自己实现的核心函数] 枚举当前局面下所有合法出牌，后续会逐步替换掉 findFirstValid 的贪心行为。
+// todo
 vector<CardCombo> enumAllValidPlays(const vector<Card> &hand, const CardCombo &lastCombo)
 {
 	vector<CardCombo> plays;
@@ -802,6 +806,7 @@ vector<CardCombo> enumAllValidPlays(const vector<Card> &hand, const CardCombo &l
 }
 
 // [我们要自己实现的扩展函数] 当主体牌型确定后，为三带一、飞机带翼等牌型补全最合适的带牌。
+// todo
 CardCombo selectAttachment(const vector<Card> &, const CardCombo &mainCombo, CardComboType)
 {
 	return mainCombo;
@@ -812,6 +817,7 @@ CardCombo selectAttachment(const vector<Card> &, const CardCombo &mainCombo, Car
 // ==================================================
 
 // [我们要自己实现的核心函数] 把手牌拆成若干组合法牌型，供策略层评估“最少还要几手出完”。
+// todo
 vector<HandPlan> decomposeHand(const vector<Card> &hand, int topK = 1)
 {
 	HandPlan plan;
@@ -837,6 +843,7 @@ vector<HandPlan> decomposeHand(const vector<Card> &hand, int topK = 1)
 }
 
 // [我们要自己实现的核心函数] 快速返回当前手牌最少还需要几手，供评估层频繁调用。
+// todo
 int getMinHandCount(const vector<Card> &hand)
 {
 	auto plans = decomposeHand(hand, 1);
