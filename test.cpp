@@ -871,22 +871,93 @@ int getMinHandCount(const vector<Card> &hand)
 
 // [我们要自己实现的核心函数] 评估整手牌强度，主要用于叫分决策和后续参数调优。
 //如果只看我自己这手牌，不看当前桌面动作，这手牌到底强不强
-//
 double evaluateHandStrength(const vector<Card> &hand)
 {
+//===为手牌评分：总分=大牌分+炸弹分+结构分-碎牌惩罚-手牌惩罚===
 	double score = 0.0;
 	auto grouped = groupCardsByLevel(hand);
-	for (Level level = 0; level < MAX_LEVEL; ++level)
+
+	// 大牌分：我手里有没有抢牌权的能力
+	//为等级赋分，记录成一个数组
+	static const double highCardBonus[MAX_LEVEL] = {
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 3~Q
+		0.8,						  // K
+		1.5,						  // A
+		2.5,						  // 2
+		3.5,						  //小鬼
+		4.0};						  //大鬼
+
+	for (Level i = 0; i < MAX_LEVEL;i++)
 	{
-		score += grouped[level].size() * 0.5;
-		if (level >= 10)
-			score += grouped[level].size() * 1.2;
-		if (grouped[level].size() == 4)
+		//grouped[i] 返回的是手牌被拆分成不同的数组之后不同等级的牌数。grouped[10] = 2 表示K有2张
+		score += highCardBonus[i] * grouped[i].size();
+	}
+	// 炸弹分：我有没有硬压能力
+	//每个炸弹 +6
+	for (Level i = 0; i < level_joker;i++)
+	{
+		if(grouped[i].size()==4)
 			score += 6.0;
 	}
-	if (!grouped[level_joker].empty() && !grouped[level_JOKER].empty())
-		score += 8.0;
-	score -= getMinHandCount(hand) * 0.8;
+
+	//火箭在大牌分的基础上 +4
+	if(!grouped[level_joker].empty() && !grouped[level_JOKER].empty())
+		score += 4.0;
+
+	// 结构分：这副牌整不整齐，容易不容易组织成高质量出牌
+	//三条+2.0，对子+1.0
+	for (Level i = 0; i < level_joker;i++)
+	{
+		size_t cnt = grouped[i].size();
+		if(cnt==3)
+			score += 2.0;
+		else if(cnt == 2)
+			score += 1.0;
+	}
+
+	//连续牌型潜力：调用 decomposeHand 接口 ，这个1是指"返回前 K 种最优拆法"
+	auto plans = decomposeHand(hand, 1);
+	if(!plans.empty())
+	{
+		for(CardCombo &combo :plans.front().groups)
+		{
+			switch (combo.comboType)
+			{
+			case CardComboType::STRAIGHT:
+				score += 1.5; break;
+			case CardComboType::STRAIGHT2:
+				score += 2.0; break;
+			case CardComboType::PLANE:
+			case CardComboType::PLANE1:
+			case CardComboType::PLANE2:
+				score += 2.5; break;
+			case CardComboType::SSHUTTLE:
+			case CardComboType::SSHUTTLE2:
+			case CardComboType::SSHUTTLE4: 
+				score += 4.0; break;
+
+			default:
+				break;
+			}
+		}
+	}
+	// 碎牌惩罚：这手牌是不是太碎，后面很难处理
+	for (Level i = 0; i < level_joker;i++)
+	{
+		if(grouped[i].size() == 1)
+		{
+			//3~9
+			if(i<=6)
+				score -= 0.8;
+			//10,J,Q
+			else if(i<=9)
+				score -= 0.3;
+		}
+	}
+	// 手数惩罚：这副牌总体还要出多少手才能打完
+	// 依赖 getMinHandCount
+	score -= 1.2 * getMinHandCount(hand);
+
 	return score;
 }
 
@@ -916,19 +987,118 @@ double evaluatePlayGain(const vector<Card> &handBefore, const CardCombo &play, c
 //这个函数不是自己瞎算所有东西，它应该建立在 evaluateHandStrength 之上
 int decideBid(const vector<Card> &hand, const vector<int> &bidHistory)
 {
-	int maxBid = bidHistory.empty() ? -1 : *std::max_element(bidHistory.begin(), bidHistory.end());
-	double strength = evaluateHandStrength(hand);
-	int desiredBid = 0;
-	if (strength >= 18.0)
-		desiredBid = 3;
-	else if (strength >= 14.0)
-		desiredBid = 2;
-	else if (strength >= 10.0)
-		desiredBid = 1;
+	//找到历史叫分中的最高分
+	int maxBid = bidHistory.empty() ? 0 : *std ::max_element(bidHistory.begin(), bidHistory.end());
+	//最高分大于3，直接跳过
+	if(maxBid>=3)	return 0;
 
-	if (desiredBid <= maxBid)
+	//===快速统计关键牌===
+	// 按牌面等级分组，grouped[12] 表示所有 2，grouped[13] 表示小王
+	auto grouped = groupCardsByLevel(hand);
+	// 判断是否有火箭
+	bool hasRocket = !grouped[level_joker].empty() && !grouped[level_JOKER].empty();
+	//统计炸弹数量
+	int bombCount = 0;
+	for (Level i = 0; i < level_joker;++i)
+	{
+		if(grouped[i].size() == 4)
+			++bombCount;
+	}
+	// 统计 2 的数量
+	int twoCount = grouped[12].size();
+	// 统计 A 的数量
+	int aceCount = grouped[11].size();
+	// 统计王的数量
+	int jokerCount = grouped[level_joker].size() + grouped[level_JOKER].size();
+
+	// 我这手牌最多愿意叫到几分
+	int targetBid = 0;
+
+	// 第一层：硬条件控制叫分上限。先默认最多可以叫 3，后面再逐步收紧。
+	int bidCap = 3;
+
+	//是否具有基础控牌能力
+	bool hasBasicControl = hasRocket || bombCount > 0 || jokerCount > 0 || twoCount > 0 || aceCount >= 2;
+
+	//是否具有强控牌能力
+	bool hasStrongControl = hasRocket || bombCount > 0 || twoCount >= 2 || (jokerCount >= 1 && twoCount >= 1) || (twoCount >= 1 && aceCount >= 2);
+
+	if(!hasBasicControl && bidCap>1)
+		bidCap = 1;
+	if(!hasStrongControl&&bidCap>2)
+		bidCap = 2;
+
+	//计算当前手牌至少大概要分几手出完，手数越多，当地主风险越大。
+	int handCount = getMinHandCount(hand);
+
+	//如果前面已经有人叫到2，风险变大
+	bool mustBidThree = (maxBid == 2);
+	
+	//叫3的强牌门槛，必须有非常明确的硬控牌能力
+	bool hasThreePointControl = hasRocket || bombCount >= 1 || twoCount >= 3 || (jokerCount >= 1 && twoCount >= 2);
+
+	//如果手数非常多，说明牌很碎，即使有一定打牌，也不适合叫地主
+	if(handCount>=14 && !hasThreePointControl &&bidCap>1)
+		bidCap = 1;
+	//如果手数偏多，不要冒险叫3
+	else if(handCount>=12 && !hasThreePointControl &&bidCap>2)
+		bidCap = 2;
+
+
+	//如果有人叫2，而我没有叫3的条件，就强制不允许叫到3
+	if(mustBidThree&&!hasThreePointControl&&bidCap>2)
+		bidCap = 2;
+
+	
+	// 低散牌数量：统计 3~9 中只有一张的牌，这些牌当地主时很难主动处理。
+
+
+	// 第二层：细粒度评分。先直接复用评估层，不在策略层重复算整手牌强度。
+	double bidScore = evaluateHandStrength(hand);
+
+	//火箭对叫地主价值很高，额外加分
+	if(hasRocket)
+		bidScore += 3.0;
+
+	// 每个炸弹都能强行拿回牌权，额外加分
+	bidScore += bombCount * 2.5;
+
+	// 2是叫地主时最关键的常规控制牌，按数量加分
+	bidScore += twoCount * 0.8;
+
+	// 王也是非常强的单牌控制资源，按数量加分
+	bidScore += jokerCount * 1.0;
+
+	// 前面最高叫分越高，继续加叫的风险越大。
+	if (maxBid == 1)
+    	bidScore -= 1.0;
+
+		// 如果已经有人叫到 2，我要赢叫分只能叫 3，所以需要更谨慎。
+	else if (maxBid == 2)
+    	bidScore -= 2.5;
+
+	// A 的控制力弱于 2 和王，但一对以上仍然有价值。
+	if (aceCount >= 2)
+    	bidScore += 0.8;
+
+	if (bidScore >= 16.0)
+    	targetBid = 3;
+	else if (bidScore >= 11.0)
+    	targetBid = 2;
+	else if (bidScore >= 7.0)
+    	targetBid = 1;
+	else
+		targetBid = 0;
+
+	// 硬条件限制最终叫分上限
+	if (targetBid > bidCap)
+    	targetBid = bidCap;
+
+	//如果不如最高分，不叫
+	if(targetBid<=maxBid)
 		return 0;
-	return desiredBid;
+
+	return targetBid;
 }
 
 // [我们要自己实现的核心函数] 在所有合法出牌中选出当前最优的一手，是后续策略升级的主入口。
