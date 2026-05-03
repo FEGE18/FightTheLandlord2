@@ -971,7 +971,7 @@ bool shouldFightControl(GameState &state)
 
 	//地主手牌较顺，主动控局
 	if(state.isLandlord() && myHandCount<=5)
-		return false;
+		return true;
 	
 		//农民看地主
 		if(!state.isLandlord() && state.cardRemaining[state.landlordPosition]<=5)
@@ -1149,6 +1149,15 @@ int decideBid(vector<Card> &hand, vector<int> &bidHistory)
 	int aceCount = grouped[11].size();
 	// 统计王的数量
 	int jokerCount = grouped[level_joker].size() + grouped[level_JOKER].size();
+	//统计高对子的数量
+	int highPairCount = 0;
+	if(grouped[10].size()>=2)
+		++highPairCount;
+	if(grouped[11].size()>=2)
+		++highPairCount;
+	if(grouped[12].size()>=2)
+		++highPairCount;
+	
 
 	// 我这手牌最多愿意叫到几分
 	int targetBid = 0;
@@ -1169,6 +1178,8 @@ int decideBid(vector<Card> &hand, vector<int> &bidHistory)
 
 	//计算当前手牌至少大概要分几手出完，手数越多，当地主风险越大。
 	int handCount = getMinHandCount(hand);
+	//判断牌型是否可以接受
+	bool handShape = handCount <= 11;
 
 	//如果前面已经有人叫到2，风险变大
 	bool mustBidThree = (maxBid == 2);
@@ -1210,15 +1221,29 @@ int decideBid(vector<Card> &hand, vector<int> &bidHistory)
 
 	// 前面最高叫分越高，继续加叫的风险越大。
 	if (maxBid == 1)
-    	bidScore -= 1.0;
+    	bidScore -= 0.3;
 
 		// 如果已经有人叫到 2，我要赢叫分只能叫 3，所以需要更谨慎。
 	else if (maxBid == 2)
-    	bidScore -= 2.5;
+    	bidScore -= 2.0;
 
 	// A 的控制力弱于 2 和王，但一对以上仍然有价值。
 	if (aceCount >= 2)
     	bidScore += 0.8;
+
+	//只在牌型可以接受的情况下激进
+	if(handShape)
+	{
+		//中档控制加分
+		if(jokerCount>=1 && twoCount>=2 && aceCount>=2)
+			bidScore += 0.6;
+		if(bombCount>=1 && twoCount>=2 && aceCount>=2)
+			bidScore += 0.6;
+		if(highPairCount>=2)
+			bidScore += 0.3;
+		if(highPairCount>=3)
+			bidScore += 0.4;
+	}
 
 	if (bidScore >= 16.0)
     	targetBid = 3;

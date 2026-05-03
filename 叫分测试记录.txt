@@ -1,0 +1,4178 @@
+================ 叫分回归测试 50 组 ================
+用途：固定叫分行为，辅助调参；MATCH 只表示符合当前设计预期，不表示策略最优。
+样例结构：10 类手牌 x 5 类叫分历史 = 50 组。After10 / After12 用来验证只看最高叫分。
+DEBUG 说明：为 PowerShell 复刻的近似特征，不等价于 C++ 内部 bidScore，但便于快速定位硬条件。
+
+=== B_WeakScatter1_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 无人叫分。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 1。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 2。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After10 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After12 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 无人叫分。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 1。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 2。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_After10 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_After12 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_NoHistory ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":1}
+MATCH: YES
+
+=== B_MidControl1_After1 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_After2 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_After10 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_After12 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl2_NoHistory ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 无人叫分。中档控制牌第二样本。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":1}
+MATCH: YES
+
+=== B_MidControl2_After1 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。中档控制牌第二样本。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl2_After2 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。中档控制牌第二样本。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=2 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl2_After10 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。中档控制牌第二样本。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl2_After12 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。中档控制牌第二样本。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=2 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_NoHistory ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 无人叫分。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_After1 ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 前面最高叫到 1。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_After2 ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 前面最高叫到 2。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_After10 ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_After12 ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_NoHistory ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 无人叫分。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":1}
+MATCH: YES
+
+=== B_BombHand2_After1 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 1。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_After2 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 2。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_After10 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_After12 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive1_NoHistory ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=0 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After1 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=1 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After2 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=2 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After10 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=1 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After12 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=2 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive2_NoHistory ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive2_After1 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive2_After2 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive2_After10 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive2_After12 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_StrongControl1_NoHistory ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=0 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After1 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After2 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After10 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After12 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_NoHistory ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=0 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_After1 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_After2 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_After10 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_After12 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+================ 汇总 ================
+TOTAL: 50
+MATCHED: 50
+FAILED: 0
+CATEGORY bomb-mid: 10/10 matched
+CATEGORY mid: 10/10 matched
+CATEGORY strong: 10/10 matched
+CATEGORY threshold: 10/10 matched
+CATEGORY weak: 10/10 matched
+
+失败用法建议：先看 CATEGORY 和 DEBUG，判断是期望写错、硬条件过强，还是阈值/扣分需要调整。
+
+
+================ 叫分回归测试 50 组 2026-05-03 15:18:16 ================
+修改说明：叫分记录和出牌记录分开保存，本脚本只写入叫分测试记录.txt。
+修改说明：每次运行会追加一轮新记录，保留历史调参过程。
+修改说明：本轮保留 CATEGORY / HAND / DEBUG / EXPECTED / OUTPUT / MATCH 字段，方便定位叫分偏差。
+用途：固定叫分行为，辅助调参；MATCH 只表示符合当前设计预期，不表示策略最优。
+样例结构：10 类手牌 x 5 类叫分历史 = 50 组。After10 / After12 用来验证只看最高叫分。
+DEBUG 说明：为 PowerShell 复刻的近似特征，不等价于 C++ 内部 bidScore，但便于快速定位硬条件。
+
+=== B_WeakScatter1_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 无人叫分。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 1。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 2。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After10 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After12 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 无人叫分。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 1。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 2。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_After10 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_After12 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_NoHistory ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":1}
+MATCH: YES
+
+=== B_MidControl1_After1 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_After2 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_After10 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_After12 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl2_NoHistory ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 无人叫分。中档控制牌第二样本。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":1}
+MATCH: YES
+
+=== B_MidControl2_After1 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。中档控制牌第二样本。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl2_After2 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。中档控制牌第二样本。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=2 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl2_After10 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。中档控制牌第二样本。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl2_After12 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。中档控制牌第二样本。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=2 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_NoHistory ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 无人叫分。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_After1 ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 前面最高叫到 1。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_After2 ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 前面最高叫到 2。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_After10 ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_After12 ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_NoHistory ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 无人叫分。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":1}
+MATCH: YES
+
+=== B_BombHand2_After1 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 1。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_After2 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 2。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_After10 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_After12 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive1_NoHistory ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=0 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After1 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=1 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After2 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=2 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After10 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=1 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After12 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=2 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive2_NoHistory ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive2_After1 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive2_After2 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive2_After10 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive2_After12 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_StrongControl1_NoHistory ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=0 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After1 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After2 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After10 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After12 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_NoHistory ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=0 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_After1 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_After2 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_After10 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_After12 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+================ 汇总 ================
+TOTAL: 50
+MATCHED: 50
+FAILED: 0
+CATEGORY bomb-mid: 10/10 matched
+CATEGORY mid: 10/10 matched
+CATEGORY strong: 10/10 matched
+CATEGORY threshold: 10/10 matched
+CATEGORY weak: 10/10 matched
+
+失败用法建议：先看 CATEGORY 和 DEBUG，判断是期望写错、硬条件过强，还是阈值/扣分需要调整。
+
+
+================ 叫分回归测试 3 组 2026-05-03 15:27:27 ================
+脚本参数验证：只跑前 3 组叫分样例。
+用途：固定叫分行为，辅助调参；MATCH 只表示符合当前设计预期，不表示策略最优。
+样例结构：当前按筛选后实际运行 3 组。After10 / After12 用来验证只看最高叫分。
+CATEGORY_FILTER: ALL
+CASE_LIMIT: 3
+DEBUG 说明：为 PowerShell 复刻的近似特征，不等价于 C++ 内部 bidScore，但便于快速定位硬条件。
+
+=== B_WeakScatter1_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 无人叫分。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 1。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 2。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+================ 汇总 ================
+TOTAL: 3
+MATCHED: 3
+FAILED: 0
+CATEGORY weak: 3/3 matched
+
+失败用法建议：先看 CATEGORY 和 DEBUG，判断是期望写错、硬条件过强，还是阈值/扣分需要调整。
+
+
+================ 叫分回归测试 100 组 2026-05-03 15:44:00 ================
+正式回归：在现有叫分程序基础上，把手牌类型从 10 类扩充到 20 类，形成 100 组叫分测试。
+正式回归：本轮重点观察降低别人叫分惩罚后，中档牌、炸弹牌、边界强牌、强牌四类输出是否仍然稳定合理。
+用途：固定叫分行为，辅助调参；MATCH 只表示符合当前设计预期，不表示策略最优。
+样例结构：当前按筛选后实际运行 100 组。After10 / After12 用来验证只看最高叫分。
+CATEGORY_FILTER: ALL
+CASE_LIMIT: ALL
+DEBUG 说明：为 PowerShell 复刻的近似特征，不等价于 C++ 内部 bidScore，但便于快速定位硬条件。
+
+=== B_WeakScatter1_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 无人叫分。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 1。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 2。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After10 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After12 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 无人叫分。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 1。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 2。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_After10 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_After12 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter3_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x1 10x2 Jx1 Qx1
+EXPECT_NOTE: 无人叫分。低位散牌更多的弱牌样例，验证程序不会被少量对子误判成可叫。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,1,5,9,13,17,21,29,33,37],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter3_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x1 10x2 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 1。低位散牌更多的弱牌样例，验证程序不会被少量对子误判成可叫。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,1,5,9,13,17,21,29,33,37],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter3_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x1 10x2 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 2。低位散牌更多的弱牌样例，验证程序不会被少量对子误判成可叫。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,1,5,9,13,17,21,29,33,37],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter3_After10 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x1 10x2 Jx1 Qx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。低位散牌更多的弱牌样例，验证程序不会被少量对子误判成可叫。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,1,5,9,13,17,21,29,33,37],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter3_After12 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x1 10x2 Jx1 Qx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。低位散牌更多的弱牌样例，验证程序不会被少量对子误判成可叫。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,1,5,9,13,17,21,29,33,37],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 无人叫分。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 前面最高叫到 1。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 前面最高叫到 2。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_After10 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_After12 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_NoHistory ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":1}
+MATCH: YES
+
+=== B_MidControl1_After1 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_After2 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_After10 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_After12 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl2_NoHistory ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 无人叫分。中档控制牌第二样本。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":1}
+MATCH: YES
+
+=== B_MidControl2_After1 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。中档控制牌第二样本。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl2_After2 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。中档控制牌第二样本。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=2 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl2_After10 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。中档控制牌第二样本。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl2_After12 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。中档控制牌第二样本。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=2 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl3_NoHistory ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。中档控制牌第三样本，保留小王和两张 2，但整体仍偏试探型。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":1}
+MATCH: YES
+
+=== B_MidControl3_After1 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。中档控制牌第三样本，保留小王和两张 2，但整体仍偏试探型。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl3_After2 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。中档控制牌第三样本，保留小王和两张 2，但整体仍偏试探型。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl3_After10 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。中档控制牌第三样本，保留小王和两张 2，但整体仍偏试探型。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl3_After12 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。中档控制牌第三样本，保留小王和两张 2，但整体仍偏试探型。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl4_NoHistory ===
+CATEGORY: mid
+HAND: 5x2 6x2 7x2 9x2 Jx2 Qx1 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 无人叫分。中档控制牌第四样本，验证大王加若干对子时仍不会过度抢分。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,32,33,24,25,16,17,12,13,8,9],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":1}
+MATCH: YES
+
+=== B_MidControl4_After1 ===
+CATEGORY: mid
+HAND: 5x2 6x2 7x2 9x2 Jx2 Qx1 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。中档控制牌第四样本，验证大王加若干对子时仍不会过度抢分。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,32,33,24,25,16,17,12,13,8,9],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl4_After2 ===
+CATEGORY: mid
+HAND: 5x2 6x2 7x2 9x2 Jx2 Qx1 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。中档控制牌第四样本，验证大王加若干对子时仍不会过度抢分。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=2 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,32,33,24,25,16,17,12,13,8,9],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl4_After10 ===
+CATEGORY: mid
+HAND: 5x2 6x2 7x2 9x2 Jx2 Qx1 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。中档控制牌第四样本，验证大王加若干对子时仍不会过度抢分。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,32,33,24,25,16,17,12,13,8,9],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl4_After12 ===
+CATEGORY: mid
+HAND: 5x2 6x2 7x2 9x2 Jx2 Qx1 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。中档控制牌第四样本，验证大王加若干对子时仍不会过度抢分。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=2 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,32,33,24,25,16,17,12,13,8,9],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_NoHistory ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 无人叫分。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_After1 ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 前面最高叫到 1。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_After2 ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 前面最高叫到 2。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_After10 ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_After12 ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_NoHistory ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 无人叫分。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":1}
+MATCH: YES
+
+=== B_BombHand2_After1 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 1。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_After2 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 2。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_After10 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_After12 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand3_NoHistory ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 无人叫分。J 炸配 2A 控牌，空场可试探，但别人已叫后仍应收手。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":1}
+MATCH: YES
+
+=== B_BombHand3_After1 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 1。J 炸配 2A 控牌，空场可试探，但别人已叫后仍应收手。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand3_After2 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 2。J 炸配 2A 控牌，空场可试探，但别人已叫后仍应收手。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand3_After10 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。J 炸配 2A 控牌，空场可试探，但别人已叫后仍应收手。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand3_After12 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。J 炸配 2A 控牌，空场可试探，但别人已叫后仍应收手。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand4_NoHistory ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 Jx2 Kx4 Ax2 2x2
+EXPECT_NOTE: 无人叫分。K 炸加 2A 双对的强炸弹手牌，空场和别人叫 1 时继续叫 2 是合理的。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[40,41,42,43,48,49,44,45,32,33,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand4_After1 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 Jx2 Kx4 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 1。K 炸加 2A 双对的强炸弹手牌，空场和别人叫 1 时继续叫 2 是合理的。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[40,41,42,43,48,49,44,45,32,33,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand4_After2 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 Jx2 Kx4 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 2。K 炸加 2A 双对的强炸弹手牌，空场和别人叫 1 时继续叫 2 是合理的。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[40,41,42,43,48,49,44,45,32,33,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand4_After10 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 Jx2 Kx4 Ax2 2x2
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。K 炸加 2A 双对的强炸弹手牌，空场和别人叫 1 时继续叫 2 是合理的。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[40,41,42,43,48,49,44,45,32,33,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand4_After12 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 Jx2 Kx4 Ax2 2x2
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。K 炸加 2A 双对的强炸弹手牌，空场和别人叫 1 时继续叫 2 是合理的。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[40,41,42,43,48,49,44,45,32,33,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive1_NoHistory ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=0 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After1 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=1 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After2 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=2 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After10 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=1 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After12 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=2 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive2_NoHistory ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive2_After1 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive2_After2 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive2_After10 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive2_After12 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive3_NoHistory ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive3_After1 ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive3_After2 ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive3_After10 ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive3_After12 ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive4_NoHistory ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。双王加多组高对，这手已经跨过边界线，直接归入强牌型输出。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=True bombs=0 twos=1 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_ThresholdAggressive4_After1 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。双王加多组高对，这手已经跨过边界线，直接归入强牌型输出。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=True bombs=0 twos=1 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_ThresholdAggressive4_After2 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。双王加多组高对，这手已经跨过边界线，直接归入强牌型输出。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=True bombs=0 twos=1 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_ThresholdAggressive4_After10 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。双王加多组高对，这手已经跨过边界线，直接归入强牌型输出。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=True bombs=0 twos=1 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_ThresholdAggressive4_After12 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。双王加多组高对，这手已经跨过边界线，直接归入强牌型输出。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=True bombs=0 twos=1 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_NoHistory ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=0 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After1 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After2 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After10 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After12 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_NoHistory ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=0 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_After1 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_After2 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_After10 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_After12 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_NoHistory ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=0 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_After1 ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_After2 ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_After10 ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_After12 ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl4_NoHistory ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax3 2x3 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。双王加三张 2 和多组高对，属于稳定顶满的强牌。
+DEBUG: maxBid=0 handCountApprox=8 bidCapApprox=3 rocket=True bombs=0 twos=3 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,44,45,46,40,41,42,32,33,24,25,16,17],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl4_After1 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax3 2x3 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。双王加三张 2 和多组高对，属于稳定顶满的强牌。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=0 twos=3 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,44,45,46,40,41,42,32,33,24,25,16,17],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl4_After2 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax3 2x3 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。双王加三张 2 和多组高对，属于稳定顶满的强牌。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=0 twos=3 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,44,45,46,40,41,42,32,33,24,25,16,17],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl4_After10 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax3 2x3 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。双王加三张 2 和多组高对，属于稳定顶满的强牌。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=0 twos=3 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,44,45,46,40,41,42,32,33,24,25,16,17],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl4_After12 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax3 2x3 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。双王加三张 2 和多组高对，属于稳定顶满的强牌。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=0 twos=3 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,44,45,46,40,41,42,32,33,24,25,16,17],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+================ 汇总 ================
+TOTAL: 100
+MATCHED: 100
+FAILED: 0
+CATEGORY bomb-mid: 20/20 matched
+CATEGORY mid: 20/20 matched
+CATEGORY strong: 20/20 matched
+CATEGORY threshold: 20/20 matched
+CATEGORY weak: 20/20 matched
+
+失败用法建议：先看 CATEGORY 和 DEBUG，判断是期望写错、硬条件过强，还是阈值/扣分需要调整。
+
+
+================ 叫分回归测试 100 组 2026-05-03 16:09:22 ================
+正式回归：在现有叫分程序基础上继续测试 100 组。
+本轮改动：增加在牌型可接受的情况下，高对子分数。
+观察目标：看中档牌、炸弹牌、边界强牌在有人先叫 1 时是否比上一轮更敢继续跟叫。
+用途：固定叫分行为，辅助调参；MATCH 只表示符合当前设计预期，不表示策略最优。
+样例结构：当前按筛选后实际运行 100 组。After10 / After12 用来验证只看最高叫分。
+CATEGORY_FILTER: ALL
+CASE_LIMIT: ALL
+DEBUG 说明：为 PowerShell 复刻的近似特征，不等价于 C++ 内部 bidScore，但便于快速定位硬条件。
+
+=== B_WeakScatter1_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 无人叫分。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 1。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 2。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After10 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After12 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 无人叫分。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 1。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 2。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_After10 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter2_After12 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。另一个弱散牌对照组，验证不会误激进。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[2,6,10,14,18,22,26,3,7,11,15,19,23,27,31,35,39],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter3_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x1 10x2 Jx1 Qx1
+EXPECT_NOTE: 无人叫分。低位散牌更多的弱牌样例，验证程序不会被少量对子误判成可叫。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,1,5,9,13,17,21,29,33,37],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter3_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x1 10x2 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 1。低位散牌更多的弱牌样例，验证程序不会被少量对子误判成可叫。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,1,5,9,13,17,21,29,33,37],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter3_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x1 10x2 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 2。低位散牌更多的弱牌样例，验证程序不会被少量对子误判成可叫。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,1,5,9,13,17,21,29,33,37],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter3_After10 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x1 10x2 Jx1 Qx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。低位散牌更多的弱牌样例，验证程序不会被少量对子误判成可叫。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,1,5,9,13,17,21,29,33,37],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter3_After12 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x1 10x2 Jx1 Qx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。低位散牌更多的弱牌样例，验证程序不会被少量对子误判成可叫。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,1,5,9,13,17,21,29,33,37],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 无人叫分。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 前面最高叫到 1。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 前面最高叫到 2。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_After10 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_After12 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_NoHistory ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":2}
+MATCH: NO
+
+=== B_MidControl1_After1 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":2}
+MATCH: NO
+
+=== B_MidControl1_After2 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_After10 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":2}
+MATCH: NO
+
+=== B_MidControl1_After12 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。中档控制牌，无人叫分可试探；是否 After1 抢 2 是策略风格问题。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl2_NoHistory ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 无人叫分。中档控制牌第二样本。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":1}
+MATCH: YES
+
+=== B_MidControl2_After1 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。中档控制牌第二样本。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl2_After2 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。中档控制牌第二样本。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=2 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl2_After10 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。中档控制牌第二样本。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl2_After12 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。中档控制牌第二样本。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=2 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9,0],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl3_NoHistory ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。中档控制牌第三样本，保留小王和两张 2，但整体仍偏试探型。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":2}
+MATCH: NO
+
+=== B_MidControl3_After1 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。中档控制牌第三样本，保留小王和两张 2，但整体仍偏试探型。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":2}
+MATCH: NO
+
+=== B_MidControl3_After2 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。中档控制牌第三样本，保留小王和两张 2，但整体仍偏试探型。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl3_After10 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。中档控制牌第三样本，保留小王和两张 2，但整体仍偏试探型。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":2}
+MATCH: NO
+
+=== B_MidControl3_After12 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。中档控制牌第三样本，保留小王和两张 2，但整体仍偏试探型。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl4_NoHistory ===
+CATEGORY: mid
+HAND: 5x2 6x2 7x2 9x2 Jx2 Qx1 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 无人叫分。中档控制牌第四样本，验证大王加若干对子时仍不会过度抢分。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,32,33,24,25,16,17,12,13,8,9],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":1}
+MATCH: YES
+
+=== B_MidControl4_After1 ===
+CATEGORY: mid
+HAND: 5x2 6x2 7x2 9x2 Jx2 Qx1 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。中档控制牌第四样本，验证大王加若干对子时仍不会过度抢分。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,32,33,24,25,16,17,12,13,8,9],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl4_After2 ===
+CATEGORY: mid
+HAND: 5x2 6x2 7x2 9x2 Jx2 Qx1 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。中档控制牌第四样本，验证大王加若干对子时仍不会过度抢分。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=2 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,32,33,24,25,16,17,12,13,8,9],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl4_After10 ===
+CATEGORY: mid
+HAND: 5x2 6x2 7x2 9x2 Jx2 Qx1 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。中档控制牌第四样本，验证大王加若干对子时仍不会过度抢分。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,32,33,24,25,16,17,12,13,8,9],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl4_After12 ===
+CATEGORY: mid
+HAND: 5x2 6x2 7x2 9x2 Jx2 Qx1 Kx2 Ax2 2x1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。中档控制牌第四样本，验证大王加若干对子时仍不会过度抢分。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=2 rocket=False bombs=0 twos=1 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=False
+INPUT: {"requests":[{"own":[53,48,44,45,40,41,36,32,33,24,25,16,17,12,13,8,9],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_NoHistory ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 无人叫分。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_After1 ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 前面最高叫到 1。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_After2 ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 前面最高叫到 2。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_After10 ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand1_After12 ===
+CATEGORY: bomb-mid
+HAND: 3x4 5x2 6x1 7x2 8x1 9x2 10x1 Kx2 Ax2
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。单炸但整体偏碎，不应被炸弹单独拉到激进叫分。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=0 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[0,1,2,3,44,45,40,41,24,25,16,17,8,9,12,20,28],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_NoHistory ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 无人叫分。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":2}
+MATCH: NO
+
+=== B_BombHand2_After1 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 1。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":2}
+MATCH: NO
+
+=== B_BombHand2_After2 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 2。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_After10 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":2}
+MATCH: NO
+
+=== B_BombHand2_After12 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。有炸弹但不是强控局，对别人已叫分仍应谨慎。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand3_NoHistory ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 无人叫分。J 炸配 2A 控牌，空场可试探，但别人已叫后仍应收手。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":2}
+MATCH: NO
+
+=== B_BombHand3_After1 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 1。J 炸配 2A 控牌，空场可试探，但别人已叫后仍应收手。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":2}
+MATCH: NO
+
+=== B_BombHand3_After2 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 2。J 炸配 2A 控牌，空场可试探，但别人已叫后仍应收手。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand3_After10 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。J 炸配 2A 控牌，空场可试探，但别人已叫后仍应收手。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":2}
+MATCH: NO
+
+=== B_BombHand3_After12 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。J 炸配 2A 控牌，空场可试探，但别人已叫后仍应收手。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand4_NoHistory ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 Jx2 Kx4 Ax2 2x2
+EXPECT_NOTE: 无人叫分。K 炸加 2A 双对的强炸弹手牌，空场和别人叫 1 时继续叫 2 是合理的。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[40,41,42,43,48,49,44,45,32,33,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":3}
+MATCH: NO
+
+=== B_BombHand4_After1 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 Jx2 Kx4 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 1。K 炸加 2A 双对的强炸弹手牌，空场和别人叫 1 时继续叫 2 是合理的。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[40,41,42,43,48,49,44,45,32,33,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand4_After2 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 Jx2 Kx4 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 2。K 炸加 2A 双对的强炸弹手牌，空场和别人叫 1 时继续叫 2 是合理的。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[40,41,42,43,48,49,44,45,32,33,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand4_After10 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 Jx2 Kx4 Ax2 2x2
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。K 炸加 2A 双对的强炸弹手牌，空场和别人叫 1 时继续叫 2 是合理的。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[40,41,42,43,48,49,44,45,32,33,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand4_After12 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 Jx2 Kx4 Ax2 2x2
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。K 炸加 2A 双对的强炸弹手牌，空场和别人叫 1 时继续叫 2 是合理的。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[40,41,42,43,48,49,44,45,32,33,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive1_NoHistory ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=0 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After1 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=1 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After2 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=2 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After10 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=1 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After12 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=2 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive2_NoHistory ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive2_After1 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive2_After2 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive2_After10 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive2_After12 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。另一手边界强牌，验证不是偶然样本。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive3_NoHistory ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive3_After1 ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive3_After2 ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive3_After10 ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive3_After12 ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive4_NoHistory ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。双王加多组高对，这手已经跨过边界线，直接归入强牌型输出。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=True bombs=0 twos=1 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_ThresholdAggressive4_After1 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。双王加多组高对，这手已经跨过边界线，直接归入强牌型输出。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=True bombs=0 twos=1 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_ThresholdAggressive4_After2 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。双王加多组高对，这手已经跨过边界线，直接归入强牌型输出。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=True bombs=0 twos=1 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_ThresholdAggressive4_After10 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。双王加多组高对，这手已经跨过边界线，直接归入强牌型输出。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=True bombs=0 twos=1 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_ThresholdAggressive4_After12 ===
+CATEGORY: threshold
+HAND: 5x2 7x2 9x2 Jx2 Qx2 Kx2 Ax2 2x1 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。双王加多组高对，这手已经跨过边界线，直接归入强牌型输出。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=True bombs=0 twos=1 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,44,45,40,41,36,37,32,33,24,25,16,17,8,9],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_NoHistory ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=0 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After1 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After2 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After10 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After12 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_NoHistory ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=0 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_After1 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_After2 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_After10 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl2_After12 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax4 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。第二手强控牌，验证强牌门槛稳定。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=2 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,46,47,48,49,40,41,42,32,33,24,25,16,17],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_NoHistory ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=0 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_After1 ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_After2 ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_After10 ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_After12 ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl4_NoHistory ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax3 2x3 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。双王加三张 2 和多组高对，属于稳定顶满的强牌。
+DEBUG: maxBid=0 handCountApprox=8 bidCapApprox=3 rocket=True bombs=0 twos=3 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,44,45,46,40,41,42,32,33,24,25,16,17],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl4_After1 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax3 2x3 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。双王加三张 2 和多组高对，属于稳定顶满的强牌。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=0 twos=3 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,44,45,46,40,41,42,32,33,24,25,16,17],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl4_After2 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax3 2x3 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。双王加三张 2 和多组高对，属于稳定顶满的强牌。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=0 twos=3 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,44,45,46,40,41,42,32,33,24,25,16,17],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl4_After10 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax3 2x3 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。双王加三张 2 和多组高对，属于稳定顶满的强牌。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=0 twos=3 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,44,45,46,40,41,42,32,33,24,25,16,17],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl4_After12 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx3 Ax3 2x3 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。双王加三张 2 和多组高对，属于稳定顶满的强牌。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=0 twos=3 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,44,45,46,40,41,42,32,33,24,25,16,17],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+================ 汇总 ================
+TOTAL: 100
+MATCHED: 87
+FAILED: 13
+CATEGORY bomb-mid: 13/20 matched
+CATEGORY mid: 14/20 matched
+CATEGORY strong: 20/20 matched
+CATEGORY threshold: 20/20 matched
+CATEGORY weak: 20/20 matched
+
+失败用法建议：先看 CATEGORY 和 DEBUG，判断是期望写错、硬条件过强，还是阈值/扣分需要调整。
+
+
+================ 叫分回归测试 50 组 2026-05-03 16:24:02 ================
+正式回归：按更接近斗地主最佳策略的 EXPECTED 重测 50 组叫分。
+本轮改动：适度回调高对子分数。
+样例选择：2 组弱牌、2 组中档牌、2 组炸弹中档、2 组边界强牌、2 组强牌，共 50 组。
+用途：固定叫分行为，辅助调参；MATCH 只表示符合当前设计预期，不表示策略最优。
+样例结构：当前按筛选后实际运行 50 组。After10 / After12 用来验证只看最高叫分。
+NAME_FILTER: WeakScatter1, WeakScatter4, MidControl1, MidControl3, BombHand2, BombHand3, ThresholdAggressive1, ThresholdAggressive3, StrongControl1, StrongControl3
+CATEGORY_FILTER: ALL
+CASE_LIMIT: ALL
+DEBUG 说明：为 PowerShell 复刻的近似特征，不等价于 C++ 内部 bidScore，但便于快速定位硬条件。
+
+=== B_WeakScatter1_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 无人叫分。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 1。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 2。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After10 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After12 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 无人叫分。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 前面最高叫到 1。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 前面最高叫到 2。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_After10 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_After12 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_NoHistory ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。中档控制牌但高对子质量较好，最佳策略更偏向空场直接叫 2；别人已叫 1 后仍应收手。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_MidControl1_After1 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。中档控制牌但高对子质量较好，最佳策略更偏向空场直接叫 2；别人已叫 1 后仍应收手。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_After2 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。中档控制牌但高对子质量较好，最佳策略更偏向空场直接叫 2；别人已叫 1 后仍应收手。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_After10 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。中档控制牌但高对子质量较好，最佳策略更偏向空场直接叫 2；别人已叫 1 后仍应收手。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_After12 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。中档控制牌但高对子质量较好，最佳策略更偏向空场直接叫 2；别人已叫 1 后仍应收手。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl3_NoHistory ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。中档控制牌第三样本，高对子和对子密度都不错，最佳策略下空场更接近叫 2。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":1}
+MATCH: NO
+
+=== B_MidControl3_After1 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。中档控制牌第三样本，高对子和对子密度都不错，最佳策略下空场更接近叫 2。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl3_After2 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。中档控制牌第三样本，高对子和对子密度都不错，最佳策略下空场更接近叫 2。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl3_After10 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。中档控制牌第三样本，高对子和对子密度都不错，最佳策略下空场更接近叫 2。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl3_After12 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。中档控制牌第三样本，高对子和对子密度都不错，最佳策略下空场更接近叫 2。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_NoHistory ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 无人叫分。有炸弹且 2/A 对子充足，最佳策略下空场和别人叫 1 时都可继续到 2。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand2_After1 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 1。有炸弹且 2/A 对子充足，最佳策略下空场和别人叫 1 时都可继续到 2。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand2_After2 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 2。有炸弹且 2/A 对子充足，最佳策略下空场和别人叫 1 时都可继续到 2。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_After10 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。有炸弹且 2/A 对子充足，最佳策略下空场和别人叫 1 时都可继续到 2。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand2_After12 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。有炸弹且 2/A 对子充足，最佳策略下空场和别人叫 1 时都可继续到 2。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand3_NoHistory ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 无人叫分。J 炸配 2A 控牌，按最佳策略更接近空场 2 分、跟 1 也到 2。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand3_After1 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 1。J 炸配 2A 控牌，按最佳策略更接近空场 2 分、跟 1 也到 2。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand3_After2 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 2。J 炸配 2A 控牌，按最佳策略更接近空场 2 分、跟 1 也到 2。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand3_After10 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。J 炸配 2A 控牌，按最佳策略更接近空场 2 分、跟 1 也到 2。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand3_After12 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。J 炸配 2A 控牌，按最佳策略更接近空场 2 分、跟 1 也到 2。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive1_NoHistory ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=0 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After1 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=1 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After2 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=2 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After10 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=1 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After12 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=2 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive3_NoHistory ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive3_After1 ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive3_After2 ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive3_After10 ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive3_After12 ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_StrongControl1_NoHistory ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=0 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After1 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After2 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After10 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After12 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_NoHistory ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=0 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_After1 ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_After2 ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_After10 ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_After12 ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+================ 汇总 ================
+TOTAL: 50
+MATCHED: 49
+FAILED: 1
+CATEGORY bomb-mid: 10/10 matched
+CATEGORY mid: 9/10 matched
+CATEGORY strong: 10/10 matched
+CATEGORY threshold: 10/10 matched
+CATEGORY weak: 10/10 matched
+
+失败用法建议：先看 CATEGORY 和 DEBUG，判断是期望写错、硬条件过强，还是阈值/扣分需要调整。
+
+
+================ 叫分回归测试 50 组 2026-05-03 16:24:24 ================
+正式回归：按更接近斗地主最佳策略的 EXPECTED 重测 50 组叫分。
+本轮改动：适度回调高对子分数。
+样例选择：2 组弱牌、2 组中档牌、2 组炸弹中档、2 组边界强牌、2 组强牌，共 50 组。
+本轮微调：将 MidControl3 的空场 EXPECTED 从 2 回调到 1。
+用途：固定叫分行为，辅助调参；MATCH 只表示符合当前设计预期，不表示策略最优。
+样例结构：当前按筛选后实际运行 50 组。After10 / After12 用来验证只看最高叫分。
+NAME_FILTER: WeakScatter1, WeakScatter4, MidControl1, MidControl3, BombHand2, BombHand3, ThresholdAggressive1, ThresholdAggressive3, StrongControl1, StrongControl3
+CATEGORY_FILTER: ALL
+CASE_LIMIT: ALL
+DEBUG 说明：为 PowerShell 复刻的近似特征，不等价于 C++ 内部 bidScore，但便于快速定位硬条件。
+
+=== B_WeakScatter1_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 无人叫分。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 1。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 前面最高叫到 2。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After10 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter1_After12 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 无人叫分。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_After1 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 前面最高叫到 1。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_After2 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 前面最高叫到 2。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_After10 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_WeakScatter4_After12 ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Ax1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。带一张 A 的弱散牌，仍不应因为单张高牌而激进叫分。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=1 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,28,32,1,5,9,13,17,21,25,44],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_NoHistory ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。中档控制牌但高对子质量较好，最佳策略更偏向空场直接叫 2；别人已叫 1 后仍应收手。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_MidControl1_After1 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。中档控制牌但高对子质量较好，最佳策略更偏向空场直接叫 2；别人已叫 1 后仍应收手。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_After2 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。中档控制牌但高对子质量较好，最佳策略更偏向空场直接叫 2；别人已叫 1 后仍应收手。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_After10 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。中档控制牌但高对子质量较好，最佳策略更偏向空场直接叫 2；别人已叫 1 后仍应收手。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl1_After12 ===
+CATEGORY: mid
+HAND: 3x1 4x1 5x2 7x2 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。中档控制牌但高对子质量较好，最佳策略更偏向空场直接叫 2；别人已叫 1 后仍应收手。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,32,33,24,25,16,17,8,9,0,4],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl3_NoHistory ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。中档控制牌第三样本，对子密度不错但缺少更硬的顶级控制，最佳策略下空场更像叫 1。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[]}],"responses":[]}
+EXPECTED: {"response":1}
+OUTPUT: {"response":1}
+MATCH: YES
+
+=== B_MidControl3_After1 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。中档控制牌第三样本，对子密度不错但缺少更硬的顶级控制，最佳策略下空场更像叫 1。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl3_After2 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。中档控制牌第三样本，对子密度不错但缺少更硬的顶级控制，最佳策略下空场更像叫 1。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl3_After10 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。中档控制牌第三样本，对子密度不错但缺少更硬的顶级控制，最佳策略下空场更像叫 1。
+DEBUG: maxBid=1 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_MidControl3_After12 ===
+CATEGORY: mid
+HAND: 3x1 5x2 7x2 8x2 9x2 Jx2 Kx1 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。中档控制牌第三样本，对子密度不错但缺少更硬的顶级控制，最佳策略下空场更像叫 1。
+DEBUG: maxBid=2 handCountApprox=10 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,32,33,24,25,20,21,16,17,8,9,0],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_NoHistory ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 无人叫分。有炸弹且 2/A 对子充足，最佳策略下空场和别人叫 1 时都可继续到 2。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand2_After1 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 1。有炸弹且 2/A 对子充足，最佳策略下空场和别人叫 1 时都可继续到 2。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand2_After2 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 2。有炸弹且 2/A 对子充足，最佳策略下空场和别人叫 1 时都可继续到 2。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand2_After10 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。有炸弹且 2/A 对子充足，最佳策略下空场和别人叫 1 时都可继续到 2。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand2_After12 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x4 Jx2 Ax2 2x2
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。有炸弹且 2/A 对子充足，最佳策略下空场和别人叫 1 时都可继续到 2。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[24,25,26,27,44,45,48,49,32,33,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand3_NoHistory ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 无人叫分。J 炸配 2A 控牌，按最佳策略更接近空场 2 分、跟 1 也到 2。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand3_After1 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 1。J 炸配 2A 控牌，按最佳策略更接近空场 2 分、跟 1 也到 2。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand3_After2 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 前面最高叫到 2。J 炸配 2A 控牌，按最佳策略更接近空场 2 分、跟 1 也到 2。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_BombHand3_After10 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。J 炸配 2A 控牌，按最佳策略更接近空场 2 分、跟 1 也到 2。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_BombHand3_After12 ===
+CATEGORY: bomb-mid
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx4 Ax2 2x2
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。J 炸配 2A 控牌，按最佳策略更接近空场 2 分、跟 1 也到 2。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=1 twos=2 aces=2 jokers=0 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[32,33,34,35,44,45,48,49,24,25,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive1_NoHistory ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=0 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After1 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=1 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After2 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=2 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After10 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=1 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive1_After12 ===
+CATEGORY: threshold
+HAND: 3x1 4x1 5x2 6x1 7x2 9x2 Jx2 Kx2 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。边界强牌，验证别人叫 1 后还能继续跟到 2。
+DEBUG: maxBid=2 handCountApprox=11 bidCapApprox=3 rocket=True bombs=0 twos=0 aces=2 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,44,45,40,41,32,33,24,25,16,17,8,9,0,4,12],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive3_NoHistory ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 无人叫分。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=0 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive3_After1 ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 1。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive3_After2 ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 前面最高叫到 2。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_ThresholdAggressive3_After10 ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=1 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":2}
+OUTPUT: {"response":2}
+MATCH: YES
+
+=== B_ThresholdAggressive3_After12 ===
+CATEGORY: threshold
+HAND: 7x2 8x2 9x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。高对子密度的边界强牌，验证降低惩罚后 After1 仍有继续叫 2 的空间。
+DEBUG: maxBid=2 handCountApprox=9 bidCapApprox=3 rocket=False bombs=0 twos=2 aces=2 jokers=1 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,48,49,44,45,40,41,36,37,32,33,24,25,20,21,16,17],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+=== B_StrongControl1_NoHistory ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=0 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After1 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After2 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After10 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl1_After12 ===
+CATEGORY: strong
+HAND: 7x2 9x2 Jx2 Kx2 Ax3 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。强控牌，无论前面叫到几分都应敢于顶满。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=1 twos=4 aces=3 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,40,41,32,33,24,25,16,17],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_NoHistory ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 无人叫分。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=0 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_After1 ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 1。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[1]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_After2 ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 前面最高叫到 2。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_After10 ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史但最高仍是 1，验证不依赖历史长度。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=1 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[1,0]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+=== B_StrongControl3_After12 ===
+CATEGORY: strong
+HAND: 7x1 9x2 Jx2 Kx2 Ax4 2x4 jokerx1 JOKERx1
+EXPECT_NOTE: 两人历史且最高是 2，验证只看最高叫分。火箭、四个 2、双 A 的超强地主手。
+DEBUG: maxBid=2 handCountApprox=8 bidCapApprox=3 rocket=True bombs=2 twos=4 aces=4 jokers=2 basicCtrl=True strongCtrl=True threeCtrl=True
+INPUT: {"requests":[{"own":[52,53,48,49,50,51,44,45,46,47,40,41,32,33,24,25,16],"bid":[1,2]}],"responses":[]}
+EXPECTED: {"response":3}
+OUTPUT: {"response":3}
+MATCH: YES
+
+================ 汇总 ================
+TOTAL: 50
+MATCHED: 50
+FAILED: 0
+CATEGORY bomb-mid: 10/10 matched
+CATEGORY mid: 10/10 matched
+CATEGORY strong: 10/10 matched
+CATEGORY threshold: 10/10 matched
+CATEGORY weak: 10/10 matched
+
+失败用法建议：先看 CATEGORY 和 DEBUG，判断是期望写错、硬条件过强，还是阈值/扣分需要调整。
