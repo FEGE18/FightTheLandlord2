@@ -388,6 +388,7 @@ struct CardCombo
 	*/
 	template <typename CARD_ITERATOR>
 	// [示例程序提供，可作为过渡方案] 从手牌里贪心找第一手能出的牌；后续主策略会逐步被 enumAllValidPlays 替代。
+	// todo
 	CardCombo findFirstValid(CARD_ITERATOR begin, CARD_ITERATOR end) const
 	{
 		if (comboType == CardComboType::PASS) // 如果不需要大过谁，只需要随便出
@@ -764,45 +765,18 @@ void outputPlay(const vector<Card> &cards)
 // 单文件骨架：枚举层
 // ==================================================
 
-// [我们要自己实现的核心函数] 枚举当前局面下所有合法出牌，后续会逐步替换掉 findFirstValid 的贪心行为。
+// [我们要自己实现的核心函数] 枚举当前局面下所有合法出牌，供策略层评估和比较；如果没有合法出牌则返回一个只包含 PASS 的列表
 // todo
 vector<CardCombo> enumAllValidPlays(const vector<Card> &hand, const CardCombo &lastCombo)
 {
-	vector<CardCombo> plays;
-	if (hand.empty())
-		return plays;
+	vector<CardCombo> validPlays; // 可能的出牌列表
+	if(lastCombo.comboType==CardComboType::ROCKET)	//上家出火箭，直接pass
+		return validPlays;
+	else if(lastCombo.comboType==CardComboType::PASS){	//上家过（要求在“我”上一次出牌后，其余两玩家都 PASS 才判定为 PASS）
 
-	if (lastCombo.comboType == CardComboType::PASS)
-	{
-		for (Card card : hand)
-			plays.emplace_back(&card, &card + 1);
+	}else{	//其他情况
 
-		auto grouped = groupCardsByLevel(hand);
-		for (const auto &cardsAtLevel : grouped)
-		{
-			if (cardsAtLevel.size() >= 2)
-				plays.emplace_back(cardsAtLevel.begin(), cardsAtLevel.begin() + 2);
-			if (cardsAtLevel.size() >= 3)
-				plays.emplace_back(cardsAtLevel.begin(), cardsAtLevel.begin() + 3);
-			if (cardsAtLevel.size() == 4)
-				plays.emplace_back(cardsAtLevel.begin(), cardsAtLevel.end());
-		}
-
-		auto groupedWithJokers = groupCardsByLevel(hand);
-		if (!groupedWithJokers[level_joker].empty() && !groupedWithJokers[level_JOKER].empty())
-		{
-			Card rocket[] = {groupedWithJokers[level_joker].front(), groupedWithJokers[level_JOKER].front()};
-			plays.emplace_back(rocket, rocket + 2);
-		}
-
-		return plays;
 	}
-
-	plays.push_back(CardCombo());
-	CardCombo candidate = lastCombo.findFirstValid(hand.begin(), hand.end());
-	if (candidate.comboType != CardComboType::PASS && candidate.comboType != CardComboType::INVALID)
-		plays.push_back(candidate);
-	return plays;
 }
 
 // [我们要自己实现的扩展函数] 当主体牌型确定后，为三带一、飞机带翼等牌型补全最合适的带牌。
@@ -817,8 +791,9 @@ CardCombo selectAttachment(const vector<Card> &, const CardCombo &mainCombo, Car
 // ==================================================
 
 // [我们要自己实现的核心函数] 把手牌拆成若干组合法牌型，供策略层评估“最少还要几手出完”。
+// 使用 MCTS，通过模拟来选取最优的若干组牌
 // todo
-vector<HandPlan> decomposeHand(const vector<Card> &hand, int topK = 1)
+vector<HandPlan> decomposeHand(const vector<Card> &hand, int topK = 1)// 返回最优的前 topK 组拆法
 {
 	HandPlan plan;
 	auto grouped = groupCardsByLevel(hand);
@@ -840,14 +815,15 @@ vector<HandPlan> decomposeHand(const vector<Card> &hand, int topK = 1)
 	if (topK > 0)
 		plans.push_back(plan);
 	return plans;
-}
+} 
 
-// [我们要自己实现的核心函数] 快速返回当前手牌最少还需要几手，供评估层频繁调用。
+// [我们要自己实现的核心函数] 快速返回当前手牌出完最少还需要几手，供评估层频繁调用
+// 不能调用 decomposeHand()，否则性能过差
 // todo
 int getMinHandCount(const vector<Card> &hand)
 {
-	auto plans = decomposeHand(hand, 1);
-	return plans.empty() ? 0 : plans.front().handCount;
+	// 这里应该实现一个更高效的算法来快速计算最少手数，而不是调用 decomposeHand()
+	return 0; // 占位符，需要根据实际逻辑实现
 }
 
 // ==================================================
