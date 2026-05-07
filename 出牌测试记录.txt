@@ -1,0 +1,864 @@
+
+
+================ 出牌回归测试 76 组 2026-05-03 15:29:26 ================
+正式回归：新增独立出牌测试脚本，沿用 EXPECTED / OUTPUT / MATCH 记录格式。
+正式回归：本轮脚本已支持 CategoryFilter 和 CaseLimit，不再锁死为固定 50 组。
+正式回归：已修复 PASS 场景与单元素数组期望值的 JSON 序列化问题。
+用途：固定出牌行为，辅助调参；MATCH 只表示符合当前设计预期，不表示策略最优。
+样例结构：当前按筛选后实际运行 76 组，可通过 CategoryFilter / CaseLimit 调整。
+CATEGORY_FILTER: ALL
+CASE_LIMIT: ALL
+DEBUG 说明：route 用来看场景来源，LastSummary 用来看当前跟牌目标和关键剩余牌数。
+
+=== P01_FreeLandlord_A ===
+CATEGORY: free
+HAND: 3x3 4x1 5x2 6x1 7x2 8x1 9x1 10x1 Jx1 Qx1 Kx1 2x1 jokerx1
+EXPECT_NOTE: 地主自由出牌，优先走普通三张而不是先拆硬控。
+DEBUG: role=landlord route=free public=Ax3
+LAST: history0=PASS history1=PASS
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[44,45,46],"own":[0,1,2,8,9,16,17,24,32,40,48,52,4,12,20,28,36],"landlord":0,"pos":0,"finalbid":3}],"responses":[]}
+EXPECTED: {"response":[0,1,2]}
+OUTPUT: {"response":[0,1,2]}
+MATCH: YES
+
+=== P02_FreeLandlord_B ===
+CATEGORY: free
+HAND: 3x2 5x2 6x1 7x2 8x1 9x2 Jx2 Kx2 2x2 jokerx1
+EXPECT_NOTE: 地主自由出牌，偏向先走对子。
+DEBUG: role=landlord route=free public=4x1 Ax2
+LAST: history0=PASS history1=PASS
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[44,45,4],"own":[0,1,8,9,16,17,24,25,32,33,40,41,48,49,52,12,20],"landlord":0,"pos":0,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[0,1]}
+OUTPUT: {"response":[0,1]}
+MATCH: YES
+
+=== P03_FreeWithBomb_A ===
+CATEGORY: free
+HAND: 3x4 5x2 7x2 9x2 Jx2 Kx2 Ax2 jokerx1
+EXPECT_NOTE: 有炸弹时自由出牌仍应优先普通三张。
+DEBUG: role=landlord route=free public=4x3
+LAST: history0=PASS history1=PASS
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[4,5,6],"own":[0,1,2,3,44,45,8,9,16,17,24,25,32,33,40,41,52],"landlord":0,"pos":0,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[4,5,6]}
+OUTPUT: {"response":[4,5,6]}
+MATCH: YES
+
+=== P04_FreeWithBomb_B ===
+CATEGORY: free
+HAND: 5x2 6x1 7x2 9x4 Jx2 Kx2 Ax2 2x1 jokerx1
+EXPECT_NOTE: 另一手带炸弹的自由出牌样例。
+DEBUG: role=landlord route=free public=4x3
+LAST: history0=PASS history1=PASS
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[4,5,6],"own":[24,25,26,27,44,45,8,9,16,17,32,33,40,41,48,52,12],"landlord":0,"pos":0,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[4,5,6]}
+OUTPUT: {"response":[4,5,6]}
+MATCH: YES
+
+=== P05_FreeWithRocket_A ===
+CATEGORY: free
+HAND: 5x2 6x1 7x2 8x1 9x2 Jx2 Kx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 有火箭时仍不应先把火箭交掉。
+DEBUG: role=landlord route=free public=4x2 JOKERx1
+LAST: history0=PASS history1=PASS
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[53,4,5],"own":[52,40,41,8,9,16,17,24,25,32,33,44,45,48,49,12,20],"landlord":0,"pos":0,"finalbid":3}],"responses":[]}
+EXPECTED: {"response":[4,5]}
+OUTPUT: {"response":[4,5]}
+MATCH: YES
+
+=== P06_FreeWithRocket_B ===
+CATEGORY: free
+HAND: 5x2 6x1 7x2 8x1 9x2 Jx2 Kx2 Ax2 2x2 JOKERx1
+EXPECT_NOTE: 另一手带王的自由出牌样例。
+DEBUG: role=landlord route=free public=4x2 jokerx1
+LAST: history0=PASS history1=PASS
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[52,4,5],"own":[53,40,41,8,9,16,17,24,25,32,33,44,45,48,49,12,20],"landlord":0,"pos":0,"finalbid":3}],"responses":[]}
+EXPECTED: {"response":[4,5]}
+OUTPUT: {"response":[4,5]}
+MATCH: YES
+
+=== P07_FollowTeammateSingle_A ===
+CATEGORY: teammate-basic
+HAND: 5x2 6x2 7x2 8x2 9x2 10x2 Jx1 Ax2 2x1 jokerx1
+EXPECT_NOTE: 跟队友单张时选择让牌。
+DEBUG: role=farmer route=follow-teammate public=4x3
+LAST: history0=Kx1 history1=PASS
+INPUT: {"requests":[{"history":[[40],[]],"publiccard":[4,5,6],"own":[44,45,48,52,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== P08_FollowTeammateSingle_B ===
+CATEGORY: teammate-basic
+HAND: 5x2 6x2 7x2 8x2 9x2 10x2 Jx1 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 跟队友大单张时同样让牌。
+DEBUG: role=farmer route=follow-teammate public=4x3
+LAST: history0=Ax1 history1=PASS
+INPUT: {"requests":[{"history":[[44],[]],"publiccard":[4,5,6],"own":[48,49,52,53,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== P09_FollowTeammatePair_A ===
+CATEGORY: teammate-basic
+HAND: 5x2 6x2 7x2 8x2 9x2 10x2 Jx1 Ax2 2x1 jokerx1
+EXPECT_NOTE: 跟队友对子时当前策略会抢牌。
+DEBUG: role=farmer route=follow-teammate public=4x3
+LAST: history0=Kx2 history1=PASS
+INPUT: {"requests":[{"history":[[40,41],[]],"publiccard":[4,5,6],"own":[44,45,48,52,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[44,45]}
+OUTPUT: {"response":[44,45]}
+MATCH: YES
+
+=== P10_FollowTeammatePair_B ===
+CATEGORY: teammate-basic
+HAND: 5x2 6x2 7x2 8x2 9x2 10x2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 第二个跟队友对子样例。
+DEBUG: role=farmer route=follow-teammate public=4x3
+LAST: history0=Jx2 history1=PASS
+INPUT: {"requests":[{"history":[[32,33],[]],"publiccard":[4,5,6],"own":[44,45,48,49,52,8,9,12,13,16,17,20,21,24,25,28,29],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[44,45]}
+OUTPUT: {"response":[44,45]}
+MATCH: YES
+
+=== P11_FollowOpponentSingle_A ===
+CATEGORY: opponent-basic
+HAND: 5x2 6x2 7x2 8x2 9x1 10x2 Jx1 Qx1 Ax2 2x1 jokerx1
+EXPECT_NOTE: 跟对手小单张，应该正常压牌。
+DEBUG: role=farmer route=follow-opponent public=4x3
+LAST: history0=PASS history1=9x1
+INPUT: {"requests":[{"history":[[],[24]],"publiccard":[4,5,6],"own":[44,45,48,52,8,9,12,13,16,17,20,21,25,28,29,32,36],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[28]}
+OUTPUT: {"response":[28]}
+MATCH: YES
+
+=== P12_FollowOpponentSingle_B ===
+CATEGORY: opponent-basic
+HAND: 5x2 6x2 7x2 8x2 9x2 10x2 Jx1 Ax2 2x1 jokerx1
+EXPECT_NOTE: 跟对手较大单张，仍会正常接管。
+DEBUG: role=farmer route=follow-opponent public=4x3
+LAST: history0=PASS history1=Kx1
+INPUT: {"requests":[{"history":[[],[40]],"publiccard":[4,5,6],"own":[44,45,48,52,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[44]}
+OUTPUT: {"response":[44]}
+MATCH: YES
+
+=== P13_FollowOpponentHighSingle_A ===
+CATEGORY: opponent-basic
+HAND: 5x2 6x2 7x2 8x2 9x2 10x2 Jx1 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 跟对手高单张时用更高单张接。
+DEBUG: role=farmer route=follow-opponent public=4x3
+LAST: history0=PASS history1=Ax1
+INPUT: {"requests":[{"history":[[],[44]],"publiccard":[4,5,6],"own":[48,49,52,53,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[48]}
+OUTPUT: {"response":[48]}
+MATCH: YES
+
+=== P14_FollowOpponentHighSingle_B ===
+CATEGORY: opponent-basic
+HAND: 5x2 6x2 7x2 8x2 9x2 10x2 Jx1 Ax2 jokerx1 JOKERx1
+EXPECT_NOTE: 跟对手更高单张时用小王接。
+DEBUG: role=farmer route=follow-opponent public=4x3
+LAST: history0=PASS history1=2x1
+INPUT: {"requests":[{"history":[[],[48]],"publiccard":[4,5,6],"own":[52,53,44,45,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[52]}
+OUTPUT: {"response":[52]}
+MATCH: YES
+
+=== P15_FollowOpponentPair_A ===
+CATEGORY: opponent-basic
+HAND: 5x2 6x2 7x2 8x2 10x2 Jx2 Qx1 Ax2 2x1 jokerx1
+EXPECT_NOTE: 跟对手小对子。
+DEBUG: role=farmer route=follow-opponent public=4x3
+LAST: history0=PASS history1=9x2
+INPUT: {"requests":[{"history":[[],[24,25]],"publiccard":[4,5,6],"own":[44,45,48,52,8,9,12,13,16,17,20,21,28,29,32,33,36],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[28,29]}
+OUTPUT: {"response":[28,29]}
+MATCH: YES
+
+=== P16_FollowOpponentPair_B ===
+CATEGORY: opponent-basic
+HAND: 5x2 6x2 7x2 8x2 10x2 Qx2 Ax2 2x2 jokerx1
+EXPECT_NOTE: 跟对手中对子。
+DEBUG: role=farmer route=follow-opponent public=4x3
+LAST: history0=PASS history1=Jx2
+INPUT: {"requests":[{"history":[[],[32,33]],"publiccard":[4,5,6],"own":[44,45,48,49,52,8,9,12,13,16,17,20,21,28,29,36,37],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[36,37]}
+OUTPUT: {"response":[36,37]}
+MATCH: YES
+
+=== P17_FollowOpponentTriple_A ===
+CATEGORY: opponent-basic
+HAND: 5x2 6x2 7x2 8x2 10x2 Jx3 Ax2 2x1 jokerx1
+EXPECT_NOTE: 跟对手三条时正常用更大三条接。
+DEBUG: role=farmer route=follow-opponent public=4x3
+LAST: history0=PASS history1=9x3
+INPUT: {"requests":[{"history":[[],[24,25,26]],"publiccard":[4,5,6],"own":[32,33,34,44,45,48,8,9,12,13,16,17,20,21,28,29,52],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[32,33,34]}
+OUTPUT: {"response":[32,33,34]}
+MATCH: YES
+
+=== P18_FollowOpponentTriple_B ===
+CATEGORY: opponent-basic
+HAND: 5x2 6x2 7x2 8x2 9x2 10x2 Ax3 2x1 jokerx1
+EXPECT_NOTE: 跟对手更大三条。
+DEBUG: role=farmer route=follow-opponent public=4x3
+LAST: history0=PASS history1=Jx3
+INPUT: {"requests":[{"history":[[],[32,33,34]],"publiccard":[4,5,6],"own":[44,45,46,48,8,9,12,13,16,17,20,21,24,25,28,29,52],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[44,45,46]}
+OUTPUT: {"response":[44,45,46]}
+MATCH: YES
+
+=== P19_CannotBeatBigJoker_A ===
+CATEGORY: cannot-beat
+HAND: 5x2 6x2 7x2 8x2 9x2 10x2 Jx2 Ax2 2x1
+EXPECT_NOTE: 无法压过大王，必须 PASS。
+DEBUG: role=farmer route=follow-opponent public=4x3
+LAST: history0=PASS history1=JOKERx1
+INPUT: {"requests":[{"history":[[],[53]],"publiccard":[4,5,6],"own":[44,45,48,8,9,12,13,16,17,20,21,24,25,28,29,32,33],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== P20_CannotBeatBigJoker_B ===
+CATEGORY: cannot-beat
+HAND: 5x2 6x2 7x2 8x2 9x2 10x2 Jx2 Ax2 2x1
+EXPECT_NOTE: 没有大王时也不能压小王。
+DEBUG: role=farmer route=follow-opponent public=4x3
+LAST: history0=PASS history1=jokerx1
+INPUT: {"requests":[{"history":[[],[52]],"publiccard":[4,5,6],"own":[44,45,48,8,9,12,13,16,17,20,21,24,25,28,29,32,33],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== P21_CannotBeatPairA ===
+CATEGORY: cannot-beat
+HAND: 5x2 6x2 7x2 8x2 9x2 10x1 Jx2 Qx1 Kx2 jokerx1
+EXPECT_NOTE: 没有更大的对子时选择 PASS。
+DEBUG: role=farmer route=follow-opponent public=4x3
+LAST: history0=PASS history1=Ax2
+INPUT: {"requests":[{"history":[[],[44,45]],"publiccard":[4,5,6],"own":[32,33,40,41,8,9,12,13,16,17,20,21,24,25,28,36,52],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== P22_CannotBeatTriple2 ===
+CATEGORY: cannot-beat
+HAND: 5x2 6x2 7x2 8x2 9x2 Jx3 Ax3 jokerx1
+EXPECT_NOTE: 没有更大的三条时 PASS。
+DEBUG: role=farmer route=follow-opponent public=4x3
+LAST: history0=PASS history1=2x3
+INPUT: {"requests":[{"history":[[],[48,49,50]],"publiccard":[4,5,6],"own":[44,45,46,32,33,34,8,9,12,13,16,17,20,21,24,25,52],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== P23_BombOnlyVsPairA ===
+CATEGORY: hard-control-restraint
+HAND: 3x4 5x2 6x2 7x1 8x1 9x1 10x1 Jx1 Qx1 Kx1 2x1 jokerx1
+EXPECT_NOTE: 只有炸弹能压对子时，当前策略选择保守 PASS。
+DEBUG: role=farmer route=follow-opponent public=4x3
+LAST: history0=PASS history1=Ax2
+INPUT: {"requests":[{"history":[[],[44,45]],"publiccard":[4,5,6],"own":[0,1,2,3,8,12,16,20,24,28,32,36,40,48,52,9,13],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== P24_BombOnlyVsTripleA ===
+CATEGORY: hard-control-restraint
+HAND: 3x4 5x2 6x2 7x1 8x1 9x1 10x1 Jx1 Qx1 Kx1 2x1 jokerx1
+EXPECT_NOTE: 只有炸弹能压三条时仍选择保守 PASS。
+DEBUG: role=farmer route=follow-opponent public=4x3
+LAST: history0=PASS history1=Ax3
+INPUT: {"requests":[{"history":[[],[44,45,46]],"publiccard":[4,5,6],"own":[0,1,2,3,8,12,16,20,24,28,32,36,40,48,52,9,13],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== P25_FreeFarmer_A ===
+CATEGORY: free
+HAND: 5x2 6x2 7x2 8x2 9x2 10x2 Jx1 Ax2 2x1 jokerx1
+EXPECT_NOTE: 农民自由出牌，优先走小对子。
+DEBUG: role=farmer route=free public=4x3
+LAST: history0=PASS history1=PASS
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[4,5,6],"own":[44,45,48,52,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[8,9]}
+OUTPUT: {"response":[8,9]}
+MATCH: YES
+
+=== P26_FreeFarmer_B ===
+CATEGORY: free
+HAND: 3x3 5x2 6x2 7x2 8x2 9x2 10x2 Jx1 jokerx1
+EXPECT_NOTE: 农民自由出牌的第二个样例。
+DEBUG: role=farmer route=free public=Ax3
+LAST: history0=PASS history1=PASS
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[44,45,46],"own":[0,1,2,8,9,12,13,16,17,20,21,24,25,28,29,32,52],"landlord":2,"pos":1,"finalbid":1}],"responses":[]}
+EXPECTED: {"response":[0,1,2]}
+OUTPUT: {"response":[0,1,2]}
+MATCH: YES
+
+=== T01_SmallSingle9_Remain16_A ===
+CATEGORY: teammate-focus-single-low
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 16 张。队友出小单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=1 teammateRemaining=16
+LAST: teammatePlay=9x1 teammateRemaining=16 variant=A
+INPUT: {"requests":[{"history":[[24],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T02_SmallSingle9_Remain16_B ===
+CATEGORY: teammate-focus-single-low
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 16 张。队友出小单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=1 teammateRemaining=16
+LAST: teammatePlay=9x1 teammateRemaining=16 variant=B
+INPUT: {"requests":[{"history":[[24],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T03_SmallSingle9_Remain12_A ===
+CATEGORY: teammate-focus-single-low
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 12 张。队友出小单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=2 teammateRemaining=12
+LAST: teammatePlay=9x1 teammateRemaining=12 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[24],[]]}],"responses":[[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T04_SmallSingle9_Remain12_B ===
+CATEGORY: teammate-focus-single-low
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 12 张。队友出小单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=2 teammateRemaining=12
+LAST: teammatePlay=9x1 teammateRemaining=12 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[24],[]]}],"responses":[[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T05_SmallSingle9_Remain8_A ===
+CATEGORY: teammate-focus-single-low
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 8 张。队友出小单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=3 teammateRemaining=8
+LAST: teammatePlay=9x1 teammateRemaining=8 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[24],[]]}],"responses":[[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T06_SmallSingle9_Remain8_B ===
+CATEGORY: teammate-focus-single-low
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 8 张。队友出小单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=3 teammateRemaining=8
+LAST: teammatePlay=9x1 teammateRemaining=8 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[24],[]]}],"responses":[[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T07_SmallSingle9_Remain4_A ===
+CATEGORY: teammate-focus-single-low
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 4 张。队友出小单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=4 teammateRemaining=4
+LAST: teammatePlay=9x1 teammateRemaining=4 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[24],[]]}],"responses":[[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T08_SmallSingle9_Remain4_B ===
+CATEGORY: teammate-focus-single-low
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 4 张。队友出小单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=4 teammateRemaining=4
+LAST: teammatePlay=9x1 teammateRemaining=4 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[24],[]]}],"responses":[[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T09_SmallSingle9_Remain2_A ===
+CATEGORY: teammate-focus-single-low
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 2 张。队友出小单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=5 teammateRemaining=2
+LAST: teammatePlay=9x1 teammateRemaining=2 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[12,13],[]]},{"history":[[24],[]]}],"responses":[[],[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T10_SmallSingle9_Remain2_B ===
+CATEGORY: teammate-focus-single-low
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 2 张。队友出小单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=5 teammateRemaining=2
+LAST: teammatePlay=9x1 teammateRemaining=2 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[12,13],[]]},{"history":[[24],[]]}],"responses":[[],[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T11_MediumSingleK_Remain16_A ===
+CATEGORY: teammate-focus-single-mid
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 16 张。队友出中等单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=1 teammateRemaining=16
+LAST: teammatePlay=Kx1 teammateRemaining=16 variant=A
+INPUT: {"requests":[{"history":[[40],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T12_MediumSingleK_Remain16_B ===
+CATEGORY: teammate-focus-single-mid
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 16 张。队友出中等单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=1 teammateRemaining=16
+LAST: teammatePlay=Kx1 teammateRemaining=16 variant=B
+INPUT: {"requests":[{"history":[[40],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T13_MediumSingleK_Remain12_A ===
+CATEGORY: teammate-focus-single-mid
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 12 张。队友出中等单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=2 teammateRemaining=12
+LAST: teammatePlay=Kx1 teammateRemaining=12 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[40],[]]}],"responses":[[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T14_MediumSingleK_Remain12_B ===
+CATEGORY: teammate-focus-single-mid
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 12 张。队友出中等单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=2 teammateRemaining=12
+LAST: teammatePlay=Kx1 teammateRemaining=12 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[40],[]]}],"responses":[[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T15_MediumSingleK_Remain8_A ===
+CATEGORY: teammate-focus-single-mid
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 8 张。队友出中等单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=3 teammateRemaining=8
+LAST: teammatePlay=Kx1 teammateRemaining=8 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[40],[]]}],"responses":[[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T16_MediumSingleK_Remain8_B ===
+CATEGORY: teammate-focus-single-mid
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 8 张。队友出中等单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=3 teammateRemaining=8
+LAST: teammatePlay=Kx1 teammateRemaining=8 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[40],[]]}],"responses":[[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T17_MediumSingleK_Remain4_A ===
+CATEGORY: teammate-focus-single-mid
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 4 张。队友出中等单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=4 teammateRemaining=4
+LAST: teammatePlay=Kx1 teammateRemaining=4 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[40],[]]}],"responses":[[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T18_MediumSingleK_Remain4_B ===
+CATEGORY: teammate-focus-single-mid
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 4 张。队友出中等单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=4 teammateRemaining=4
+LAST: teammatePlay=Kx1 teammateRemaining=4 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[40],[]]}],"responses":[[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T19_MediumSingleK_Remain2_A ===
+CATEGORY: teammate-focus-single-mid
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 2 张。队友出中等单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=5 teammateRemaining=2
+LAST: teammatePlay=Kx1 teammateRemaining=2 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[12,13],[]]},{"history":[[40],[]]}],"responses":[[],[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T20_MediumSingleK_Remain2_B ===
+CATEGORY: teammate-focus-single-mid
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 2 张。队友出中等单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=5 teammateRemaining=2
+LAST: teammatePlay=Kx1 teammateRemaining=2 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[12,13],[]]},{"history":[[40],[]]}],"responses":[[],[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T21_HighSingleA_Remain16_A ===
+CATEGORY: teammate-focus-single-high
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 16 张。队友出高单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=1 teammateRemaining=16
+LAST: teammatePlay=Ax1 teammateRemaining=16 variant=A
+INPUT: {"requests":[{"history":[[44],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T22_HighSingleA_Remain16_B ===
+CATEGORY: teammate-focus-single-high
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 16 张。队友出高单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=1 teammateRemaining=16
+LAST: teammatePlay=Ax1 teammateRemaining=16 variant=B
+INPUT: {"requests":[{"history":[[44],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T23_HighSingleA_Remain12_A ===
+CATEGORY: teammate-focus-single-high
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 12 张。队友出高单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=2 teammateRemaining=12
+LAST: teammatePlay=Ax1 teammateRemaining=12 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[44],[]]}],"responses":[[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T24_HighSingleA_Remain12_B ===
+CATEGORY: teammate-focus-single-high
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 12 张。队友出高单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=2 teammateRemaining=12
+LAST: teammatePlay=Ax1 teammateRemaining=12 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[44],[]]}],"responses":[[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T25_HighSingleA_Remain8_A ===
+CATEGORY: teammate-focus-single-high
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 8 张。队友出高单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=3 teammateRemaining=8
+LAST: teammatePlay=Ax1 teammateRemaining=8 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[44],[]]}],"responses":[[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T26_HighSingleA_Remain8_B ===
+CATEGORY: teammate-focus-single-high
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 8 张。队友出高单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=3 teammateRemaining=8
+LAST: teammatePlay=Ax1 teammateRemaining=8 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[44],[]]}],"responses":[[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T27_HighSingleA_Remain4_A ===
+CATEGORY: teammate-focus-single-high
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 4 张。队友出高单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=4 teammateRemaining=4
+LAST: teammatePlay=Ax1 teammateRemaining=4 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[44],[]]}],"responses":[[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T28_HighSingleA_Remain4_B ===
+CATEGORY: teammate-focus-single-high
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 4 张。队友出高单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=4 teammateRemaining=4
+LAST: teammatePlay=Ax1 teammateRemaining=4 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[44],[]]}],"responses":[[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T29_HighSingleA_Remain2_A ===
+CATEGORY: teammate-focus-single-high
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 2 张。队友出高单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=5 teammateRemaining=2
+LAST: teammatePlay=Ax1 teammateRemaining=2 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[12,13],[]]},{"history":[[44],[]]}],"responses":[[],[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T30_HighSingleA_Remain2_B ===
+CATEGORY: teammate-focus-single-high
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 2 张。队友出高单张时，当前策略整体选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=5 teammateRemaining=2
+LAST: teammatePlay=Ax1 teammateRemaining=2 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[12,13],[]]},{"history":[[44],[]]}],"responses":[[],[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T31_SmallPair99_Remain15_A ===
+CATEGORY: teammate-focus-pair-low
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 15 张。队友出小对子时，A 变体会抢，B 变体会让。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=1 teammateRemaining=15
+LAST: teammatePlay=9x2 teammateRemaining=15 variant=A
+INPUT: {"requests":[{"history":[[24,25],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[28,29]}
+OUTPUT: {"response":[28,29]}
+MATCH: YES
+
+=== T32_SmallPair99_Remain15_B ===
+CATEGORY: teammate-focus-pair-low
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 15 张。队友出小对子时，A 变体会抢，B 变体会让。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=1 teammateRemaining=15
+LAST: teammatePlay=9x2 teammateRemaining=15 variant=B
+INPUT: {"requests":[{"history":[[24,25],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T33_SmallPair99_Remain11_A ===
+CATEGORY: teammate-focus-pair-low
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 11 张。队友出小对子时，A 变体会抢，B 变体会让。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=2 teammateRemaining=11
+LAST: teammatePlay=9x2 teammateRemaining=11 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[24,25],[]]}],"responses":[[]]}
+EXPECTED: {"response":[28,29]}
+OUTPUT: {"response":[28,29]}
+MATCH: YES
+
+=== T34_SmallPair99_Remain11_B ===
+CATEGORY: teammate-focus-pair-low
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 11 张。队友出小对子时，A 变体会抢，B 变体会让。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=2 teammateRemaining=11
+LAST: teammatePlay=9x2 teammateRemaining=11 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[24,25],[]]}],"responses":[[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T35_SmallPair99_Remain7_A ===
+CATEGORY: teammate-focus-pair-low
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 7 张。队友出小对子时，A 变体会抢，B 变体会让。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=3 teammateRemaining=7
+LAST: teammatePlay=9x2 teammateRemaining=7 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[24,25],[]]}],"responses":[[],[]]}
+EXPECTED: {"response":[28,29]}
+OUTPUT: {"response":[28,29]}
+MATCH: YES
+
+=== T36_SmallPair99_Remain7_B ===
+CATEGORY: teammate-focus-pair-low
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 7 张。队友出小对子时，A 变体会抢，B 变体会让。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=3 teammateRemaining=7
+LAST: teammatePlay=9x2 teammateRemaining=7 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[24,25],[]]}],"responses":[[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T37_SmallPair99_Remain3_A ===
+CATEGORY: teammate-focus-pair-low
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 3 张。队友出小对子时，A 变体会抢，B 变体会让。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=4 teammateRemaining=3
+LAST: teammatePlay=9x2 teammateRemaining=3 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[24,25],[]]}],"responses":[[],[],[]]}
+EXPECTED: {"response":[28,29]}
+OUTPUT: {"response":[28,29]}
+MATCH: YES
+
+=== T38_SmallPair99_Remain3_B ===
+CATEGORY: teammate-focus-pair-low
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 3 张。队友出小对子时，A 变体会抢，B 变体会让。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=4 teammateRemaining=3
+LAST: teammatePlay=9x2 teammateRemaining=3 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[24,25],[]]}],"responses":[[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T39_SmallPair99_Remain1_A ===
+CATEGORY: teammate-focus-pair-low
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 1 张。队友出小对子时，A 变体会抢，B 变体会让。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=5 teammateRemaining=1
+LAST: teammatePlay=9x2 teammateRemaining=1 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[12,13],[]]},{"history":[[24,25],[]]}],"responses":[[],[],[],[]]}
+EXPECTED: {"response":[28,29]}
+OUTPUT: {"response":[28,29]}
+MATCH: YES
+
+=== T40_SmallPair99_Remain1_B ===
+CATEGORY: teammate-focus-pair-low
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 1 张。队友出小对子时，A 变体会抢，B 变体会让。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=5 teammateRemaining=1
+LAST: teammatePlay=9x2 teammateRemaining=1 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[12,13],[]]},{"history":[[24,25],[]]}],"responses":[[],[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T41_HighPairAA_Remain15_A ===
+CATEGORY: teammate-focus-pair-high
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 15 张。队友出高对子时，两种手牌都选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=1 teammateRemaining=15
+LAST: teammatePlay=Ax2 teammateRemaining=15 variant=A
+INPUT: {"requests":[{"history":[[44,45],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T42_HighPairAA_Remain15_B ===
+CATEGORY: teammate-focus-pair-high
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 15 张。队友出高对子时，两种手牌都选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=1 teammateRemaining=15
+LAST: teammatePlay=Ax2 teammateRemaining=15 variant=B
+INPUT: {"requests":[{"history":[[44,45],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T43_HighPairAA_Remain11_A ===
+CATEGORY: teammate-focus-pair-high
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 11 张。队友出高对子时，两种手牌都选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=2 teammateRemaining=11
+LAST: teammatePlay=Ax2 teammateRemaining=11 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[44,45],[]]}],"responses":[[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T44_HighPairAA_Remain11_B ===
+CATEGORY: teammate-focus-pair-high
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 11 张。队友出高对子时，两种手牌都选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=2 teammateRemaining=11
+LAST: teammatePlay=Ax2 teammateRemaining=11 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[44,45],[]]}],"responses":[[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T45_HighPairAA_Remain7_A ===
+CATEGORY: teammate-focus-pair-high
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 7 张。队友出高对子时，两种手牌都选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=3 teammateRemaining=7
+LAST: teammatePlay=Ax2 teammateRemaining=7 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[44,45],[]]}],"responses":[[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T46_HighPairAA_Remain7_B ===
+CATEGORY: teammate-focus-pair-high
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 7 张。队友出高对子时，两种手牌都选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=3 teammateRemaining=7
+LAST: teammatePlay=Ax2 teammateRemaining=7 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[44,45],[]]}],"responses":[[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T47_HighPairAA_Remain3_A ===
+CATEGORY: teammate-focus-pair-high
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 3 张。队友出高对子时，两种手牌都选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=4 teammateRemaining=3
+LAST: teammatePlay=Ax2 teammateRemaining=3 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[44,45],[]]}],"responses":[[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T48_HighPairAA_Remain3_B ===
+CATEGORY: teammate-focus-pair-high
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 3 张。队友出高对子时，两种手牌都选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=4 teammateRemaining=3
+LAST: teammatePlay=Ax2 teammateRemaining=3 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[44,45],[]]}],"responses":[[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T49_HighPairAA_Remain1_A ===
+CATEGORY: teammate-focus-pair-high
+HAND: 6x1 8x2 10x2 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 1 张。队友出高对子时，两种手牌都选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=5 teammateRemaining=1
+LAST: teammatePlay=Ax2 teammateRemaining=1 variant=A
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,32,33,36,37,40,41,44,45,48,49,52,53,20,21,12],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[12,13],[]]},{"history":[[44,45],[]]}],"responses":[[],[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+=== T50_HighPairAA_Remain1_B ===
+CATEGORY: teammate-focus-pair-high
+HAND: 7x1 10x4 Jx2 Qx2 Kx2 Ax2 2x2 jokerx1 JOKERx1
+EXPECT_NOTE: 队友剩余 1 张。队友出高对子时，两种手牌都选择让牌。
+DEBUG: role=farmer route=follow-teammate-focus historyDepth=5 teammateRemaining=1
+LAST: teammatePlay=Ax2 teammateRemaining=1 variant=B
+INPUT: {"requests":[{"history":[[0,1,2,3],[]],"publiccard":[4,5,6],"own":[28,29,30,31,32,33,36,37,40,41,44,45,48,49,52,53,16],"landlord":0,"pos":1,"finalbid":2},{"history":[[4,5,6,7],[]]},{"history":[[8,9,10,11],[]]},{"history":[[12,13],[]]},{"history":[[44,45],[]]}],"responses":[[],[],[],[]]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+
+================ 汇总 ================
+TOTAL: 76
+MATCHED: 76
+FAILED: 0
+CATEGORY cannot-beat: 4/4 matched
+CATEGORY free: 8/8 matched
+CATEGORY hard-control-restraint: 2/2 matched
+CATEGORY opponent-basic: 8/8 matched
+CATEGORY teammate-basic: 4/4 matched
+CATEGORY teammate-focus-pair-high: 10/10 matched
+CATEGORY teammate-focus-pair-low: 10/10 matched
+CATEGORY teammate-focus-single-high: 10/10 matched
+CATEGORY teammate-focus-single-low: 10/10 matched
+CATEGORY teammate-focus-single-mid: 10/10 matched
+
+失败用法建议：先看 CATEGORY、DEBUG 和 LAST，判断是期望写错、跟牌场景理解错，还是策略行为真的回归了。
