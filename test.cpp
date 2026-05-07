@@ -767,23 +767,239 @@ void outputPlay(const vector<Card> &cards)
 
 // [我们要自己实现的核心函数] 枚举当前局面下所有合法出牌，供策略层评估和比较；如果没有合法出牌则返回一个只包含 PASS 的列表
 // todo
-vector<CardCombo> enumAllValidPlays(const vector<Card> &hand, const CardCombo &lastCombo)
-{
+/* 
+实现逻辑：
+先扫描一遍当前手牌，记录每个level各有几张牌，可以快速筛选可能的牌型；
+然后定向枚举挑牌，比如单张、对子、三带一等等；每找到一种合法组合，就将其放入candidate中；
+接着把candidate传入构造函数CardCombo(start,end)中，得到comboType和comboLevel；
+最后判断这组candidate是否合法
+*/
+vector<CardCombo> enumAllValidPlays(const vector<Card> &hand, const CardCombo &lastCombo){
 	vector<CardCombo> validPlays; // 可能的出牌列表
-	if(lastCombo.comboType==CardComboType::ROCKET)	//上家出火箭，直接pass
+	validPlays.push_back(CardCombo());	// pass
+
+	// 上家出火箭，直接pass
+	if(lastCombo.comboType==CardComboType::ROCKET)	
 		return validPlays;
-	else if(lastCombo.comboType==CardComboType::PASS){	//上家过（要求在“我”上一次出牌后，其余两玩家都 PASS 才判定为 PASS）
-
-	}else{	//其他情况
-
+	
+	int counts[MAX_LEVEL+1]={0};	// 统计手牌中各个level的牌有多少张
+	vector<Card> cardsByLevel[MAX_LEVEL+1];
+	for(Card c:hand){
+		Level l=card2level(c);
+		counts[l]++;
+		cardsByLevel[l].push_back(c);
 	}
-}
 
-// [我们要自己实现的扩展函数] 当主体牌型确定后，为三带一、飞机带翼等牌型补全最合适的带牌。
-// todo
-CardCombo selectAttachment(const vector<Card> &, const CardCombo &mainCombo, CardComboType)
-{
-	return mainCombo;
+	set<string> uniqueFP;//！！！用于去重（同点数不同花色）！！！
+
+	// 检查手牌，并将合法组合加入合法出牌序列（独立于上面所说的实现逻辑！）
+	auto addPlay=[&](const vector<Card> candidates){
+		CardCombo choice(candidates.begin(),candidates.end());
+		// 上家未出牌，或自己的牌能大过上家，就将choice放入有效出牌序列中
+		if(lastCombo.comboType==CardComboType::PASS||lastCombo.canBeBeatenBy(choice)){
+			// 把“等级”&“点数”组合成指纹fp
+			string fp="";
+			for(auto pack:choice.packs){
+				fp+=std::to_string(pack.level)+"&"+std::to_string(pack.count);	// 这个count是“等级为level的牌的张数”
+			}
+
+			if(uniqueFP.insert(fp).second){	// set不允许存储重复元素，仅当fp是首次被检测才将其存入
+				//// if里的条件简析：
+				//// 调用uniqueFP.insert(fp)时，它在把元素塞进去的同时返回一个std::pair<iterator, bool>类型的结果（一个包含两个元素的键值对）
+				//// .first(一个iterator)是集合中实际存放这个fp的位置；
+				//// .second(bool)标志这次插入是否成功
+				validPlays.push_back(choice);
+			}
+		}
+	};
+
+	// 得到等级为l的前count张牌
+	auto getCards=[&](Level l,int count){
+		vector<Card> res;
+		for(int i=0;i<count;i++)res.push_back(cardsByLevel[l][i]);
+		return res;
+	};
+
+	// 当主体牌型确定后，为三带一、飞机带翼等牌型补全最合适的带牌
+	// curCombo为主牌，need为需要带几组副牌（主要用于飞机和航天飞机，航天飞机的副牌组数是主牌组数的两倍，因为只能是四带二/四带两对）
+	// type为带牌的种类（单张or对子），ex为被主牌占用的level（即副牌中不能出现的level种类）
+	// 内部使用引用变量，直接在函数内对可行牌组进行插入
+	auto selectAttachment=[&](vector<Card> curCombo,int need,int type,const set<Level>& ex){	
+		vector<vector<Card> > res;	// 记录可行结果
+		// 要在lambda内部调用自身，只能用self参数！！（因为在函数内部dfs自身仍未定义）
+		// startL为初始的牌的等级，remain为还需要的副牌的张数，path为暂存结果
+		auto dfs=[&](auto& self,int startL,int remain,vector<Card> path){
+            if(remain==0){
+                res.push_back(path);
+                return;
+            }
+            for(Level i=startL;i<=MAX_LEVEL;i++){
+				// 如果i不在ex（即主牌）中
+                if(ex.count(i)==0&&counts[i]>=type){
+                    vector<Card> nextPath=path;
+                    for(int j=0;j<type;j++)nextPath.push_back(cardsByLevel[i][j]);
+                    self(self,i+1,remain-1,nextPath);
+                }
+            }
+        };
+        dfs(dfs,0,need,curCombo);
+        for(auto& aRes:res)addPlay(aRes);	// 使用&可优化性能？
+	};
+
+	// 定向枚举
+	//// 炸弹+火箭
+	auto getBombAndRocket=[&](){
+		// bomb
+		for(Level i=0;i<level_joker;i++){
+			if(counts[i]==4)addPlay(getCards(i,4));
+		}
+
+		// rocket
+		if(counts[level_JOKER]==1&&counts[level_joker]==1){
+			vector<Card> rocket;
+			rocket.push_back(cardsByLevel[level_JOKER][0]);
+			rocket.push_back(cardsByLevel[level_joker][0]);
+			addPlay(rocket);
+		}
+	};
+
+	//// 单张
+	auto getSingle=[&](){
+		for(Level i=0;i<=MAX_LEVEL;i++){
+			if(counts[i]>=1)addPlay(getCards(i,1));
+		}
+	};
+
+	//// 对子
+	auto getPair=[&](){
+		for(Level i=0;i<level_joker;i++){
+			if(counts[i]>=2)addPlay(getCards(i,2));
+		}
+	};
+
+	//// 三/带一/对
+	//// with:0=带零，1=带一，2=带一对
+	auto getTriplet=[&](int with){
+		for(Level i=0;i<level_joker;i++){
+			if(counts[i]>=3){
+				vector<Card> body=getCards(i,3);
+				set<Level> ex={i};	//excluded-即带牌中不应出现的牌，也就是主牌的level
+				if (with==0) addPlay(body);
+                if (with==1) selectAttachment(body, 1, 1, ex);
+                if (with==2) selectAttachment(body, 1, 2, ex);
+			}
+		}
+	};
+
+	//// “连续序列”型；type：1=单顺，2=双顺，3=飞机，4=航天飞机，同时type也代表所属牌型的主牌中各个card的张数
+	//// 四种类型的主牌都不能有2(level<=MAX_STRAIGHT_LEVEL)
+	//// minLen、maxLen分别标识对应牌型的主牌level长度限制
+	auto getStraightAndPlane=[&](int minLen,int maxLen,int type){
+		for(int l=minLen;l<=maxLen;l++){
+			// 滑动窗口遍历，start标识窗口起点
+			for(Level start=0;start<=MAX_STRAIGHT_LEVEL-l+1;start++){
+				bool valid=true;
+				for(int k=0;k<l;k++){
+					// 判断起点是否有效
+					if(counts[start+k]<type){
+						valid=false;
+						break;
+					}
+				}
+				
+				if(valid){
+					vector<Card> body;
+					set<Level> ex;
+					// 如果连续l个点数的张数都达标，则分别调用getCards提取type张牌，加入body数组中
+					for(int k=0;k<l;k++){
+						vector<Card> cards=getCards(start+k,type);
+						body.insert(body.end(),cards.begin(),cards.end());
+						ex.insert(start+k);
+					}
+
+					// 单顺、双顺
+					if(type==1||type==2){
+						addPlay(body);
+					}
+
+					// 飞机
+					if(type==3){
+						addPlay(body);
+						selectAttachment(body,l,1,ex);
+						selectAttachment(body,l,2,ex);
+					}
+
+					// 航天飞机
+					if(type==4){
+						addPlay(body);
+						selectAttachment(body,l*2,1,ex);
+						selectAttachment(body,l*2,2,ex);
+					}
+				}
+			}
+		}
+	};
+
+	//// 四带二
+	auto getQuadruple=[&]{
+		for(Level i=0;i<level_joker;i++){
+			if(counts[i]==4){
+				vector<Card> body=getCards(i,4);
+				set<Level> ex={i};
+				addPlay(body);
+				selectAttachment(body,2,1,ex);
+				selectAttachment(body,2,2,ex);
+			}
+		}
+	};
+
+	// 调用lambda来枚举
+	getBombAndRocket();
+	
+	if(lastCombo.comboType==CardComboType::PASS){
+		getSingle();
+		getPair();
+		getTriplet(0);
+		getTriplet(1);
+		getTriplet(2);
+		getStraightAndPlane(5,12,1);	// 单顺，主牌种数介于5～12
+		getStraightAndPlane(3,10,2);	// 双顺，主牌的种数介于3～10（一个玩家最多只能有20张牌，也就是地主）
+		getStraightAndPlane(2,6,3);		// 飞机，主牌的种数介于2～6
+		getStraightAndPlane(2,5,4);		// 航天飞机
+		getQuadruple();
+	}else{
+		switch(lastCombo.comboType){
+			case CardComboType::SINGLE:		getSingle();break;
+
+			case CardComboType::PAIR:		getPair();break;
+
+			case CardComboType::TRIPLET:	getTriplet(0);break;
+			case CardComboType::TRIPLET1:	getTriplet(1);break;
+			case CardComboType::TRIPLET2:	getTriplet(2);break;
+
+			// 顺子类的，长度和上家一样
+            case CardComboType::STRAIGHT:    getStraightAndPlane(lastCombo.packs.size(), lastCombo.packs.size(), 1); break;
+            case CardComboType::STRAIGHT2:   getStraightAndPlane(lastCombo.packs.size(), lastCombo.packs.size(), 2); break;
+            
+            case CardComboType::PLANE:
+            case CardComboType::PLANE1:
+            case CardComboType::PLANE2: 
+            case CardComboType::SSHUTTLE:
+            case CardComboType::SSHUTTLE2:
+            case CardComboType::SSHUTTLE4:{
+				// 飞机长度
+				int seqLen=lastCombo.findMaxSeq();
+				getStraightAndPlane(seqLen, seqLen, 3);
+                getStraightAndPlane(seqLen, seqLen, 4);
+                break;
+			}
+
+			case CardComboType::QUADRUPLE2:
+            case CardComboType::QUADRUPLE4:  getQuadruple(); break;
+            default: break;
+		}
+	}
+	return validPlays;
 }
 
 // ==================================================
@@ -793,28 +1009,9 @@ CardCombo selectAttachment(const vector<Card> &, const CardCombo &mainCombo, Car
 // [我们要自己实现的核心函数] 把手牌拆成若干组合法牌型，供策略层评估“最少还要几手出完”。
 // 使用 MCTS，通过模拟来选取最优的若干组牌
 // todo
-vector<HandPlan> decomposeHand(const vector<Card> &hand, int topK = 1)// 返回最优的前 topK 组拆法
-{
-	HandPlan plan;
-	auto grouped = groupCardsByLevel(hand);
-	for (const auto &cardsAtLevel : grouped)
-	{
-		if (cardsAtLevel.empty())
-			continue;
-		if (cardsAtLevel.size() == 4)
-			plan.groups.emplace_back(cardsAtLevel.begin(), cardsAtLevel.end());
-		else if (cardsAtLevel.size() >= 3)
-			plan.groups.emplace_back(cardsAtLevel.begin(), cardsAtLevel.begin() + 3);
-		else if (cardsAtLevel.size() >= 2)
-			plan.groups.emplace_back(cardsAtLevel.begin(), cardsAtLevel.begin() + 2);
-		else
-			plan.groups.emplace_back(cardsAtLevel.begin(), cardsAtLevel.begin() + 1);
-	}
-	plan.handCount = static_cast<int>(plan.groups.size());
-	vector<HandPlan> plans;
-	if (topK > 0)
-		plans.push_back(plan);
-	return plans;
+// 返回最优的前 topK 组拆法
+vector<HandPlan> decomposeHand(const vector<Card> &hand, int topK = 1){
+	
 } 
 
 // [我们要自己实现的核心函数] 快速返回当前手牌出完最少还需要几手，供评估层频繁调用
