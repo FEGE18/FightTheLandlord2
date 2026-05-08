@@ -541,6 +541,39 @@ struct HandPlan
 	int handCount = 0;
 };
 
+//一次出牌的事件上下文
+struct PlayEvent
+{
+	//当前行动的玩家编号
+	int player = -1;
+	//当前玩家实际打出的牌
+	vector<Card> cards;
+	//当前玩家实际打出的牌型
+	CardCombo combo;
+	//当前玩家行动前，需要压过的牌
+	CardCombo requiredCombo;
+	//requiredCombo是谁出的
+	int requiredPlayer = -1;
+	//当前玩家是否选择PASS
+	bool isPass = false;
+};
+
+//一条PASS约束
+struct PassConstraint
+{
+	//选择PASS的玩家
+	int player = -1;
+	//他当时要压过的牌
+	CardCombo requirCombo;
+	//这牌是谁出的
+	int requirPlayer = -1;
+	
+	//约束强度，数值越小证据越强
+	//例如危险残局里的 PASS 可以更强，普通跟牌 PASS 可以更弱
+	double strength = 1.0;
+};
+
+
 /// 当前整局局面
 //这个结构表示的是，当前整盘游戏轮到我时的完整局面
 struct GameState
@@ -565,9 +598,20 @@ struct GameState
 	int cardRemaining[PLAYER_COUNT] = {17, 17, 17};
 	//每个人历史上出过什么
 	vector<vector<Card>> playHistory[PLAYER_COUNT];
+
+	//按时间顺序记录每一次出牌事件
+	vector<PlayEvent> playEvents;
+	//从PASS中提取的约束
+	vector<PassConstraint> passConstraints;
+
 	//记牌器基础数据
 	bool cardPlayed[54] = {};
 	short levelRemaining[MAX_LEVEL] = {};
+
+	//这张牌当前是否属于未知牌区
+	bool cardUnknown[54] = {};
+	//每个玩家当前确定还持有的明牌
+	vector<Card> konwCardOfPlayer[PLAYER_COUNT];
 
 	// [我们实现] 判断我是否为地主，供策略层快速区分角色使用。
 	bool isLandlord() const
@@ -600,6 +644,15 @@ struct GameState
 			total += count;
 		return total;
 	}
+};
+
+//一次可能的完整发牌结果
+struct InferredDeal
+{
+	//每个玩家在这个样本中的手牌
+	vector<Card> hands[PLAYER_COUNT];
+	//这个样本的可信权重
+	double weight = 1.0;
 };
 
 // ==================================================
@@ -642,11 +695,24 @@ vector<vector<Card>> groupCardsByLevel(const vector<Card> &hand)
 	return grouped;
 }
 
+void initRandomSeed()
+{
+	// time(nullptr) 提供秒级时间，clock() 提供当前进程运行时间。
+    // 两者异或后作为种子，避免每次进程启动都使用默认固定种子。
+	std::srand(static_cast<unsigned>(std::time(nullptr)) ^ static_cast<unsigned>(clock()));
+}
+
 
 // ==================================================
 // 单文件骨架：IO / 状态恢复
 // ==================================================
 
+void RebuildCard(GameState &state);
+void recordPlayEvent(GameState &state, int player, vector<Card> &playedCard);
+bool isSameSidePlayer(GameState &state, int palyer);
+bool canBeatComboFast(vector<Card> &hand, CardCombo &requiredCombo);
+bool canPlayerBeatInDeal(InferredDeal &deal, int player, CardCombo &requiredCombo);
+ 
 // [基于示例程序逻辑改造，建议优先保留] 读取 Botzone 输入并重建当前局面，返回本轮决策所需的完整状态。
 GameState readGameState()
 {
@@ -716,6 +782,11 @@ GameState readGameState()
 				playedCards.push_back(card);
 				state.cardPlayed[card] = true;
 			}
+
+			// 先记录事件，再更新桌面状态。
+			// 这样 event 里拿到的是“行动前”的 requiredCombo 和 requiredPlayer。
+			recordPlayEvent(state, player, playedCards);
+
 			state.playHistory[player].push_back(playedCards);
 			state.cardRemaining[player] -= static_cast<int>(playerAction.size());
 
@@ -756,6 +827,21 @@ GameState readGameState()
 				playedCards.push_back(card);
 				state.cardPlayed[card] = true;
 			}
+
+			// 记录我自己的历史行动。
+			// 这里同样要在更新任何会影响后续判断的状态之前记录。
+			recordPlayEvent(state, state.myPosition, playedCards);
+
+			// 如果我当时出了有效牌，这手牌也会成为后续玩家需要压过的桌面牌。
+			if (!playedCards.empty())
+			{
+				// 更新当前桌面最后一手有效牌。
+				state.lastValidCombo = CardCombo(playedCards.begin(), playedCards.end());
+
+				// 记录这手有效牌是我出的。
+				state.lastValidPlayer = state.myPosition;
+			}
+
 			state.myCards = removeCardsFromHand(state.myCards, playedCards);
 			state.playHistory[state.myPosition].push_back(playedCards);
 			state.cardRemaining[state.myPosition] -= static_cast<int>(playerAction.size());
@@ -771,8 +857,17 @@ GameState readGameState()
 		if (state.cardPlayed[card])
 			--state.levelRemaining[card2level(card)];
 	if (!state.isLandlord())
+	{
 		for (Card card : state.publicCards)
-			--state.levelRemaining[card2level(card)];
+		{
+			//只有还没被打出的地主明牌，才需要从未知牌里排除
+			if(!state.cardPlayed[card])
+				--state.levelRemaining[card2level(card)];
+		}
+	}
+
+	//在所有历史都重放完成之后，统一重建确定牌和未知牌区
+	RebuildCard(state);
 
 	return state;
 }
@@ -888,6 +983,444 @@ int getMinHandCount(const vector<Card> &hand)
 // ==================================================
 // 单文件骨架：评估层
 // ==================================================
+
+
+//根据一次PASS事件的上下文，决定它作为没有压制牌的证据有多强
+//越小说明证据越强,1.0说明几乎不做约束
+double getPassStrength(GameState &state,int player,CardCombo &requiredCombo,int requiredPlayer)
+{
+	//如果是自由派，PASS不会出现
+	if(requiredCombo.comboType==CardComboType::PASS || requiredPlayer<0)
+		return 1.0;
+
+	//如果和上一个出牌的人同一阵营，强度较弱
+	if(isSameSidePlayer(state,player) && isSameSidePlayer(state,requiredPlayer))
+		return 0.9;
+
+	//我是地主
+	if(state.isLandlord())
+	{
+		//快没牌了还PASS，大概率压不了
+		if(state.cardRemaining[player]<=3)
+			return 0.5;
+		//普通局面
+		return 0.7;
+	}
+
+	//我是农民
+	if(requiredPlayer==state.landlordPosition)
+	{
+		//地主快跑完了，农民压不了
+		if(state.cardRemaining[state.landlordPosition]<3)
+			return 0.3;
+
+		return 0.7;
+	}
+	//我是农民，出牌的压的是我的牌
+	return 0.9; 
+}
+//记录一次出牌事件
+void recordPlayEvent(GameState &state,int player,vector<Card> &playedCard)
+{
+	PlayEvent event;
+	//记录是谁在行动,出了什么牌
+	event.player = player;
+	event.cards = playedCard;
+
+	//记录当前玩家行动前桌面上需要压过的牌及是谁出的
+	event.requiredCombo = state.lastValidCombo;
+	event.requiredPlayer = state.lastValidPlayer;
+
+	//判断是否PASS
+	event.isPass = playedCard.empty();
+	//记录之前出的什么牌
+	if(event.isPass)
+		event.combo = CardCombo();
+	else
+		event.combo = CardCombo(playedCard.begin(), playedCard.end());
+
+	if(player != state.myPosition && event.isPass && event.requiredCombo.comboType != CardComboType::PASS && event.requiredPlayer >= 0)
+	{
+		//创建一条PASS约束
+		PassConstraint constraint;
+		//记录谁PASS
+		constraint.player = player;
+		constraint.requirCombo = event.requiredCombo;
+		constraint.requirPlayer = event.requiredPlayer;
+		constraint.strength = getPassStrength(state, player, event.requiredCombo, event.requiredPlayer);
+
+		//记录约束
+		state.passConstraints.push_back(constraint);
+	}
+	//按时间顺序保存事件
+	state.playEvents.push_back(event);
+}
+
+//根据当前已经恢复出来的局面，重建已知牌和未知牌区
+void RebuildCard(GameState &state)
+{
+	//先默认54张牌都属于未知牌
+	for (Card i = 0; i < 54;++i)
+		state.cardUnknown[i] = true;
+
+	//清空每个玩家的确定持牌记录
+	for (int i = 0; i < PLAYER_COUNT;++i)
+		state.konwCardOfPlayer[i].clear();
+
+	//我的手牌是确定信息
+	for(Card i:state.myCards)
+		state.cardUnknown[i] = false;
+
+	//已经打出去的牌也是确定信息
+	for (Card i = 0; i < 54;++i)
+	{
+		if(state.cardPlayed[i])
+			state.cardUnknown[i] = false;
+	}
+
+	//地主明牌
+	if(state.landlordPosition >=0&&state.landlordPosition!=state.myPosition)
+	{
+		for(Card i:state.publicCards)
+		{
+			if(!state.cardPlayed[i])
+			{
+				//如果地主没打出，这张牌属于地主
+				state.konwCardOfPlayer[state.landlordPosition].push_back(i);
+				//移出未知牌区
+				state.cardUnknown[i] = false;
+			}
+		}
+	}
+}
+
+//收集当前所有未知牌
+vector<Card> collectUnknowCard(GameState &state)
+{
+	//保存所有任然未知的具体牌
+	vector<Card> unknownCard;
+
+	for (Card i = 0; i < 54;++i)
+	{
+		if(state.cardUnknown[i])
+			unknownCard.push_back(i);
+	}
+
+	sortCards(unknownCard);
+
+	return unknownCard;
+}
+
+// 检查未知牌数量是否和玩家剩余手牌数一致
+bool checkUnknownCard(GameState &state)
+{
+	//收集所有未知牌
+	vector<Card> unknownCard = collectUnknowCard(state);
+
+	//统计其他玩家还剩多少张牌是无法确定的
+	int expectedUnknownCount = 0;
+
+	for (int i = 0; i < PLAYER_COUNT;++i)
+	{
+		//我的手牌已知，不属于未知牌
+		if(i==state.myPosition)
+		continue;
+		
+		//这个玩家剩余牌中的明牌
+		int knownCount = state.konwCardOfPlayer[i].size();
+
+		//剩下那部分才是未知牌
+		expectedUnknownCount += state.cardRemaining[i] - knownCount;
+	}
+	//如果数量一致，说明合理
+	return unknownCard.size() == expectedUnknownCount;
+}
+
+//构造一次随机补全的完整局面
+InferredDeal bulidOneRandomDeal(GameState &state)
+{
+	//创建一个样本
+	InferredDeal deal;
+
+	//我的手牌是确定的，直接复制进去
+	deal.hands[state.myPosition] = state.myCards;
+
+	//其他玩家的确定手牌也放进去
+	//地主未打出的底牌
+	for (int i = 0; i < PLAYER_COUNT;++i)
+	{
+		if(i==state.myPosition)
+			continue;
+		deal.hands[i] = state.konwCardOfPlayer[i];
+	}
+
+	//收集所有未知牌
+	vector<Card> unknownCard = collectUnknowCard(state);
+
+	//随机打乱未知牌
+	std::random_shuffle(unknownCard.begin(), unknownCard.end());
+
+	// 计算理论上需要分配出去的未知牌数量。
+	int totalNeedCount = 0;
+
+	// 遍历其他两个玩家，统计他们还缺多少张未知牌。
+	for (int player = 0; player < PLAYER_COUNT; ++player)
+	{
+    	// 我的手牌已经确定，不需要从未知牌中补。
+    	if (player == state.myPosition)
+        	continue;
+
+    	// 这个玩家需要补的未知牌数量 = 剩余牌数 - 已知确定牌数。
+    	totalNeedCount += state.cardRemaining[player] - static_cast<int>(deal.hands[player].size());
+	}
+
+	// 如果未知牌数量和需要补的数量不一致，说明状态恢复或未知牌重建有问题。
+	if (totalNeedCount != unknownCard.size())
+	{
+    	// 返回一个空权重样本，表示这次补全不可用。
+    	deal.weight = 0.0;
+    	return deal;
+	}
+
+	//当前已经发到unknownCards 的哪个位置
+	int cnt = 0;
+
+	//给其他玩家补足手牌
+	for (int i = 0; i < PLAYER_COUNT;++i)
+	{
+		if(i==state.myPosition)
+		continue;
+
+		//这个玩家要补多少张
+		int needCount = state.cardRemaining[i] - deal.hands[i].size();
+		//从未知牌中取给这个玩家
+		for (int j = 0; j < needCount;++j)
+		{
+			deal.hands[i].push_back(unknownCard[cnt]);
+			++cnt;
+		}
+
+		// 每个玩家手牌排序
+    	sortCards(deal.hands[i]);
+	}
+	//样本权重设为1
+	deal.weight = 1.0;
+
+	return deal;
+}
+
+// 检查一次随机补全样本的手牌张数是否正确。
+bool checkInferredDeal(GameState &state, InferredDeal &deal)
+{
+    // 如果样本本身已经标记为无效，直接返回 false。
+    if (deal.weight <= 0.0)
+        return false;
+
+    // 遍历三个玩家。
+    for (int player = 0; player < PLAYER_COUNT; ++player)
+    {
+        // 每个玩家样本手牌数量必须等于当前局面记录的剩余牌数。
+        if (static_cast<int>(deal.hands[player].size()) != state.cardRemaining[player])
+            return false;
+    }
+
+    // 所有玩家张数都对，说明这个样本在数量层面合法。
+    return true;
+}
+
+// 检查一次随机补全样本中是否存在重复牌。
+bool checkInferredDealNoDuplicate(InferredDeal &deal)
+{
+    // 标记每张牌是否已经在样本手牌中出现过。
+    bool seen[54] = {};
+
+    // 遍历三个玩家。
+    for (int player = 0; player < PLAYER_COUNT; ++player)
+    {
+        // 遍历这个玩家样本手牌里的每张牌。
+        for (Card card : deal.hands[player])
+        {
+            // 如果这张牌之前已经出现过，说明重复了。
+            if (seen[card])
+                return false;
+
+            // 标记这张牌已经出现。
+            seen[card] = true;
+        }
+    }
+
+    // 没有发现重复牌，说明样本在唯一性层面合法。
+    return true;
+}
+
+//判断在某个随机补全样本中，指定玩家是否有能力压过 requiredCombo
+bool canPlayerBeatInDeal(InferredDeal &deal,int player,CardCombo &requiredCombo)
+{
+	if(requiredCombo.comboType ==CardComboType::PASS)
+		return false;
+
+	//枚举这个玩家在样本手牌中所有能出的合法响应
+	vector<CardCombo> vaildPlays = enumAllValidPlays(deal.hands[player], requiredCombo);
+
+	for(CardCombo &play:vaildPlays)
+	{
+		if(play.comboType !=CardComboType::PASS && play.comboType !=CardComboType::INVALID)
+			return true;
+	}
+
+	return false;
+}
+
+//根据历史PASS约束，评估一个随机补全样本的可信度
+//如果某个玩家历史上 PASS 了，但这个样本里他其实能压过当时那手牌，就降低这个样本的权重
+double evaluateDealByPass(GameState &state,InferredDeal &deal)
+{
+	//初始权重为1，表示完全可信
+	double weight = 1.0;
+
+	//遍历所有从PASS中提取出来的约束
+	for(PassConstraint &constraint : state.passConstraints)
+	{
+		if(constraint.player<0 || constraint.player>=PLAYER_COUNT)
+			continue;
+		
+		if(canPlayerBeatInDeal(deal,constraint.player,constraint.requirCombo))
+		{
+			weight *= constraint.strength;
+		}
+	}
+	return weight;
+}
+
+//批量生成若干个随机补全样本
+//sampleCount 表示希望生成多少种可能局面
+vector<InferredDeal> buildRandomDeals(GameState &state, int sampleCount)
+{
+	//保存所有有效样本
+	vector<InferredDeal> deals;
+
+	for (int i = 0; i < sampleCount;++i)
+	{
+		//生成一个随机补全样本
+		InferredDeal deal = bulidOneRandomDeal(state);
+
+		//如果样本权重为0，说明失败，跳过
+		if(deal.weight<=0.0)
+		continue;
+
+		//根据历史PASS约束修正
+		deal.weight *= evaluateDealByPass(state, deal);
+
+		if(deal.weight<=0.0)
+		continue;
+
+		//如果样本手牌张数不对，排除
+		if(!checkInferredDeal(state,deal))
+		continue;
+
+		//如果有重复牌，排除
+		if(!checkInferredDealNoDuplicate(deal))
+			continue;
+
+		//保存有效样本
+		deals.push_back(deal);
+	}
+	return deals;
+}
+
+// 调试用：检查随机补全模块是否能生成合法样本。
+// 注意：这个函数不应该在 Botzone 正式输出前打印内容，否则会污染 JSON 输出。
+void debugRandomDeals(GameState &state)
+{
+    // 先检查确定未知牌数量是否一致。
+    bool unknownOk = checkUnknownCard(state);
+
+    // 生成 20 个随机补全样本。
+    vector<InferredDeal> deals = buildRandomDeals(state, 20);
+
+    // 输出调试信息到 cerr，不影响正常 JSON 输出。
+    std::cerr << "[debug] unknownOk=" << unknownOk
+              << " sampleCount=" << deals.size()
+              << " unknownCards=" << collectUnknowCard(state).size()
+              << std::endl;
+
+    // 最多打印前三个样本的三个玩家手牌数量，避免输出太多。
+    for (int i = 0; i < static_cast<int>(deals.size()) && i < 3; ++i)
+    {
+        std::cerr << "[debug] deal " << i
+                  << " p0=" << deals[i].hands[0].size()
+                  << " p1=" << deals[i].hands[1].size()
+                  << " p2=" << deals[i].hands[2].size()
+                  << std::endl;
+    }
+}
+// 调试用：检查 PASS 约束是否正确生成，并观察随机样本权重。
+// 注意：正式 Botzone 输出前不要调用，避免调试信息干扰。
+void debugPassConstraints(GameState &state)
+{
+    // 输出历史事件数量和 PASS 约束数量。
+    std::cerr << "[debug-pass] events=" << state.playEvents.size()
+              << " constraints=" << state.passConstraints.size()
+              << std::endl;
+
+    // 生成一批样本，观察有多少样本被 PASS 约束降权。
+    vector<InferredDeal> deals = buildRandomDeals(state, 50);
+
+    int penalizedCount = 0;
+    double minWeight = deals.empty() ? 0.0 : deals[0].weight;
+    double maxWeight = deals.empty() ? 0.0 : deals[0].weight;
+    double totalWeight = 0.0;
+
+    for (InferredDeal &deal : deals)
+    {
+        // 权重小于 1，说明至少触发过一次 PASS 降权。
+        if (deal.weight < 1.0)
+            ++penalizedCount;
+
+        if (deal.weight < minWeight)
+            minWeight = deal.weight;
+
+        if (deal.weight > maxWeight)
+            maxWeight = deal.weight;
+
+        totalWeight += deal.weight;
+    }
+
+    // 打印前几条 PASS 约束，避免输出太多。
+    for (int i = 0; i < static_cast<int>(state.passConstraints.size()) && i < 8; ++i)
+    {
+        PassConstraint &constraint = state.passConstraints[i];
+        int matchedDeals = 0;
+
+        // 统计这条约束在多少个样本中被触发。
+        // 如果样本中该玩家能压过当时那手牌，却历史上选择 PASS，这个样本就会被降权。
+        for (InferredDeal &deal : deals)
+        {
+            if (canPlayerBeatInDeal(deal, constraint.player, constraint.requirCombo))
+                ++matchedDeals;
+        }
+
+        std::cerr << "[debug-pass] constraint " << i
+                  << " player=" << constraint.player
+                  << " requiredPlayer=" << constraint.requirPlayer
+                  << " requiredType=" << cardComboStrings[static_cast<int>(constraint.requirCombo.comboType)]
+                  << " requiredLevel=" << constraint.requirCombo.comboLevel
+                  << " requiredSize=" << constraint.requirCombo.cards.size()
+                  << " strength=" << constraint.strength
+                  << " matchedDeals=" << matchedDeals
+                  << std::endl;
+    }
+
+    double avgWeight = deals.empty() ? 0.0 : totalWeight / deals.size();
+
+    std::cerr << "[debug-pass] deals=" << deals.size()
+              << " penalized=" << penalizedCount
+              << " minWeight=" << minWeight
+              << " maxWeight=" << maxWeight
+              << " avgWeight=" << avgWeight
+              << std::endl;
+}
+
 
 //判断指定玩家是否和我属于同一阵营
 bool isSameSidePlayer(GameState &state, int palyer)
@@ -1264,79 +1797,68 @@ int decideBid(vector<Card> &hand, vector<int> &bidHistory)
 	return targetBid;
 }
 
-
-// [我们要自己实现的核心函数] 在所有合法出牌中选出当前最优的一手，是后续策略升级的主入口。
-//依赖于evaluatePlayGain
-CardCombo decidePlay(GameState &state, vector<CardCombo> &validPlays)
+//带分数的候选出牌
+struct ScoredPlay
 {
-	//如果没有任何合法候选，返回PASS
-	if(validPlays.empty())
-		return CardCombo();
+	//候选出牌本身
+	CardCombo play;
+	//这手牌当前的启发式评分
+	double score = 0;
+	//在随机补全样本中的平均评估分
+	double sampleScore = 0;
+};
 
-	//第一优先级：如果能直接出完牌，就立刻出
-	for(CardCombo &play:validPlays)
-	{
-		//直接出完意味着本方获胜不需要考虑
-		if(isWinningPlay(state,play))
-			return play;
-	}
 
-	//判断当前是不是自由出牌
+//评估一手候选牌在当前真实局面下的启发式分数
+double evaluatePlayHScore(GameState &state ,CardCombo &play)
+{
+	// 判断当前是不是自由出牌
 	bool freeTurn = state.lastValidCombo.comboType == CardComboType::PASS;
-	//判断当前是不是危险局面
+
+	// 判断当前是不是危险局面
 	bool dangerous = isDangerousSituation(state);
-	//判断当前需要压的牌是不是队友出的
+
+	// 判断当前需要压的牌是不是队友出的
 	bool followingTeammate = !freeTurn && state.lastValidPlayer >= 0 && isSameSidePlayer(state, state.lastValidPlayer);
-	// 当前需要压的牌是不是对手出的。
-	bool followingOpponent =!freeTurn &&state.lastValidPlayer >= 0 &&!isSameSidePlayer(state, state.lastValidPlayer);
-	// 当前出牌者是不是危险对手，只有“对手出的牌”并且“这个对手只剩 1~2 张”时，才是必须积极压制的局面。
-	bool followingDangerousOpponent =followingOpponent && state.cardRemaining[state.lastValidPlayer] <= 2;
-	//看是否要主动出击
+
+	// 判断当前需要压的牌是不是对手出的
+	bool followingOpponent = !freeTurn && state.lastValidPlayer >= 0 && !isSameSidePlayer(state, state.lastValidPlayer);
+
+	// 判断当前是否是在压危险对手
+	bool followingDangerousOpponent = followingOpponent && state.cardRemaining[state.lastValidPlayer] <= 2;
+
+	// 判断当前是否应该主动争夺牌权
 	bool fightForControl = shouldFightControl(state);
 
-	//===评分系统
-	//初始化为PASS
-	CardCombo bestplay;
-	//当前最高分设为一个很小的数
-	double bestScore = -1e18;
+	//复用已有的基础收益评分,只看出牌后，我的手牌有没有变好
+	double score = evaluatePlayGain(state.myCards, play, state);
 
-	//对每个候选牌进行评估打分
-	for(CardCombo &play:validPlays)
+	//压队友的情况
+	if(followingTeammate)
 	{
-		//自由出牌时不能PASS
-		if(freeTurn && play.comboType == CardComboType::PASS)
-			continue;
-
-		//基础分来自评估层，只评价这手牌本身的收益
-		double score = evaluatePlayGain(state.myCards, play, state);
-
-		//如果当前压的是队友的牌，正常不应该抢
-		if(followingTeammate)
+		if(play.comboType == CardComboType::PASS)
+			//让队友继续控牌
+			score += 1.0;
+		else
 		{
-			//PASS是好的选择
-			if(play.comboType==CardComboType::PASS)
-				score += 1.0;
+			//普通局面压队友扣分
+			score -= 1.0;
+			
+			//不应该用炸弹
+			if(isHardControlPlay(play) && !dangerous)
+				score -= 10.0;
 
-			//非危险局面压队友
-			else
+			//用 2 或王压队友也比较亏，普通局面要扣分
+			for(Card card:play.cards)
 			{
-				score -= 1.0;
-				
-				//如果用炸弹或火箭压队友，除非危险局面，否则非常不划算
-				if(isHardControlPlay(play) && !dangerous)
-					score -= 10.0;
-				
-				//如果用2或王压队友，普通局面扣分
-				for(Card card:play.cards)
-				{
-					Level level = card2level(card);
-					if(level>=12&&!dangerous)
-						score -= 2.0;
-				}
+				Level level = card2level(card);
+				if(level>=12 && !dangerous)
+					score -= 2.0;
 			}
 		}
+	}
 
-		// 如果当前要压的是危险对手出的牌，PASS 风险极高。
+	// 如果当前要压的是危险对手出的牌，PASS 风险极高。
 		if (followingDangerousOpponent)
 		{
     		// 不压危险对手，可能直接让对方继续走完，重罚。
@@ -1418,6 +1940,15 @@ CardCombo decidePlay(GameState &state, vector<CardCombo> &validPlays)
     		if (play.cards.size() >= 5)
         		score += 2.0;
 
+			//自由出牌时，同牌型更倾向先走低牌
+			//这样可以避免 333 和 AAA 启发式打平后，被样本分推去先出 AAA
+			if(play.comboType == CardComboType::SINGLE ||
+			   play.comboType == CardComboType::PAIR ||
+			   play.comboType == CardComboType::TRIPLET)
+			{
+				score -= play.comboLevel * 0.08;
+			}
+
     		// 三带、顺子、连对、飞机等组合牌优先级更高。
     		if (play.comboType == CardComboType::STRAIGHT ||
         		play.comboType == CardComboType::STRAIGHT2 ||
@@ -1456,11 +1987,251 @@ CardCombo decidePlay(GameState &state, vector<CardCombo> &validPlays)
 			}
 		}
 
-		// 如果当前候选分数更高，就更新最优选择
-		if(score > bestScore)
+
+	return score;
+}
+
+//在一个随机补全样本中，评估我打出Play之后的局面收益
+double evaluatePlayInDeal(GameState &state,InferredDeal &deal,CardCombo &play)
+{
+	//PASS无收益
+	if(play.comboType == CardComboType::PASS)
+		return 0;
+
+	//取出我的手牌
+	vector<Card> myHandBefore = deal.hands[state.myPosition];
+
+	//假设打出play，出牌后的手牌
+	vector<Card> myHandAfter = removeCardsFromHand(myHandBefore, play.cards);
+
+	//如果出完，直接出
+	if(myHandAfter.empty())
+		return 10000;
+	
+	//比较手数
+	int beforeCount = getMinHandCount(myHandBefore);
+	int afterCount = getMinHandCount(myHandAfter);
+
+	//样本收益
+	double score = 0;
+
+	//减少出手数，加分
+	score += (beforeCount - afterCount) * 5.0;
+	//出得多，接近出完
+	score += play.cards.size() * 0.3;
+
+	//===接入随机补全
+	int nextPlayer = (state.myPosition + 1) % PLAYER_COUNT;
+	bool nextPlaySameSide = isSameSidePlayer(state, nextPlayer);
+
+	if(canPlayerBeatInDeal(deal,nextPlayer,play))
+	{
+		//下家是对手
+		if(!nextPlaySameSide)
 		{
-			bestScore = score;
-			bestplay = play;
+			//普通情况
+			score -= 4.0;
+
+			//如果只剩3张牌，风险大
+			if(state.cardRemaining[nextPlayer]<=3)
+				score -= 8.0;
+		}
+		//下家是队友
+		else
+		{
+			score -= 1.0;
+		}
+	}
+	else
+	{
+		//下家压不了我
+		score += 2.0;
+	}
+
+	return score;
+}
+
+//用一批随机补全样本，评估某一候选牌的平均局面价值
+double evaluatePlayBySamples(GameState &state,vector<InferredDeal> &deals,CardCombo &play)
+{
+	if(deals.empty())
+		return 0;
+
+	//加权总分
+	double totalScore = 0;
+	//样本总权重
+	double totalWeight = 0;
+
+	for(InferredDeal &deal:deals)
+	{
+		if(deal.weight<=0)
+		continue;
+
+		//用样本评估候选牌
+		double oneScore = evaluatePlayInDeal(state, deal, play);
+
+		//按样本可信度加权
+		totalScore += oneScore * deal.weight;
+		//累计样本加权
+		totalWeight += deal.weight;
+	}
+	if(totalWeight<=0)
+		return 0;
+
+	return totalScore / totalWeight;
+}
+
+//从所有合法出牌中选出启发式评分最高的前 topK个候选
+vector<ScoredPlay> selectTopPlays(GameState &state,vector<CardCombo> &validPlays,int topK)
+{
+	//保存所有带分数的候选
+	vector<ScoredPlay> scoredPlays;
+
+	//判断当前是不是自由出牌
+	bool freeTurn = state.lastValidCombo.comboType == CardComboType::PASS;
+
+	for(CardCombo &play : validPlays)
+	{
+		if(freeTurn && play.comboType ==CardComboType::PASS)
+			continue;
+
+		//创建一条带分数的候选
+		ScoredPlay scored;
+		scored.play = play;
+		//计算这手牌的启发式评分
+		scored.score = evaluatePlayHScore(state, play);
+
+		//放入候选
+		scoredPlays.push_back(scored);
+	}
+
+	//按分数排序
+	std::sort(scoredPlays.begin(), scoredPlays.end(),
+			  [](ScoredPlay &a, ScoredPlay &b)
+			  {
+				  return a.score > b.score;
+			  });
+	
+	//只保留前topK个
+	if(topK>0 && scoredPlays.size()>topK)
+		scoredPlays.resize(topK);
+
+	return scoredPlays;
+}
+
+// 调试用：输出 TopK 候选的启发式分、样本分和最终融合分。
+// 注意：这个函数只写 cerr，不应该在 Botzone 正式输出前默认调用。
+void debugTopPlays(GameState &state,vector<CardCombo> &validPlays)
+{
+	// 先用和 decidePlay 一致的方式选出 TopK。
+	vector<ScoredPlay> topPlays = selectTopPlays(state, validPlays, 6);
+
+	// 只生成一次随机补全样本，保证每个候选使用同一批样本比较。
+	vector<InferredDeal> deals = buildRandomDeals(state, 20);
+
+	std::cerr << "[debug-top] topCount=" << topPlays.size()
+			  << " dealCount=" << deals.size()
+			  << " freeTurn=" << (state.lastValidCombo.comboType == CardComboType::PASS)
+			  << " dangerous=" << isDangerousSituation(state)
+			  << std::endl;
+
+	double bestScore = -1e18;
+	int bestIndex = -1;
+
+	for(int i = 0; i < static_cast<int>(topPlays.size()); ++i)
+	{
+		ScoredPlay &scored = topPlays[i];
+
+		// 计算样本平均分。
+		scored.sampleScore = evaluatePlayBySamples(state, deals, scored.play);
+
+		// 使用和 decidePlay 一致的样本权重规则。
+		double sampleWeight = 0.4;
+		if(state.lastValidCombo.comboType == CardComboType::PASS)
+			sampleWeight = 0.1;
+		if(isHardControlPlay(scored.play) && !isDangerousSituation(state))
+			sampleWeight = 0;
+
+		// 融合成最终分。
+		double finalScore = scored.score + scored.sampleScore * sampleWeight;
+
+		if(finalScore > bestScore)
+		{
+			bestScore = finalScore;
+			bestIndex = i;
+		}
+
+		std::cerr << "[debug-top] index=" << i
+				  << " type=" << static_cast<int>(scored.play.comboType)
+				  << " level=" << scored.play.comboLevel
+				  << " size=" << scored.play.cards.size()
+				  << " cards=";
+
+		for(Card card : scored.play.cards)
+			std::cerr << card << ",";
+
+		std::cerr << " heuristic=" << scored.score
+				  << " sample=" << scored.sampleScore
+				  << " sampleWeight=" << sampleWeight
+				  << " final=" << finalScore
+				  << std::endl;
+	}
+
+	std::cerr << "[debug-top] bestIndex=" << bestIndex
+			  << " bestScore=" << bestScore
+			  << std::endl;
+}
+
+// [我们要自己实现的核心函数] 在所有合法出牌中选出当前最优的一手，是后续策略升级的主入口。
+//依赖于evaluatePlayGain
+CardCombo decidePlay(GameState &state, vector<CardCombo> &validPlays)
+{
+	//如果没有任何合法候选，返回PASS
+	if(validPlays.empty())
+		return CardCombo();
+
+	
+	//===评分系统
+	//初始化为PASS
+	CardCombo bestplay;
+	//当前最高分设为一个很小的数
+	double bestScore = -1e18;
+
+	//第一优先级：如果能直接出完牌，就立刻出
+	for(CardCombo &play : validPlays)
+	{
+		if(isWinningPlay(state,play))
+			return play;
+	}
+
+	//先用启发式评分选出前几个候选，后续 PIMC 只在这些候选里模拟
+	vector<ScoredPlay> topPlays = selectTopPlays(state, validPlays, 6);
+
+	//只生成一次随机补全样本
+	vector<InferredDeal> deals = buildRandomDeals(state, 20);
+	//为每个TopK候选计算样本平均分
+	for(ScoredPlay &scored:topPlays)
+	{
+		scored.sampleScore = evaluatePlayBySamples(state, deals, scored.play);
+	}
+
+
+	//选启发式评分最高的一手
+	for(ScoredPlay &scored:topPlays)
+	{
+		//设定随机样本的权重
+		double sampleWeight = 0.4;
+		if(state.lastValidCombo.comboType == CardComboType::PASS)
+			sampleWeight = 0.1;
+		if(isHardControlPlay(scored.play) && !isDangerousSituation(state))
+			sampleWeight = 0;
+
+		//启发式评分和样本评分
+		double finalScore = scored.score + scored.sampleScore * sampleWeight;
+		if(finalScore > bestScore)
+		{
+			bestScore = finalScore;
+			bestplay = scored.play;
 		}
 	}
 
@@ -1478,6 +2249,9 @@ CardCombo decidePlay(GameState &state, vector<CardCombo> &validPlays)
 // [我们实现的程序入口] 负责串联“读状态 -> 调策略 -> 输出结果”，尽量不承载具体业务细节。
 int main()
 {
+	//初始化随机数
+	initRandomSeed();
+
 	GameState state = readGameState();
 
 	if (state.stage == Stage::BIDDING)

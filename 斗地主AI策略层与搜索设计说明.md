@@ -162,32 +162,233 @@ decidePlay(state, validPlays)
 
 候选裁剪的目的不是最终决策，而是控制 1 秒时间限制。
 
-### 4.3 PIMC 随机补全
+### 4.3 当前已落地：确定推牌与随机补全 V1
 
-根据当前 `GameState` 可以知道：
+当前已经先完成了 PIMC 的地基部分：不做概率猜测，只从 Botzone 每次输入中恢复确定信息，并生成合法的随机补全样本。
 
-- 我的手牌。
-- 地主明牌。
-- 已经打出的牌。
-- 每个玩家剩余牌数。
-- 未知牌集合。
+当前 `GameState` 中与推牌相关的确定信息：
 
-随机补全步骤：
+- `cardPlayed[54]`：哪些具体牌已经被打出。
+- `levelRemaining[MAX_LEVEL]`：未知区域中每个点数还剩多少张。
+- `cardUnknown[54]`：哪些具体牌仍属于未知牌区。
+- `konwCardOfPlayer[PLAYER_COUNT]`：当前代码中的字段名，表示确定还在某个玩家手里的明牌，主要是地主未出的底牌明牌。
 
-```text
-1. 构造 unknownCards
-2. 打乱 unknownCards
-3. 按 cardRemaining 分给其他两个玩家
-4. 得到一个完整可见局面
+当前已经加入的样本结构：
+
+```cpp
+struct InferredDeal
+{
+    vector<Card> hands[PLAYER_COUNT];
+    double weight = 1.0;
+};
 ```
 
-需要注意：
+当前已经落地的函数：
+
+- `RebuildCard(state)`：重建 `cardUnknown` 和确定明牌归属。
+- `collectUnknowCard(state)`：收集所有未知具体牌。
+- `checkUnknownCard(state)`：检查未知牌数量和剩余牌数是否一致。
+- `bulidOneRandomDeal(state)`：生成一次随机补全样本。
+- `checkInferredDeal(state, deal)`：检查样本中每个玩家手牌张数是否正确。
+- `checkInferredDealNoDuplicate(deal)`：检查样本中是否有重复牌。
+- `buildRandomDeals(state, sampleCount)`：批量生成合法样本。
+- `initRandomSeed()`：初始化随机种子，避免 Botzone 每次重启后随机序列固定。
+- `debugRandomDeals(state)`：本地调试用，不应在正式输出前调用。
+
+当前 V1 保证：
+
+```text
+我的手牌：真实确定，直接复制
+已经打出的牌：不进入未知牌区
+地主未出的明牌：锁定给地主
+其他未知牌：按剩余张数随机分给其他玩家
+```
+
+已经用 `模拟发牌测试记录.txt` 做过外部探针测试：
+
+```text
+unknownOk=1
+validDeals=200
+uniqueDeals=200
+countsOk=1
+duplicateOk=1
+myCardsPreserved=1
+knownCardsPreserved=1
+```
+
+复测后跨进程随机性也已恢复：
+
+```text
+UNIQUE_RUN_OUTPUTS=3
+```
+
+这说明当前随机补全模块在数量、唯一性、地主明牌锁定、随机多样性上已经可作为 V2 搜索地基。
+
+### 4.4 后续设计：历史事件与 PASS 约束推断
+
+下一阶段不要直接猜“某玩家有没有某张牌”，而是记录他在什么上下文中选择了什么动作。
+
+建议新增历史事件结构：
+
+```cpp
+struct PlayEvent
+{
+    int player;
+    vector<Card> cards;
+    CardCombo combo;
+
+    CardCombo requiredCombo;
+    int requiredPlayer;
+
+    bool isPass;
+};
+```
+
+含义：
+
+- `player`：谁行动。
+- `cards` / `combo`：他实际出了什么。
+- `requiredCombo`：他行动前桌面上需要压过的牌。
+- `requiredPlayer`：这手牌是谁出的。
+- `isPass`：他是否选择 PASS。
+
+这样可以区分：
+
+```text
+面对地主的单 A 选择 PASS
+面对队友的单 A 选择 PASS
+面对危险残局中的单 A 选择 PASS
+```
+
+这三种 PASS 的推断强度完全不同。
+
+在 `PlayEvent` 之上，再建立软约束：
+
+```cpp
+struct PassConstraint
+{
+    int player;
+    CardCombo requiredCombo;
+    int requiredPlayer;
+    double strength;
+};
+```
+
+核心思想：
+
+```text
+某玩家面对 requiredCombo 选择 PASS
+不代表他绝对没有某张牌
+只代表“他拥有能压过 requiredCombo 的牌型”的概率下降
+```
+
+后续随机补全时，对每个样本做权重修正：
+
+```text
+如果样本中该玩家能压过 requiredCombo，但历史里他 PASS 了：
+    样本权重 *= 惩罚系数
+```
+
+建议 V1 惩罚系数：
+
+```text
+普通对手 PASS：0.7
+危险残局 PASS：0.3
+队友牌后 PASS：0.95
+炸弹/火箭可压但没压：0.85，除非危险残局
+```
+
+这种方式比直接删牌安全，因为斗地主里“有牌但不压”很常见。
+
+### 4.5 不同牌型的推断方式
+
+历史推断不应直接落到单张牌，而应落到“能否压过某个牌型”。
+
+单张：
+
+```text
+PASS 单 A：
+降低拥有 单 2 / 小王 / 大王 的样本权重
+轻微降低拥有炸弹或火箭的样本权重
+```
+
+对子：
+
+```text
+PASS 对 K：
+降低拥有 AA / 22 的样本权重
+不是降低单张 A 或单张 2
+```
+
+三条、三带一、三带二：
+
+```text
+PASS JJJ 或 JJJ+x：
+主要降低拥有更大三张主体的样本权重
+V1 先不细推带牌是否足够
+```
+
+顺子：
+
+```text
+PASS 34567：
+降低拥有更大同长度顺子窗口的样本权重
+不能拆成“他没有 4/5/6/7/8”
+```
+
+连对：
+
+```text
+PASS 334455：
+降低拥有更大同长度连对窗口的样本权重
+不能直接推断某个单独对子不存在
+```
+
+飞机：
+
+```text
+PASS 333444 + 带牌：
+V1 只推断更大连续三张主体
+带牌约束后续再补
+```
+
+炸弹：
+
+```text
+PASS 9999：
+降低拥有更大炸弹或火箭的样本权重
+但除非是危险残局，不应绝对排除
+```
+
+最终实现上，最稳的判断不是手写每种缺牌规则，而是复用合法出牌枚举：
+
+```text
+给定某个样本中的 player 手牌
+调用 enumAllValidPlays(sampleHand, requiredCombo)
+如果存在非 PASS 候选，说明这个样本中他当时“能压”
+再结合他历史上 PASS 的事实，对样本降权
+```
+
+### 4.6 PIMC 随机补全
+
+后续 PIMC 应建立在当前 V1 随机补全之上。
+
+基础流程：
+
+```text
+1. 用 buildRandomDeals 生成若干合法样本
+2. 根据 PassConstraint 对样本加权或过滤
+3. 对每个候选动作，在多个样本中做 rollout
+4. 根据加权胜率选择动作
+```
+
+需要继续注意：
 
 - 地主视角：两个农民的手牌未知。
 - 农民视角：地主和队友手牌都未知，但队友目标和自己一致。
 - 已经打出的牌、自己的牌、地主明牌不能进入未知集合。
 
-### 4.4 启发式 rollout
+### 4.7 启发式 rollout
 
 每次补全后，对候选动作做快速模拟：
 
