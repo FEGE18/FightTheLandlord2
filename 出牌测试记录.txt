@@ -1,9 +1,10 @@
+整理说明：本文件已清理旧的历史记录，仅保留整理后的当前有效回归结果。
+整理说明：下面这一轮将作为当前版本“随机补全样本接入出牌策略”后的最新一致记录。
 
 
-================ 出牌回归测试 76 组 2026-05-03 15:29:26 ================
-正式回归：新增独立出牌测试脚本，沿用 EXPECTED / OUTPUT / MATCH 记录格式。
-正式回归：本轮脚本已支持 CategoryFilter 和 CaseLimit，不再锁死为固定 50 组。
-正式回归：已修复 PASS 场景与单元素数组期望值的 JSON 序列化问题。
+================ 出牌回归测试 76 组 2026-05-08 19:11:38 ================
+整理版保留记录：删除旧历史后重新生成当前有效回归。
+检查目标：生成一份与当前代码一致、结构干净的出牌测试记录。
 用途：固定出牌行为，辅助调参；MATCH 只表示符合当前设计预期，不表示策略最优。
 样例结构：当前按筛选后实际运行 76 组，可通过 CategoryFilter / CaseLimit 调整。
 CATEGORY_FILTER: ALL
@@ -18,8 +19,8 @@ DEBUG: role=landlord route=free public=Ax3
 LAST: history0=PASS history1=PASS
 INPUT: {"requests":[{"history":[[],[]],"publiccard":[44,45,46],"own":[0,1,2,8,9,16,17,24,32,40,48,52,4,12,20,28,36],"landlord":0,"pos":0,"finalbid":3}],"responses":[]}
 EXPECTED: {"response":[0,1,2]}
-OUTPUT: {"response":[0,1,2]}
-MATCH: YES
+OUTPUT: {"response":[44,45,46]}
+MATCH: NO
 
 === P02_FreeLandlord_B ===
 CATEGORY: free
@@ -29,8 +30,8 @@ DEBUG: role=landlord route=free public=4x1 Ax2
 LAST: history0=PASS history1=PASS
 INPUT: {"requests":[{"history":[[],[]],"publiccard":[44,45,4],"own":[0,1,8,9,16,17,24,25,32,33,40,41,48,49,52,12,20],"landlord":0,"pos":0,"finalbid":2}],"responses":[]}
 EXPECTED: {"response":[0,1]}
-OUTPUT: {"response":[0,1]}
-MATCH: YES
+OUTPUT: {"response":[44,45]}
+MATCH: NO
 
 === P03_FreeWithBomb_A ===
 CATEGORY: free
@@ -62,8 +63,8 @@ DEBUG: role=landlord route=free public=4x2 JOKERx1
 LAST: history0=PASS history1=PASS
 INPUT: {"requests":[{"history":[[],[]],"publiccard":[53,4,5],"own":[52,40,41,8,9,16,17,24,25,32,33,44,45,48,49,12,20],"landlord":0,"pos":0,"finalbid":3}],"responses":[]}
 EXPECTED: {"response":[4,5]}
-OUTPUT: {"response":[4,5]}
-MATCH: YES
+OUTPUT: {"response":[44,45]}
+MATCH: NO
 
 === P06_FreeWithRocket_B ===
 CATEGORY: free
@@ -73,8 +74,8 @@ DEBUG: role=landlord route=free public=4x2 jokerx1
 LAST: history0=PASS history1=PASS
 INPUT: {"requests":[{"history":[[],[]],"publiccard":[52,4,5],"own":[53,40,41,8,9,16,17,24,25,32,33,44,45,48,49,12,20],"landlord":0,"pos":0,"finalbid":3}],"responses":[]}
 EXPECTED: {"response":[4,5]}
-OUTPUT: {"response":[4,5]}
-MATCH: YES
+OUTPUT: {"response":[44,45]}
+MATCH: NO
 
 === P07_FollowTeammateSingle_A ===
 CATEGORY: teammate-basic
@@ -260,8 +261,8 @@ DEBUG: role=farmer route=follow-opponent public=4x3
 LAST: history0=PASS history1=Ax2
 INPUT: {"requests":[{"history":[[],[44,45]],"publiccard":[4,5,6],"own":[0,1,2,3,8,12,16,20,24,28,32,36,40,48,52,9,13],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
 EXPECTED: {"response":[]}
-OUTPUT: {"response":[]}
-MATCH: YES
+OUTPUT: {"response":[0,1,2,3]}
+MATCH: NO
 
 === P24_BombOnlyVsTripleA ===
 CATEGORY: hard-control-restraint
@@ -271,8 +272,8 @@ DEBUG: role=farmer route=follow-opponent public=4x3
 LAST: history0=PASS history1=Ax3
 INPUT: {"requests":[{"history":[[],[44,45,46]],"publiccard":[4,5,6],"own":[0,1,2,3,8,12,16,20,24,28,32,36,40,48,52,9,13],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
 EXPECTED: {"response":[]}
-OUTPUT: {"response":[]}
-MATCH: YES
+OUTPUT: {"response":[0,1,2,3]}
+MATCH: NO
 
 === P25_FreeFarmer_A ===
 CATEGORY: free
@@ -282,8 +283,8 @@ DEBUG: role=farmer route=free public=4x3
 LAST: history0=PASS history1=PASS
 INPUT: {"requests":[{"history":[[],[]],"publiccard":[4,5,6],"own":[44,45,48,52,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
 EXPECTED: {"response":[8,9]}
-OUTPUT: {"response":[8,9]}
-MATCH: YES
+OUTPUT: {"response":[44,45]}
+MATCH: NO
 
 === P26_FreeFarmer_B ===
 CATEGORY: free
@@ -848,11 +849,11 @@ MATCH: YES
 
 ================ 汇总 ================
 TOTAL: 76
-MATCHED: 76
-FAILED: 0
+MATCHED: 69
+FAILED: 7
 CATEGORY cannot-beat: 4/4 matched
-CATEGORY free: 8/8 matched
-CATEGORY hard-control-restraint: 2/2 matched
+CATEGORY free: 3/8 matched
+CATEGORY hard-control-restraint: 0/2 matched
 CATEGORY opponent-basic: 8/8 matched
 CATEGORY teammate-basic: 4/4 matched
 CATEGORY teammate-focus-pair-high: 10/10 matched
@@ -860,5 +861,33 @@ CATEGORY teammate-focus-pair-low: 10/10 matched
 CATEGORY teammate-focus-single-high: 10/10 matched
 CATEGORY teammate-focus-single-low: 10/10 matched
 CATEGORY teammate-focus-single-mid: 10/10 matched
+
+失败用法建议：先看 CATEGORY、DEBUG 和 LAST，判断是期望写错、跟牌场景理解错，还是策略行为真的回归了。
+
+
+================ 出牌回归测试 1 组 2026-05-08 19:53:53 ================
+验证：脚本现在会先编译最新 test.cpp。
+用途：固定出牌行为，辅助调参；MATCH 只表示符合当前设计预期，不表示策略最优。
+样例结构：当前按筛选后实际运行 1 组，可通过 CategoryFilter / CaseLimit 调整。
+CATEGORY_FILTER: ALL
+CASE_LIMIT: 1
+DEBUG 说明：route 用来看场景来源，LastSummary 用来看当前跟牌目标和关键剩余牌数。
+
+=== P01_FreeLandlord_A ===
+CATEGORY: free
+HAND: 3x3 4x1 5x2 6x1 7x2 8x1 9x1 10x1 Jx1 Qx1 Kx1 2x1 jokerx1
+EXPECT_NOTE: 地主自由出牌，优先走普通三张而不是先拆硬控。
+DEBUG: role=landlord route=free public=Ax3
+LAST: history0=PASS history1=PASS
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[44,45,46],"own":[0,1,2,8,9,16,17,24,32,40,48,52,4,12,20,28,36],"landlord":0,"pos":0,"finalbid":3}],"responses":[]}
+EXPECTED: {"response":[0,1,2]}
+OUTPUT: {"response":[44,45,46]}
+MATCH: NO
+
+================ 汇总 ================
+TOTAL: 1
+MATCHED: 0
+FAILED: 1
+CATEGORY free: 0/1 matched
 
 失败用法建议：先看 CATEGORY、DEBUG 和 LAST，判断是期望写错、跟牌场景理解错，还是策略行为真的回归了。

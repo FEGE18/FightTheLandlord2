@@ -1,0 +1,586 @@
+
+
+================ 出牌 TopK 调试测试 30 组 2026-05-08 19:53:39 ================
+调试测试：修复脚本，运行前强制编译最新 test.cpp。
+目标：避免测试工具继续沿用旧的 test.exe。
+说明：test.exe 反映当前真实策略输出；play_topk_probe.exe 使用固定随机种子 20260508 输出 TopK 表，便于稳定调 PIMC。
+说明：本文件偏调试分析，不是纯 EXPECTED 回归，因此部分 exploratory 用例不做 MATCH 判定。
+说明：test.cpp 当前以 time(nullptr) ^ clock() 作为随机种子；连续进程若落在同一秒，稳定性结果可能高估。
+
+=== D01_FreeLowTripleVsHighTriple ===
+CATEGORY: free-anti-interference
+EXPECT_NOTE: 自由出牌时，低三张不该被高三张顶掉。
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[44,45,46],"own":[0,1,2,8,9,16,17,24,32,40,48,52,4,12,20,28,36],"landlord":0,"pos":0,"finalbid":3}],"responses":[]}
+EXPECTED: {"response":[0,1,2]}
+OUTPUT: {"response":[44,45,46]}
+MATCH: NO
+TOPK:
+seed=20260508
+validPlays=26
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	TRIPLET {Ax3} [44,45,46]	5.900	6.400	20.000	8.460
+2	TRIPLET {3x3} [0,1,2]	5.900	3.700	20.000	7.380
+3	PAIR {7x2} [16,17]	5.600	1.600	20.000	6.240
+4	PAIR {5x2} [8,9]	5.600	1.600	20.000	6.240
+5	SINGLE {Qx1} [36]	5.300	1.300	20.000	5.820
+6	SINGLE {Kx1} [40]	5.300	1.300	20.000	5.820
+bestPlay=TRIPLET {Ax3} [44,45,46]
+
+=== D02_FreeLowPairVsAA ===
+CATEGORY: free-anti-interference
+EXPECT_NOTE: 自由出牌时，低对子不该被 AA 强行顶掉。
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[4,5,6],"own":[44,45,48,52,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[8,9]}
+OUTPUT: {"response":[44,45]}
+MATCH: NO
+TOPK:
+seed=20260508
+validPlays=24
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PAIR {Ax2} [44,45]	5.600	6.550	20.000	8.220
+2	PAIR {10x2} [28,29]	5.600	4.600	20.000	7.440
+3	PAIR {9x2} [24,25]	5.600	4.600	20.000	7.440
+4	PAIR {8x2} [20,21]	5.600	4.600	20.000	7.440
+5	PAIR {7x2} [16,17]	5.600	4.600	20.000	7.440
+6	PAIR {6x2} [12,13]	5.600	4.600	20.000	7.440
+bestPlay=PAIR {Ax2} [44,45]
+
+=== D03_FreeWithBomb_NoLead ===
+CATEGORY: free-anti-interference
+EXPECT_NOTE: 自由轮有炸弹时，不应该被样本分推到先炸。
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[4,5,6],"own":[0,1,2,3,44,45,8,9,16,17,24,25,32,33,40,41,52],"landlord":0,"pos":0,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[4,5,6]}
+OUTPUT: {"response":[4,5,6]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=31
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	TRIPLET {4x3} [4,5,6]	5.900	2.500	20.000	6.900
+2	PAIR {Ax2} [44,45]	5.600	2.800	20.000	6.720
+3	PAIR {Kx2} [40,41]	5.600	2.500	20.000	6.600
+4	PAIR {Jx2} [32,33]	5.600	1.600	20.000	6.240
+5	PAIR {9x2} [24,25]	5.600	1.600	20.000	6.240
+6	PAIR {7x2} [16,17]	5.600	1.600	20.000	6.240
+bestPlay=TRIPLET {4x3} [4,5,6]
+
+=== D04_FreeWithRocket_NoLead ===
+CATEGORY: free-anti-interference
+EXPECT_NOTE: 自由轮有火箭时，不应该被样本分推到先火箭。
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[53,4,5],"own":[52,40,41,8,9,16,17,24,25,32,33,44,45,48,49,12,20],"landlord":0,"pos":0,"finalbid":3}],"responses":[]}
+EXPECTED: {"response":[4,5]}
+OUTPUT: {"response":[44,45]}
+MATCH: NO
+TOPK:
+seed=20260508
+validPlays=29
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PAIR {Ax2} [44,45]	5.600	4.000	20.000	7.200
+2	PAIR {Kx2} [40,41]	5.600	3.400	20.000	6.960
+3	PAIR {Jx2} [32,33]	5.600	2.200	20.000	6.480
+4	PAIR {9x2} [24,25]	5.600	1.600	20.000	6.240
+5	PAIR {7x2} [16,17]	5.600	1.600	20.000	6.240
+6	PAIR {5x2} [8,9]	5.600	1.600	20.000	6.240
+bestPlay=PAIR {Ax2} [44,45]
+
+=== D05_BombOnlyVsSingle_Normal ===
+CATEGORY: hard-control-protection
+EXPECT_NOTE: 普通局面里，只有炸弹能压单张时应保炸。
+INPUT: {"requests":[{"history":[[],[44]],"publiccard":[4,5,6],"own":[0,1,2,3,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=2
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PASS	-2.000	0.000	20.000	-2.000
+2	BOMB {3x4} [0,1,2,3]	-4.800	6.850	20.000	-2.060
+bestPlay=PASS
+
+=== D06_BombOnlyVsPair_Normal ===
+CATEGORY: hard-control-protection
+EXPECT_NOTE: 普通局面里，只有炸弹能压对子时应保炸。
+INPUT: {"requests":[{"history":[[],[44,45]],"publiccard":[4,5,6],"own":[0,1,2,3,8,12,16,20,24,28,32,36,40,48,52,9,13],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=2
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PASS	-2.000	0.000	20.000	-2.000
+2	BOMB {3x4} [0,1,2,3]	-4.800	8.200	20.000	-1.520
+bestPlay=PASS
+
+=== D07_RocketOnlyVsBomb_Normal ===
+CATEGORY: hard-control-protection
+EXPECT_NOTE: 普通局面里，只有火箭能压炸弹时应保火箭。
+INPUT: {"requests":[{"history":[[],[44,45,46,47]],"publiccard":[4,5,6],"own":[52,53,8,9,12,13,16,17,20,21,24,25,28,29,32,36,40],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=2
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PASS	-2.000	0.000	20.000	-2.000
+2	ROCKET {jokerx1 JOKERx1} [52,53]	-5.700	12.600	20.000	-0.660
+bestPlay=PASS
+
+=== D08_DangerOpponentRemain1_AllowBomb ===
+CATEGORY: hard-control-protection
+EXPECT_NOTE: 对手只剩 1 张时，允许炸单张。
+INPUT: {"requests":[{"history":[[],[7,10,11,14]],"publiccard":[4,5,6],"own":[0,1,2,3,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2},{"history":[[],[15,18,19,22]]},{"history":[[],[23,26,27,30]]},{"history":[[],[31,33,34,35]]},{"history":[[],[36,37]]},{"history":[[],[44]]}],"responses":[[],[],[],[],[]]}
+EXPECTED: {"response":[0,1,2,3]}
+OUTPUT: {"response":[0,1,2,3]}
+MATCH: YES
+TOPK:
+
+
+=== D09_DangerOpponentRemain2_AllowBomb ===
+CATEGORY: hard-control-protection
+EXPECT_NOTE: 对手只剩 2 张时，允许炸单张。
+INPUT: {"requests":[{"history":[[],[7,10,11,14]],"publiccard":[4,5,6],"own":[0,1,2,3,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2},{"history":[[],[15,18,19,22]]},{"history":[[],[23,26,27,30]]},{"history":[[],[31,33,34,35]]},{"history":[[],[36]]},{"history":[[],[44]]}],"responses":[[],[],[],[],[]]}
+EXPECTED: {"response":[0,1,2,3]}
+OUTPUT: {"response":[0,1,2,3]}
+MATCH: YES
+TOPK:
+
+
+=== D10_LandlordRemain5_AllowBomb ===
+CATEGORY: hard-control-protection
+EXPECT_NOTE: 地主剩余不多时，农民允许用炸弹争牌权。
+INPUT: {"requests":[{"history":[[],[7,10,11,14]],"publiccard":[4,5,6],"own":[0,1,2,3,8,12,16,20,24,28,32,36,40,48,52,9,13],"landlord":0,"pos":1,"finalbid":2},{"history":[[],[15,17,18,19]]},{"history":[[],[21,22,23,25]]},{"history":[[],[26]]},{"history":[[],[44,45]]}],"responses":[[],[],[],[]]}
+EXPECTED: {"response":[0,1,2,3]}
+OUTPUT: {"response":[0,1,2,3]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=2
+sampleCount=20
+sampleWeight=6.860
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	BOMB {3x4} [0,1,2,3]	1.200	8.200	6.860	4.480
+2	PASS	-5.000	0.000	6.860	-5.000
+bestPlay=BOMB {3x4} [0,1,2,3]
+
+=== D11_MyHandCount3_AllowBomb ===
+CATEGORY: hard-control-protection
+EXPECT_NOTE: 自己只剩约 3 手牌时，再不抢牌权就可能输，应允许炸。
+INPUT: {"requests":[{"history":[[],[44]],"publiccard":[4,5,6],"own":[0,1,2,3,4,5,6,7,8,12,16,20,24,28,32,36,40],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[0,1,2,3]}
+OUTPUT: {"response":[]}
+MATCH: NO
+TOPK:
+seed=20260508
+validPlays=2
+sampleCount=0
+sampleWeight=0.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PASS	-2.000	0.000	0.000	-2.000
+2	BOMB {3x4} [0,1,2,3]	-4.800	0.000	0.000	-4.800
+bestPlay=PASS
+
+=== D12_PassConstraint_Base ===
+CATEGORY: pimc-helpful
+EXPECT_NOTE: 无 PASS 约束的基线样例，用来看 TopK 和权重。
+INPUT: {"requests":[{"history":[[],[36,37]],"publiccard":[4,5,6],"own":[44,45,48,49,8,9,12,13,16,17,20,21,24,25,28,29,52],"landlord":0,"pos":0,"finalbid":2}],"responses":[]}
+EXPECTED: EXPLORATORY
+OUTPUT: {"response":[44,45]}
+MATCH: N/A
+TOPK:
+seed=20260508
+validPlays=2
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PAIR {Ax2} [44,45]	6.600	4.300	20.000	8.320
+2	PASS	-2.000	0.000	20.000	-2.000
+bestPlay=PAIR {Ax2} [44,45]
+
+=== D13_PassConstraint_WithPass ===
+CATEGORY: pimc-helpful
+EXPECT_NOTE: 加入前序 PASS 约束后，观察 sampleWeight 和 TopK 是否变化。
+INPUT: {"requests":[{"history":[[32,33],[]],"publiccard":[4,5,6],"own":[44,45,48,49,8,9,12,13,16,17,20,21,24,25,28,29,52],"landlord":0,"pos":0,"finalbid":2},{"history":[[],[36,37]]}],"responses":[[]]}
+EXPECTED: EXPLORATORY
+OUTPUT: {"response":[44,45]}
+MATCH: N/A
+TOPK:
+seed=20260508
+validPlays=2
+sampleCount=20
+sampleWeight=10.220
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PAIR {Ax2} [44,45]	6.600	6.162	10.220	9.065
+2	PASS	-2.000	0.000	10.220	-2.000
+bestPlay=PAIR {Ax2} [44,45]
+
+=== D14_FreeLandlord_PairLead ===
+CATEGORY: free-anti-interference
+EXPECT_NOTE: 另一手地主自由轮样例，优先走小对子。
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[44,45,4],"own":[0,1,8,9,16,17,24,25,32,33,40,41,48,49,52,12,20],"landlord":0,"pos":0,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[0,1]}
+OUTPUT: {"response":[44,45]}
+MATCH: NO
+TOPK:
+seed=20260508
+validPlays=28
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PAIR {Ax2} [44,45]	5.600	4.600	20.000	7.440
+2	PAIR {Kx2} [40,41]	5.600	4.300	20.000	7.320
+3	PAIR {Jx2} [32,33]	5.600	2.500	20.000	6.600
+4	PAIR {9x2} [24,25]	5.600	1.900	20.000	6.360
+5	PAIR {7x2} [16,17]	5.600	1.600	20.000	6.240
+6	PAIR {5x2} [8,9]	5.600	1.600	20.000	6.240
+bestPlay=PAIR {Ax2} [44,45]
+
+=== D15_FreeWithBomb_SecondHand ===
+CATEGORY: free-anti-interference
+EXPECT_NOTE: 第二手带炸弹的自由轮样例，仍应优先普通三张。
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[4,5,6],"own":[24,25,26,27,44,45,8,9,16,17,32,33,40,41,48,52,12],"landlord":0,"pos":0,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[4,5,6]}
+OUTPUT: {"response":[4,5,6]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=30
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	TRIPLET {4x3} [4,5,6]	5.900	3.100	20.000	7.140
+2	PAIR {Ax2} [44,45]	5.600	2.800	20.000	6.720
+3	PAIR {Kx2} [40,41]	5.600	2.500	20.000	6.600
+4	PAIR {Jx2} [32,33]	5.600	1.600	20.000	6.240
+5	PAIR {7x2} [16,17]	5.600	1.600	20.000	6.240
+6	PAIR {5x2} [8,9]	5.600	1.600	20.000	6.240
+bestPlay=TRIPLET {4x3} [4,5,6]
+
+=== D16_FreeWithRocket_SecondHand ===
+CATEGORY: free-anti-interference
+EXPECT_NOTE: 另一手带王的自由轮样例，也不应该先交火箭。
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[52,4,5],"own":[53,40,41,8,9,16,17,24,25,32,33,44,45,48,49,12,20],"landlord":0,"pos":0,"finalbid":3}],"responses":[]}
+EXPECTED: {"response":[4,5]}
+OUTPUT: {"response":[44,45]}
+MATCH: NO
+TOPK:
+seed=20260508
+validPlays=29
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PAIR {Ax2} [44,45]	5.600	4.000	20.000	7.200
+2	PAIR {Kx2} [40,41]	5.600	3.400	20.000	6.960
+3	PAIR {Jx2} [32,33]	5.600	2.200	20.000	6.480
+4	PAIR {9x2} [24,25]	5.600	1.600	20.000	6.240
+5	PAIR {7x2} [16,17]	5.600	1.600	20.000	6.240
+6	PAIR {5x2} [8,9]	5.600	1.600	20.000	6.240
+bestPlay=PAIR {Ax2} [44,45]
+
+=== D17_FreeFarmer_TripleLead ===
+CATEGORY: free-anti-interference
+EXPECT_NOTE: 农民自由轮补一个三张样例，检查是否也会被高控牌干扰。
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[44,45,46],"own":[0,1,2,8,9,12,13,16,17,20,21,24,25,28,29,32,52],"landlord":2,"pos":1,"finalbid":1}],"responses":[]}
+EXPECTED: {"response":[0,1,2]}
+OUTPUT: {"response":[0,1,2]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=25
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	TRIPLET {3x3} [0,1,2]	5.900	1.900	20.000	6.660
+2	PAIR {10x2} [28,29]	5.600	1.600	20.000	6.240
+3	PAIR {9x2} [24,25]	5.600	1.600	20.000	6.240
+4	PAIR {8x2} [20,21]	5.600	1.600	20.000	6.240
+5	PAIR {7x2} [16,17]	5.600	1.600	20.000	6.240
+6	PAIR {6x2} [12,13]	5.600	1.600	20.000	6.240
+bestPlay=TRIPLET {3x3} [0,1,2]
+
+=== D18_FollowTeammateSingle_LetPassA ===
+CATEGORY: teammate-basic
+EXPECT_NOTE: 跟队友单张时应优先让牌。
+INPUT: {"requests":[{"history":[[40],[]],"publiccard":[4,5,6],"own":[44,45,48,52,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=2
+sampleCount=20
+sampleWeight=18.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PASS	2.500	0.000	18.000	2.500
+2	SINGLE {Ax1} [44]	-0.700	-0.400	18.000	-0.860
+bestPlay=PASS
+
+=== D19_FollowTeammateSingle_LetPassB ===
+CATEGORY: teammate-basic
+EXPECT_NOTE: 跟队友较大单张时同样应优先让牌。
+INPUT: {"requests":[{"history":[[44],[]],"publiccard":[4,5,6],"own":[48,49,52,53,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=2
+sampleCount=20
+sampleWeight=18.400
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PASS	2.500	0.000	18.400	2.500
+2	SINGLE {2x1} [48]	-3.700	1.566	18.400	-3.073
+bestPlay=PASS
+
+=== D20_FollowTeammatePair_GrabA ===
+CATEGORY: teammate-basic
+EXPECT_NOTE: 跟队友小对子时，当前策略会抢牌，这类样例也需要 TopK 可视化。
+INPUT: {"requests":[{"history":[[40,41],[]],"publiccard":[4,5,6],"own":[44,45,48,52,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[44,45]}
+OUTPUT: {"response":[44,45]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=2
+sampleCount=20
+sampleWeight=18.300
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PAIR {Ax2} [44,45]	4.600	6.518	18.300	7.207
+2	PASS	2.500	0.000	18.300	2.500
+bestPlay=PAIR {Ax2} [44,45]
+
+=== D21_FollowTeammatePair_GrabB ===
+CATEGORY: teammate-basic
+EXPECT_NOTE: 第二手跟队友对子样例，观察 TopK 是否同样把 AA 顶到最前。
+INPUT: {"requests":[{"history":[[32,33],[]],"publiccard":[4,5,6],"own":[44,45,48,49,52,8,9,12,13,16,17,20,21,24,25,28,29],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[44,45]}
+OUTPUT: {"response":[44,45]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=2
+sampleCount=20
+sampleWeight=18.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PAIR {Ax2} [44,45]	4.600	7.000	18.000	7.400
+2	PASS	2.500	0.000	18.000	2.500
+bestPlay=PAIR {Ax2} [44,45]
+
+=== D22_FollowOpponentSingle_Normal ===
+CATEGORY: opponent-basic
+EXPECT_NOTE: 跟对手小单张时，应该正常用最小可接单张压牌。
+INPUT: {"requests":[{"history":[[],[24]],"publiccard":[4,5,6],"own":[44,45,48,52,8,9,12,13,16,17,20,21,25,28,29,32,36],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[28]}
+OUTPUT: {"response":[28]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=2
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	SINGLE {10x1} [28]	1.300	-0.700	20.000	1.020
+2	PASS	-2.000	0.000	20.000	-2.000
+bestPlay=SINGLE {10x1} [28]
+
+=== D23_FollowOpponentHighSingle_JokerTake ===
+CATEGORY: opponent-basic
+EXPECT_NOTE: 跟对手更高单张时，用小王接管，确认基本跟牌仍正常。
+INPUT: {"requests":[{"history":[[],[48]],"publiccard":[4,5,6],"own":[52,53,44,45,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[52]}
+OUTPUT: {"response":[52]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=2
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	SINGLE {jokerx1} [52]	4.800	6.550	20.000	7.420
+2	PASS	-2.000	0.000	20.000	-2.000
+bestPlay=SINGLE {jokerx1} [52]
+
+=== D24_FollowOpponentPair_Normal ===
+CATEGORY: opponent-basic
+EXPECT_NOTE: 跟对手小对子时，应该正常用更大对子压牌。
+INPUT: {"requests":[{"history":[[],[24,25]],"publiccard":[4,5,6],"own":[44,45,48,52,8,9,12,13,16,17,20,21,28,29,32,33,36],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[28,29]}
+OUTPUT: {"response":[28,29]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=2
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PAIR {10x2} [28,29]	6.600	4.600	20.000	8.440
+2	PASS	-2.000	0.000	20.000	-2.000
+bestPlay=PAIR {10x2} [28,29]
+
+=== D25_FollowOpponentTriple_Normal ===
+CATEGORY: opponent-basic
+EXPECT_NOTE: 跟对手三条时，确认基本三条接管逻辑不受 PIMC 干扰。
+INPUT: {"requests":[{"history":[[],[24,25,26]],"publiccard":[4,5,6],"own":[32,33,34,44,45,48,8,9,12,13,16,17,20,21,28,29,52],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[32,33,34]}
+OUTPUT: {"response":[32,33,34]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=2
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	TRIPLET {Jx3} [32,33,34]	6.900	5.950	20.000	9.280
+2	PASS	-2.000	0.000	20.000	-2.000
+bestPlay=TRIPLET {Jx3} [32,33,34]
+
+=== D26_CannotBeatBigJoker ===
+CATEGORY: cannot-beat
+EXPECT_NOTE: 无法压过大王时必须 PASS。
+INPUT: {"requests":[{"history":[[],[53]],"publiccard":[4,5,6],"own":[44,45,48,8,9,12,13,16,17,20,21,24,25,28,29,32,33],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=1
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PASS	-2.000	0.000	20.000	-2.000
+bestPlay=PASS
+
+=== D27_CannotBeatSmallJokerWithoutBig ===
+CATEGORY: cannot-beat
+EXPECT_NOTE: 没有大王时也不能压小王。
+INPUT: {"requests":[{"history":[[],[52]],"publiccard":[4,5,6],"own":[44,45,48,8,9,12,13,16,17,20,21,24,25,28,29,32,33],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=1
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PASS	-2.000	0.000	20.000	-2.000
+bestPlay=PASS
+
+=== D28_CannotBeatHighPair ===
+CATEGORY: cannot-beat
+EXPECT_NOTE: 没有更大的对子时，应稳定 PASS。
+INPUT: {"requests":[{"history":[[],[44,45]],"publiccard":[4,5,6],"own":[32,33,40,41,8,9,12,13,16,17,20,21,24,25,28,36,52],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=1
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PASS	-2.000	0.000	20.000	-2.000
+bestPlay=PASS
+
+=== D29_CannotBeatHighTriple ===
+CATEGORY: cannot-beat
+EXPECT_NOTE: 没有更大的三条时，应稳定 PASS。
+INPUT: {"requests":[{"history":[[],[48,49,50]],"publiccard":[4,5,6],"own":[44,45,46,32,33,34,8,9,12,13,16,17,20,21,24,25,52],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=1
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PASS	-2.000	0.000	20.000	-2.000
+bestPlay=PASS
+
+=== D30_BombOnlyVsTriple_Normal ===
+CATEGORY: hard-control-restraint
+EXPECT_NOTE: 只有炸弹能压三条时，普通局面应保炸不交。
+INPUT: {"requests":[{"history":[[],[44,45,46]],"publiccard":[4,5,6],"own":[0,1,2,3,8,12,16,20,24,28,32,36,40,48,52,9,13],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+EXPECTED: {"response":[]}
+OUTPUT: {"response":[]}
+MATCH: YES
+TOPK:
+seed=20260508
+validPlays=2
+sampleCount=20
+sampleWeight=20.000
+topK
+rank	play	heuristicScore	sampleScore	sampleWeight	finalScore
+1	PASS	-2.000	0.000	20.000	-2.000
+2	BOMB {3x4} [0,1,2,3]	-4.800	8.200	20.000	-1.520
+bestPlay=PASS
+
+=== Stability_FreeLowPairVsAA_10Runs ===
+CATEGORY: random-stability
+EXPECT_NOTE: 同一输入连续运行 10 次，观察输出是否稳定。
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[4,5,6],"own":[44,45,48,52,8,9,12,13,16,17,20,21,24,25,28,29,32],"landlord":0,"pos":1,"finalbid":2}],"responses":[]}
+RUNS: 10
+RUN 1: 19:53:40.800 => {"response":[44,45]}
+RUN 2: 19:53:40.817 => {"response":[44,45]}
+RUN 3: 19:53:40.835 => {"response":[44,45]}
+RUN 4: 19:53:40.853 => {"response":[44,45]}
+RUN 5: 19:53:40.870 => {"response":[44,45]}
+RUN 6: 19:53:40.888 => {"response":[44,45]}
+RUN 7: 19:53:40.904 => {"response":[44,45]}
+RUN 8: 19:53:40.920 => {"response":[44,45]}
+RUN 9: 19:53:40.936 => {"response":[44,45]}
+RUN 10: 19:53:40.953 => {"response":[44,45]}
+FREQUENCY: {"response":[44,45]} => 10
+
+=== CrossMoment_FreeWithBomb_NoLead ===
+CATEGORY: random-stability
+EXPECT_NOTE: 利用整套脚本的自然耗时做跨时刻复测，观察同一敏感输入是否漂移。
+INPUT: {"requests":[{"history":[[],[]],"publiccard":[4,5,6],"own":[0,1,2,3,44,45,8,9,16,17,24,25,32,33,40,41,52],"landlord":0,"pos":0,"finalbid":2}],"responses":[]}
+RUN EARLY: 2026-05-08 19:53:39.879 => {"response":[4,5,6]}
+RUN LATE: 2026-05-08 19:53:40.969 => {"response":[4,5,6]}
+MATCH: YES
+

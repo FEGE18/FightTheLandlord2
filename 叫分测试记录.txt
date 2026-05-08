@@ -4176,3 +4176,31 @@ CATEGORY threshold: 10/10 matched
 CATEGORY weak: 10/10 matched
 
 失败用法建议：先看 CATEGORY 和 DEBUG，判断是期望写错、硬条件过强，还是阈值/扣分需要调整。
+
+
+================ 叫分回归测试 1 组 2026-05-08 19:53:59 ================
+验证：脚本现在会先编译最新 test.cpp。
+用途：固定叫分行为，辅助调参；MATCH 只表示符合当前设计预期，不表示策略最优。
+样例结构：当前按筛选后实际运行 1 组。After10 / After12 用来验证只看最高叫分。
+NAME_FILTER: ALL
+CATEGORY_FILTER: ALL
+CASE_LIMIT: 1
+DEBUG 说明：为 PowerShell 复刻的近似特征，不等价于 C++ 内部 bidScore，但便于快速定位硬条件。
+
+=== B_WeakScatter1_NoHistory ===
+CATEGORY: weak
+HAND: 3x2 4x2 5x2 6x2 7x2 8x2 9x2 10x1 Jx1 Qx1
+EXPECT_NOTE: 无人叫分。弱散牌，任何叫分历史下都不应主动抢地主。
+DEBUG: maxBid=0 handCountApprox=10 bidCapApprox=1 rocket=False bombs=0 twos=0 aces=0 jokers=0 basicCtrl=False strongCtrl=False threeCtrl=False
+INPUT: {"requests":[{"own":[0,4,8,12,16,20,24,1,5,9,13,17,21,25,29,33,37],"bid":[]}],"responses":[]}
+EXPECTED: {"response":0}
+OUTPUT: {"response":0}
+MATCH: YES
+
+================ 汇总 ================
+TOTAL: 1
+MATCHED: 1
+FAILED: 0
+CATEGORY weak: 1/1 matched
+
+失败用法建议：先看 CATEGORY 和 DEBUG，判断是期望写错、硬条件过强，还是阈值/扣分需要调整。

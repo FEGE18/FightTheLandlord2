@@ -7,12 +7,19 @@ param(
 $workspacePath = if ([string]::IsNullOrWhiteSpace($PSScriptRoot)) { 'e:\vscode\数据结构项目' } else { $PSScriptRoot }
 Set-Location $workspacePath
 
+$compilerPath = 'E:/mingw64/bin/g++.exe'
+$testSrcPath = Join-Path $workspacePath 'test.cpp'
 $exePath = Join-Path $workspacePath 'test.exe'
 $playRecordPath = Join-Path $workspacePath '出牌测试记录.txt'
 $changeNotes = $ChangeNote
 
-if (!(Test-Path $exePath)) {
-    throw "Missing test executable: $exePath"
+if (!(Test-Path $testSrcPath)) {
+    throw "Missing test source: $testSrcPath"
+}
+
+& $compilerPath -std=c++17 -g $testSrcPath -o $exePath
+if ($LASTEXITCODE -ne 0) {
+    throw 'Failed to build test.exe from latest test.cpp'
 }
 
 $rankNames = @('3','4','5','6','7','8','9','10','J','Q','K','A','2','joker','JOKER')
