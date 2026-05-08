@@ -538,7 +538,7 @@ struct CardCombo
 // 单文件骨架：状态结构
 // ==================================================
 
-// 表示手牌可以拆分成的牌型组合：每一个groups都是一种牌型，所有groups加和就是当前的手牌集合）
+// 表示手牌可以拆分成的牌型组合：每一个groups[]都是一种牌型，所有groups[]加和就是当前的手牌集合）
 struct HandPlan
 {
 	vector<CardCombo> groups;
@@ -1049,30 +1049,78 @@ vector<CardCombo> enumAllValidPlays(const vector<Card> &hand, const CardCombo &l
 // 单文件骨架：拆分层
 // ==================================================
 
+int getMinHandCount(const vector<Card> &hand);
+void searchDecompose(vector<Card> curHand,HandPlan& curPlan,vector<HandPlan>& res,int maxD);
 // [我们要自己实现的核心函数] 把手牌拆成若干组合法牌型，供策略层评估“最少还要几手出完”。
 // 使用 MCTS，通过模拟来选取最优的若干组牌 <- 这句话是给策略层看的
 // todo
 // 返回最优的前topK组拆法，用beam search
 vector<HandPlan> decomposeHand(const vector<Card> &hand, int topK = 1){
-	
+	vector<HandPlan> allPlans;
+	HandPlan ini;
+
+	if(hand.empty())return allPlans;
+
+	int dyLimit=getMinHandCount(hand)+3;	// 搜索深度由最少手数加一个值来限制，这个3后续可再调整
+	searchDecompose(hand,ini,allPlans,dyLimit);
+
+	// 按手数升序排序allPlans
+	std::sort(allPlans.begin(),allPlans.end(),[](const HandPlan& a,const HandPlan& b){
+		return a.handCount>b.handCount;
+	});
+
+	if(allPlans.size()>topK){
+		allPlans.resize(topK);
+	}
+
+	// if(allPlans.empty()){}
+
+	return allPlans;
 }
 
-void searchDecompose(){
-	
+// 回溯
+// curHand是当前仍未匹配的牌，curPlan是遍历路径，res保存结果，maxDep剪枝
+void searchDecompose(vector<Card> curHand,HandPlan& curPlan,vector<HandPlan>& res,int maxD){
+	if(curHand.empty()){
+		res.push_back(curPlan);
+		return;
+	}
+	if(curPlan.groups.size()>=maxD)return;
+
+	CardCombo empty;	// PASS牌型
+	auto play=enumAllValidPlays(curHand,empty);	// 所有可能的牌型
+
+	// 先对牌组排序，张数消耗得越多的牌组优先级越高
+	std::sort(play.begin(),play.end(),[](const CardCombo& a,const CardCombo& b){
+		// 如果牌组的张数相同，连牌优先（顺子、飞机、航天飞机）
+		if(a.cards.size()==b.cards.size()){
+			return a.comboType>b.comboType;
+		}
+		return a.cards.size()>b.cards.size();
+	});
+
+	int limit=5;	// 每个节点最多探索排名前limit的组法
+	int curBranch=0;// 当前分支数
+	// 回溯主体
+	for(const CardCombo& p:play){
+		if(p.comboType==CardComboType::PASS||p.comboType==CardComboType::INVALID)continue;
+		if(curBranch>=limit)break;
+		curBranch++;
+
+		vector<Card> nextHand=removeCardsFromHand(curHand,p.cards);
+		curPlan.groups.push_back(p);
+		curPlan.handCount++;
+
+		searchDecompose(nextHand,curPlan,res,maxD);
+
+		curPlan.groups.pop_back();
+		curPlan.handCount--;
+	}
 }
 
-// [我们要自己实现的核心函数] 快速返回当前手牌出完最少还需要几手，供评估层频繁调用
-// todo
 // 使用状态压缩dp来优化性能，总体思路是回溯法+贪心
 static std::unordered_map<uint64_t,int> memo;	// 用于缓存getMinHandCount的结果，实现剪枝
 											 	// 键：某一时刻手牌的牌型状态state；值：在当前存档（键）的状态下，出完所有牌的最少手数
-int getMinHandCount(const vector<Card> &hand){
-	if(hand.empty())return 0;
-	short counts[15]={0};
-	for(Card c:hand)
-		counts[card2level(c)]++;
-	return dfs(counts,0);
-}
 
 // counts[]表示当前每一级牌还有几张
 // wings表示额外的带牌空位：比如拿出了一个飞机（333444），三条可以带单张或对子，所以飞机主干被拿走后留下了2个翅膀空位，即wing=2；
@@ -1175,6 +1223,23 @@ int dfs(short counts[15],int wings){
 	memo[state]=ans;
 	return memo[state];
 }
+
+// [我们要自己实现的核心函数] 快速返回当前手牌出完最少还需要几手，供评估层频繁调用
+// todo
+
+int getMinHandCount(const vector<Card> &hand){
+	if(hand.empty())return 0;
+	short counts[15]={0};
+	for(Card c:hand)
+		counts[card2level(c)]++;
+	return dfs(counts,0);
+}
+
+// 快速判断 hand 是否存在任意一手牌可以压过 lastCombo
+// 这个函数只回答“能不能压”，不需要返回具体出哪几张牌
+/*bool canBeatComboFast(const vector<Card> &hand, const CardCombo &lastCombo){
+	
+}*/
 
 // ==================================================
 // 单文件骨架：评估层
