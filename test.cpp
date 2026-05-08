@@ -1055,7 +1055,7 @@ vector<CardCombo> enumAllValidPlays(const vector<Card> &hand, const CardCombo &l
 // 返回最优的前topK组拆法，用beam search
 vector<HandPlan> decomposeHand(const vector<Card> &hand, int topK = 1){
 	
-} 
+}
 
 void searchDecompose(){
 	
@@ -1065,13 +1065,115 @@ void searchDecompose(){
 // todo
 // 使用状态压缩dp来优化性能，总体思路是回溯法+贪心
 static std::unordered_map<uint64_t,int> memo;	// 用于缓存getMinHandCount的结果，实现剪枝
-											 	// 键：某一时刻手牌的牌型状态；值：在当前存档（键）的状态下，出完所有牌的最少手数
+											 	// 键：某一时刻手牌的牌型状态state；值：在当前存档（键）的状态下，出完所有牌的最少手数
 int getMinHandCount(const vector<Card> &hand){
-	
+	if(hand.empty())return 0;
+	short counts[15]={0};
+	for(Card c:hand)
+		counts[card2level(c)]++;
+	return dfs(counts,0);
 }
 
+// counts[]表示当前每一级牌还有几张
+// wings表示额外的带牌空位：比如拿出了一个飞机（333444），三条可以带单张或对子，所以飞机主干被拿走后留下了2个翅膀空位，即wing=2；
+//// 当进入到了递归的底层（此时只剩下散牌）时，就可以将wing组散牌装进飞机中，也就进一步减少了hands
 int dfs(short counts[15],int wings){
-	
+	// 将counts转化为单一状态state
+	// 压缩当前剩余手数情况及额外带牌名额，作为state键
+	// 用uint64_t是因为其拷贝等操作快于int,string等
+	uint64_t state=0;
+	for(int i=0;i<15;i++){
+		state=(state<<3)|counts[i];	// 将state左移三位，然后把counts[i]补在state的低三位上
+	}
+	state=(state<<6)|(wings&0b111111);	// 把wings加在state末六位，因为wing也是手牌拆分状态的组成部分
+										// 这里的（wings&0b111111）是为了只保留wings的末六位，防止wings值过大导致污染前面的counts数据
+
+	if(memo.count(state))return memo[state];	// 备忘录中已有state状态，直接返回
+
+	// 统计四、三、二、单牌的具体数目，c[i]表示i牌有c[i]组
+	// hands初始化为最笨蛋的出法
+	int c[5]={0};
+	for(int i=0;i<15;i++)c[counts[i]]++;
+	int hands=c[1]+c[2]+c[3]+c[4];	//
+
+	// 筛选火箭
+	if(counts[level_JOKER]==1&&counts[level_joker]==1){
+		hands-=1;
+		c[1]-=2;
+	}
+
+	// 筛选翅膀
+	int posWing=c[1]+c[2];	// 可能的翅膀数
+	int needWing=c[3]+c[4]*2+wings;	// 手牌中实际需要的翅膀数，wings是从上一层继承下来的，也要加进来
+	int matched=std::min(posWing,needWing);		// 实际用到的翅膀数，为二者较小者
+	hands-=matched;
+
+	int ans=hands;
+	// 单顺，下面的筛选都使用滑动窗口
+	for(int l=5;l<=12;l++){	// 分别筛选长度为5～12的单顺
+		for(int start=0;start<=MAX_STRAIGHT_LEVEL-l+1;start++){
+			bool valid=true;
+			for(int i=0;i<l;i++){	// l是窗口长度，i遍历窗口查看是否可行
+				if(counts[start+i]==0){	// 顺子里缺牌了，不行
+										// 直接跳出内层循环，回到start所在循环，start++，从下一等级的牌开始遍历
+					valid=false;
+					break;
+				}
+			}
+			if(valid){
+				for(int i=0;i<l;i++)
+					// 有合法的单顺，就把单顺中的牌从手牌计数器中删掉，然后拿着新的手牌计数器去dfs
+					counts[start+i]-=1;
+				ans=std::min(ans,dfs(counts,wings)+1);
+				for(int i=0;i<l;i++)
+					// 回溯，继续start的循环
+					counts[start+i]+=1;
+			}
+		}
+	}
+
+	// 双顺
+	for(int l=3;l<=10;l++){
+		for(int start=0;start<=MAX_STRAIGHT_LEVEL-l+1;start++){
+			bool valid=true;
+			for(int i=0;i<l;i++){
+				if(counts[start+i]<2){
+					valid=false;
+					break;
+				}
+			}
+			if(valid){
+				for(int i=0;i<l;i++)
+					counts[start+i]-=2;
+				ans=std::min(ans,dfs(counts,wings)+1);
+				for(int i=0;i<l;i++)
+					counts[start+i]+=2;
+			}
+		}
+	}
+
+	// 飞机
+	for(int l=2;l<=6;l++){
+		for(int start=0;start<=MAX_STRAIGHT_LEVEL-l+1;start++){
+			bool valid=true;
+			for(int i=0;i<l;i++){
+				if(counts[start+i]<3){
+					valid=false;
+					break;
+				}
+			}
+			if(valid){
+				for(int i=0;i<l;i++)
+					counts[start+i]-=3;
+				// wings更新为wings+l（每组三排带一个翅膀）
+				ans=std::min(ans,dfs(counts,wings+l)+1);
+				for(int i=0;i<l;i++)
+					counts[start+i]+=3;
+			}
+		}
+	}
+	memo[state]=ans;
+	return memo[state];
 }
 
 // ==================================================
