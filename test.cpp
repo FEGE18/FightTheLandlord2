@@ -6,6 +6,7 @@
 #include <ctime>
 #include <algorithm>
 #include <vector>
+#include <unordered_map>
 #include "jsoncpp/json.h" // 在平台上，C++编译时默认包含此库
 
 using std::set;
@@ -537,6 +538,7 @@ struct CardCombo
 // 单文件骨架：状态结构
 // ==================================================
 
+// 表示手牌可以拆分成的牌型组合：每一个groups都是一种牌型，所有groups加和就是当前的手牌集合）
 struct HandPlan
 {
 	vector<CardCombo> groups;
@@ -1048,20 +1050,28 @@ vector<CardCombo> enumAllValidPlays(const vector<Card> &hand, const CardCombo &l
 // ==================================================
 
 // [我们要自己实现的核心函数] 把手牌拆成若干组合法牌型，供策略层评估“最少还要几手出完”。
-// 使用 MCTS，通过模拟来选取最优的若干组牌
+// 使用 MCTS，通过模拟来选取最优的若干组牌 <- 这句话是给策略层看的
 // todo
-// 返回最优的前 topK 组拆法
+// 返回最优的前topK组拆法，用beam search
 vector<HandPlan> decomposeHand(const vector<Card> &hand, int topK = 1){
 	
 } 
 
+void searchDecompose(){
+	
+}
+
 // [我们要自己实现的核心函数] 快速返回当前手牌出完最少还需要几手，供评估层频繁调用
-// 不能调用 decomposeHand()，否则性能过差
 // todo
-int getMinHandCount(const vector<Card> &hand)
-{
-	// 这里应该实现一个更高效的算法来快速计算最少手数，而不是调用 decomposeHand()
-	return 0; // 占位符，需要根据实际逻辑实现
+// 使用状态压缩dp来优化性能，总体思路是回溯法+贪心
+static std::unordered_map<uint64_t,int> memo;	// 用于缓存getMinHandCount的结果，实现剪枝
+											 	// 键：某一时刻手牌的牌型状态；值：在当前存档（键）的状态下，出完所有牌的最少手数
+int getMinHandCount(const vector<Card> &hand){
+	
+}
+
+int dfs(short counts[15],int wings){
+	
 }
 
 // ==================================================
