@@ -539,10 +539,11 @@ struct CardCombo
 // ==================================================
 
 // 表示手牌可以拆分成的牌型组合：每一个groups[]都是一种牌型，所有groups[]加和就是当前的手牌集合）
+// handCount表示同一手牌的不同出法的个数
 struct HandPlan
 {
 	vector<CardCombo> groups;
-	int handCount = 0;
+	int handCount=0;
 };
 
 /// 当前整局局面
@@ -885,7 +886,7 @@ vector<CardCombo> enumAllValidPlays(const vector<Card> &hand, const CardCombo &l
             }
         };
         dfs(dfs,0,need,curCombo);
-        for(auto& aRes:res)addPlay(aRes);	// 使用&可优化性能？
+        for(auto& aRes:res)addPlay(aRes);	// -----使用&可优化性能？-----
 	};
 
 	// 定向枚举
@@ -1059,14 +1060,17 @@ vector<HandPlan> decomposeHand(const vector<Card> &hand, int topK = 1){
 	vector<HandPlan> allPlans;
 	HandPlan ini;
 
-	if(hand.empty())return allPlans;
+	if(hand.empty()){
+		allPlans.push_back(ini);
+		return allPlans;
+	}
 
 	int dyLimit=getMinHandCount(hand)+3;	// 搜索深度由最少手数加一个值来限制，这个3后续可再调整
 	searchDecompose(hand,ini,allPlans,dyLimit);
 
 	// 按手数升序排序allPlans
 	std::sort(allPlans.begin(),allPlans.end(),[](const HandPlan& a,const HandPlan& b){
-		return a.handCount>b.handCount;
+		return a.handCount<b.handCount;
 	});
 
 	if(allPlans.size()>topK){
