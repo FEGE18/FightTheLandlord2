@@ -902,7 +902,7 @@ void outputPlay(const vector<Card> &cards)
 // ==================================================
 // 单文件骨架：枚举层
 // ==================================================
-
+#pragma region enum
 // [我们要自己实现的核心函数] 枚举当前局面下所有合法出牌，供策略层评估和比较；如果没有合法出牌则返回一个只包含 PASS 的列表
 // todo
 /* 
@@ -912,7 +912,7 @@ void outputPlay(const vector<Card> &cards)
 接着把candidate传入构造函数CardCombo(start,end)中，得到comboType和comboLevel；
 最后判断这组candidate是否合法
 */
-vector<CardCombo> enumAllValidPlays(const vector<Card> &hand, const CardCombo &lastCombo){
+vector<CardCombo> enumAllValidPlays(vector<Card>& hand,CardCombo& lastCombo){
 	vector<CardCombo> validPlays; // 可能的出牌列表
 	validPlays.push_back(CardCombo());	// pass
 
@@ -931,7 +931,7 @@ vector<CardCombo> enumAllValidPlays(const vector<Card> &hand, const CardCombo &l
 	set<string> uniqueFP;//！！！用于去重（同点数不同花色）！！！
 
 	// 检查手牌，并将合法组合加入合法出牌序列（独立于上面所说的实现逻辑！）
-	auto addPlay=[&](const vector<Card> candidates){
+	auto addPlay=[&](vector<Card> candidates){
 		CardCombo choice(candidates.begin(),candidates.end());
 		// 上家未出牌，或自己的牌能大过上家，就将choice放入有效出牌序列中
 		if(lastCombo.comboType==CardComboType::PASS||lastCombo.canBeBeatenBy(choice)){
@@ -962,7 +962,7 @@ vector<CardCombo> enumAllValidPlays(const vector<Card> &hand, const CardCombo &l
 	// curCombo为主牌，need为需要带几组副牌（主要用于飞机和航天飞机，航天飞机的副牌组数是主牌组数的两倍，因为只能是四带二/四带两对）
 	// type为带牌的种类（单张or对子），ex为被主牌占用的level（即副牌中不能出现的level种类）
 	// 内部使用引用变量，直接在函数内对可行牌组进行插入
-	auto selectAttachment=[&](vector<Card> curCombo,int need,int type,const set<Level>& ex){	
+	auto selectAttachment=[&](vector<Card> curCombo,int need,int type,set<Level>& ex){	
 		vector<vector<Card> > res;	// 记录可行结果
 		// 要在lambda内部调用自身，只能用self参数！！（因为在函数内部dfs自身仍未定义）
 		// startL为初始的牌的等级，remain为还需要的副牌的张数，path为暂存结果
@@ -1140,18 +1140,73 @@ vector<CardCombo> enumAllValidPlays(const vector<Card> &hand, const CardCombo &l
 	return validPlays;
 }
 
+// 威胁信息
+struct ResponseThreatInfo{
+    bool canBeat=false;          // 是否存在合法响应
+    bool canWinNow=false;        // 是否存在一手直接压完
+    bool canLeaveOneHand=false;  // 是否存在压完后只剩一手
+    int minRemainCards=100;      // 所有合法响应中，压完后最少剩余牌数
+    int minRemainHands=100;      // 所有合法响应中，压完后最少还需几手
+    CardCombo bestResponse;      // 最危险的一手响应
+};
 
+int getMinHandCount(vector<Card> &hand);
+
+/*这个接口内部可以复用 enumAllValidPlays；
+不要重新写牌型判断；
+PASS 和 INVALID 不算有效响应；
+bestResponse 建议选 minRemainHands 最小的响应，如果并列可以选 remainCards 更少的；
+requiredCombo == PASS 时可以直接返回 canBeat = false，因为自由出牌不是“压牌威胁分析”的场景*/
+
+ResponseThreatInfo analyzeResponseThreat(vector<Card>& hand,CardCombo& requiredCombo){
+    ResponseThreatInfo info;
+    vector<CardCombo> responses=enumAllValidPlays(hand, requiredCombo);
+
+    for(CardCombo &response:responses){
+        if(response.comboType==CardComboType::PASS||response.comboType==CardComboType::INVALID)
+            continue;
+
+        info.canBeat=true;
+        vector<Card> handAfter=removeCardsFromHand(hand,response.cards);	// 打出当前牌组后剩余的手牌
+        int remainCards=handAfter.size();
+
+		if(handAfter.empty()){
+			info.minRemainHands=0;
+			info.minRemainCards=0;
+			info.bestResponse=response;
+			break;
+		}
+
+		int remainHands=getMinHandCount(handAfter);
+        if(remainHands<info.minRemainHands||
+		(remainHands==info.minRemainHands&&remainCards<info.minRemainCards)){
+			info.minRemainHands=remainHands;
+			info.minRemainCards=remainCards;
+			info.bestResponse=response;
+		}
+    }
+
+	if(info.canBeat){
+		info.canWinNow=(info.minRemainHands==0);
+		info.canLeaveOneHand=(info.minRemainHands==1);
+	}
+
+    return info;
+}
+
+
+#pragma endregion
 // ==================================================
 // 单文件骨架：拆分层
 // ==================================================
-
-int getMinHandCount(const vector<Card> &hand);
+#pragma region decompose
+int getMinHandCount(vector<Card> &hand);
 void searchDecompose(vector<Card> curHand,HandPlan& curPlan,vector<HandPlan>& res,int maxD);
 // [我们要自己实现的核心函数] 把手牌拆成若干组合法牌型，供策略层评估“最少还要几手出完”。
 // 使用 MCTS，通过模拟来选取最优的若干组牌 <- 这句话是给策略层看的
 // todo
 // 返回最优的前topK组拆法，用beam search
-vector<HandPlan> decomposeHand(const vector<Card> &hand, int topK = 1){
+vector<HandPlan> decomposeHand(vector<Card> &hand, int topK = 1){
 	vector<HandPlan> allPlans;
 	HandPlan ini;
 
@@ -1164,8 +1219,17 @@ vector<HandPlan> decomposeHand(const vector<Card> &hand, int topK = 1){
 	searchDecompose(hand,ini,allPlans,dyLimit);
 
 	// 按手数升序排序allPlans
-	std::sort(allPlans.begin(),allPlans.end(),[](const HandPlan& a,const HandPlan& b){
-		return a.handCount<b.handCount;
+	// 手数相同时优先保留炸弹、火箭等高价值牌型（通过累加权重作Tie-breaker）
+	std::sort(allPlans.begin(),allPlans.end(),[](HandPlan& a,HandPlan& b){
+		if(a.handCount!=b.handCount)
+			return a.handCount<b.handCount;
+			
+		int weightA=0;
+		for(CardCombo& c:a.groups)weightA+=c.getWeight();
+		int weightB=0;
+		for(CardCombo& c:b.groups)weightB+=c.getWeight();
+		
+		return weightA > weightB;
 	});
 
 	if(allPlans.size()>topK){
@@ -1190,7 +1254,7 @@ void searchDecompose(vector<Card> curHand,HandPlan& curPlan,vector<HandPlan>& re
 	auto play=enumAllValidPlays(curHand,empty);	// 所有可能的牌型
 
 	// 先对牌组排序，张数消耗得越多的牌组优先级越高
-	std::sort(play.begin(),play.end(),[](const CardCombo& a,const CardCombo& b){
+	std::sort(play.begin(),play.end(),[](CardCombo& a,CardCombo& b){
 		// 如果牌组的张数相同，连牌优先（顺子、飞机、航天飞机）
 		if(a.cards.size()==b.cards.size()){
 			return a.comboType>b.comboType;
@@ -1326,7 +1390,7 @@ int dfs(short counts[15],int wings){
 // [我们要自己实现的核心函数] 快速返回当前手牌出完最少还需要几手，供评估层频繁调用
 // todo
 
-int getMinHandCount(const vector<Card> &hand){
+int getMinHandCount(vector<Card> &hand){
 	if(hand.empty())return 0;
 	short counts[15]={0};
 	for(Card c:hand)
@@ -1337,7 +1401,7 @@ int getMinHandCount(const vector<Card> &hand){
 // 快速判断 hand 是否存在任意一手牌可以压过 lastCombo
 // 这个函数只回答“能不能压”，不需要返回具体出哪几张牌
 // 用counts频率表加快查找
-bool canBeatComboFast(const vector<Card> &hand, const CardCombo &lastCombo){
+bool canBeatComboFast(vector<Card>& hand,CardCombo& lastCombo){
 	if(lastCombo.comboType==CardComboType::PASS)return true;
 	if(hand.empty()||lastCombo.comboType==CardComboType::ROCKET)return false;	// hand判空好像有点没必要，但还是写一下
 
@@ -1496,10 +1560,8 @@ bool canBeatComboFast(const vector<Card> &hand, const CardCombo &lastCombo){
 
 		default: return false;
 	}
-
-	
 }
-
+#pragma endregion
 // ==================================================
 // 单文件骨架：评估层
 // ==================================================
@@ -2034,7 +2096,7 @@ bool shouldFightControl(GameState &state)
 
 // [我们要自己实现的核心函数] 评估整手牌强度，主要用于叫分决策和后续参数调优。
 //如果只看我自己这手牌，不看当前桌面动作，这手牌到底强不强
-double evaluateHandStrength(const vector<Card> &hand)
+double evaluateHandStrength(vector<Card> &hand)
 {
 //===为手牌评分：总分=大牌分+炸弹分+结构分-碎牌惩罚-手牌惩罚===
 	double score = 0.0;
