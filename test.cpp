@@ -1753,7 +1753,16 @@ InferredDeal bulidOneRandomDeal(GameState &state)
         	continue;
 
     	// 这个玩家需要补的未知牌数量 = 剩余牌数 - 已知确定牌数。
-    	totalNeedCount += state.cardRemaining[player] - static_cast<int>(deal.hands[player].size());
+    	int knownCount = deal.hands[player].size();
+
+		if(knownCount > state.cardRemaining[player])
+		{
+    		deal.weight = 0.0;
+    		return deal;
+		}
+
+		totalNeedCount += state.cardRemaining[player] - knownCount;
+
 	}
 
 	// 如果未知牌数量和需要补的数量不一致，说明状态恢复或未知牌重建有问题。
@@ -1775,6 +1784,15 @@ InferredDeal bulidOneRandomDeal(GameState &state)
 
 		//这个玩家要补多少张
 		int needCount = state.cardRemaining[i] - deal.hands[i].size();
+
+		// 如果 needCount 为负，说明这个玩家已知牌比剩余牌还多，状态不合法。
+    	// 如果 cnt + needCount 超过 unknownCard 数量，说明未知牌不够发，也是不合法样本。
+    	if(needCount < 0 || cnt + needCount > static_cast<int>(unknownCard.size()))
+    	{
+        	deal.weight = 0.0;
+        	return deal;
+    	}
+
 		//从未知牌中取给这个玩家
 		for (int j = 0; j < needCount;++j)
 		{
@@ -1866,7 +1884,7 @@ double evaluateDealByPass(GameState &state,InferredDeal &deal)
 		if(constraint.player<0 || constraint.player>=PLAYER_COUNT)
 			continue;
 		
-		if(canPlayerBeatInDeal(deal,constraint.player,constraint.requirCombo))
+		if(canBeatComboFast(deal.hands[constraint.player], constraint.requirCombo))
 		{
 			weight *= constraint.strength;
 		}
@@ -1938,6 +1956,7 @@ void debugRandomDeals(GameState &state)
 }
 // 调试用：检查 PASS 约束是否正确生成，并观察随机样本权重。
 // 注意：正式 Botzone 输出前不要调用，避免调试信息干扰。
+#ifndef _BOTZONE_ONLINE
 void debugPassConstraints(GameState &state)
 {
     // 输出历史事件数量和 PASS 约束数量。
@@ -2002,6 +2021,7 @@ void debugPassConstraints(GameState &state)
               << " avgWeight=" << avgWeight
               << std::endl;
 }
+#endif
 
 
 //判断指定玩家是否和我属于同一阵营
@@ -2065,7 +2085,17 @@ bool isHardControlPlay(CardCombo &play)
     if (play.comboType == CardComboType::BOMB)
         return true;
 
-    // 火箭是最高硬控牌。
+	//四带二、四带两对也属于硬控牌
+	if(play.comboType == CardComboType::QUADRUPLE2 || play.comboType == CardComboType::QUADRUPLE4)
+		return true;
+	
+	//航天飞机也是
+	if (play.comboType == CardComboType::SSHUTTLE ||
+        play.comboType == CardComboType::SSHUTTLE2 ||
+        play.comboType == CardComboType::SSHUTTLE4)
+        return true;
+
+	// 火箭是最高硬控牌。
     if (play.comboType == CardComboType::ROCKET)
         return true;
 
@@ -2083,13 +2113,54 @@ bool shouldFightControl(GameState &state)
 	if(myHandCount<=3)
 		return true;
 
+	// 如果当前有效出牌来自队友，不能简单放弃牌权。
+	// 因为比赛收益和“谁先出完”有关，我也需要适当主动争取出完机会。
+	// 只有队友已经很接近出完，而我自己还需要较多手时，才倾向让队友继续。
+	if(state.lastValidPlayer >= 0 && isSameSidePlayer(state, state.lastValidPlayer))
+	{
+		int teammate = state.lastValidPlayer;
+
+		if(state.cardRemaining[teammate] <= 2 && myHandCount > 3)
+			return false;
+	}
+
+	//如果我的下家是对手，而他只剩几张牌，就要抢
+	int nextPlayer = (state.myPosition + 1) % PLAYER_COUNT;
+	if(!isSameSidePlayer(state,nextPlayer) && state.cardRemaining[nextPlayer] <= 3)
+		return true;
+
 	//地主手牌较顺，主动控局
 	if(state.isLandlord() && myHandCount<=5)
 		return true;
 	
-		//农民看地主
-		if(!state.isLandlord() && state.cardRemaining[state.landlordPosition]<=5)
-			return true;
+	// 农民看地主剩牌。
+	// 地主剩 1~2 张：强危险，必须争夺牌权
+	// 地主剩 3~5 张：进入警戒，要更积极，但如果当前是队友出的牌，先不要盲目抢队友
+	if(!state.isLandlord())
+	{
+
+    	int landlordRemain = state.cardRemaining[state.landlordPosition];
+    	// 地主只剩 1~2 张
+    	if(landlordRemain <= 2)
+        	return true;
+
+    	// 地主剩 3~5 张时，进入中度警戒。
+    	if(landlordRemain <= 5)
+    	{
+        	if(state.lastValidPlayer == state.landlordPosition)
+            	return true;
+
+        	if(state.lastValidCombo.comboType == CardComboType::PASS)
+            	return true;
+
+        	// 当前是队友出的牌
+        	if(state.lastValidPlayer >= 0 && isSameSidePlayer(state, state.lastValidPlayer))
+            	return false;
+
+        	return true;
+    	}
+	}
+
 
 		return false;
 }
@@ -2186,6 +2257,137 @@ double evaluateHandStrength(vector<Card> &hand)
 	return score;
 }
 
+// 轻量叫分评估函数：
+// 这个函数专门给 decideBid 使用，不能调用 decomposeHand / getMinHandCount 这类搜索函数。
+// Botzone 每步只有 1 秒，叫分阶段必须用稳定的 O(牌数 + 牌面等级) 统计评估。
+double evaluateBidStrength(vector<Card> &hand)
+{
+	// 从 0 开始累计叫分强度。
+	double score = 0.0;
+
+	// 按牌面等级分组，便于统计炸弹、对子、三条、高牌和连续牌潜力。
+	auto grouped = groupCardsByLevel(hand);
+
+	// 高牌分：K、A、2、王是叫地主时最重要的控牌资源。
+	static double highCardBonus[MAX_LEVEL] = {
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 3~Q
+		0.8,                          // K
+		1.5,                          // A
+		2.5,                          // 2
+		3.5,                          // 小王
+		4.0                           // 大王
+	};
+
+	// 逐个等级累加高牌分。
+	for(Level level = 0; level < MAX_LEVEL; level++)
+	{
+		score += highCardBonus[level] * grouped[level].size();
+	}
+
+	// 火箭是最强控制资源，额外加分。
+	if(!grouped[level_joker].empty() && !grouped[level_JOKER].empty())
+		score += 4.0;
+
+	// 炸弹、三条、对子都是结构资源。
+	for(Level level = 0; level < level_joker; level++)
+	{
+		int count = grouped[level].size();
+
+		// 炸弹能强行拿回牌权，叫地主价值很高。
+		if(count == 4)
+			score += 6.0;
+
+		// 三条容易组成三带，是比较好的整理结构。
+		else if(count == 3)
+			score += 2.0;
+
+		// 对子比单张更整齐。
+		else if(count == 2)
+			score += 1.0;
+	}
+
+	// 低散牌惩罚：3~9 的单张当地主时较难处理。
+	for(Level level = 0; level <= 6; level++)
+	{
+		if(grouped[level].size() == 1)
+			score -= 0.7;
+	}
+
+	// 中散牌小惩罚：10、J、Q 的单张也会增加出牌压力，但比低散牌好一些。
+	for(Level level = 7; level <= 9; level++)
+	{
+		if(grouped[level].size() == 1)
+			score -= 0.3;
+	}
+
+	// 单顺潜力：只看 3~A，不含 2 和王。
+	// 连续长度达到 5 就说明手牌有一定整理能力。
+	int singleRun = 0;
+	int bestSingleRun = 0;
+	for(Level level = 0; level <= MAX_STRAIGHT_LEVEL; level++)
+	{
+		if(!grouped[level].empty())
+			singleRun++;
+		else
+			singleRun = 0;
+
+		if(singleRun > bestSingleRun)
+			bestSingleRun = singleRun;
+	}
+	if(bestSingleRun >= 5)
+		score += 1.2 + (bestSingleRun - 5) * 0.25;
+
+	// 连对潜力：连续对子达到 3 对就有价值。
+	int pairRun = 0;
+	int bestPairRun = 0;
+	for(Level level = 0; level <= MAX_STRAIGHT_LEVEL; level++)
+	{
+		if(grouped[level].size() >= 2)
+			pairRun++;
+		else
+			pairRun = 0;
+
+		if(pairRun > bestPairRun)
+			bestPairRun = pairRun;
+	}
+	if(bestPairRun >= 3)
+		score += 1.8 + (bestPairRun - 3) * 0.35;
+
+	// 飞机潜力：连续三条达到 2 组就很有价值。
+	int tripletRun = 0;
+	int bestTripletRun = 0;
+	for(Level level = 0; level <= MAX_STRAIGHT_LEVEL; level++)
+	{
+		if(grouped[level].size() >= 3)
+			tripletRun++;
+		else
+			tripletRun = 0;
+
+		if(tripletRun > bestTripletRun)
+			bestTripletRun = tripletRun;
+	}
+	if(bestTripletRun >= 2)
+		score += 2.5 + (bestTripletRun - 2) * 0.5;
+
+	// 粗略手数惩罚：
+	// 不做搜索，只按不同点数的组数估算碎片数量，避免叫分阶段超时。
+	int roughGroups = 0;
+	for(Level level = 0; level < MAX_LEVEL; level++)
+	{
+		if(!grouped[level].empty())
+			roughGroups++;
+	}
+
+	// 火箭两张王实际可以一手出，粗略组数里算了两组，这里修正一下。
+	if(!grouped[level_joker].empty() && !grouped[level_JOKER].empty())
+		roughGroups--;
+
+	// 牌越碎，叫地主风险越高。
+	score -= roughGroups * 0.45;
+
+	return score;
+}
+
 // [我们要自己实现的核心函数] 评估某一手候选出牌对局面的收益，供出牌策略比较多个选项。
 //看“出这一手之后”局面有没有变好
 //输入的是 出牌前手牌，你打算出的这一手，当前局面
@@ -2215,8 +2417,9 @@ double evaluatePlayGain(vector<Card> &handBefore, CardCombo &play, GameState &st
     // 减少 1 手比单纯多出几张牌更重要
 	gain += (beforeCount - afterCount) * 5.0;
 
-	//次要指标：一次打出更多牌通常需要更接近胜利
-	gain += (play.cards.size()) * 0.3;
+	// 次要指标：一次打出更多牌通常更接近胜利。
+	// 但手数减少已经是核心指标，这里只给弱奖励，避免长顺/长连对被重复抬得过高。
+	gain += play.cards.size() * 0.15;
 	// 普通局面下，炸弹和火箭是珍贵控制资源，先扣分保守使用。
     if (play.comboType == CardComboType::BOMB)
         gain -= 6.0;
@@ -2317,8 +2520,9 @@ int decideBid(vector<Card> &hand, vector<int> &bidHistory)
 	// 低散牌数量：统计 3~9 中只有一张的牌，这些牌当地主时很难主动处理。
 
 
-	// 第二层：细粒度评分。先直接复用评估层，不在策略层重复算整手牌强度。
-	double bidScore = evaluateHandStrength(hand);
+	// 第二层：细粒度评分。
+	// 叫分阶段必须非常快，不能调用 decomposeHand 这类搜索型评估。
+	double bidScore = evaluateBidStrength(hand);
 
 	//火箭对叫地主价值很高，额外加分
 	if(hasRocket)
@@ -2390,6 +2594,463 @@ struct ScoredPlay
 	double sampleScore = 0;
 };
 
+//自由出牌时，评估这手牌作为主动出牌的价值
+//这个函数只处理“主动出什么更顺”，不处理压对手，让队友和危险局面
+double evaluateFreeTurn(CardCombo &play)
+{
+	double bonus = 0;
+
+	//PASS无意义
+	if(play.comboType==CardComboType::PASS)
+		return -10000;
+	
+	//炸弹和火箭是硬控资源，自由轮不应该主动消耗
+	if(play.comboType==CardComboType::BOMB)
+		return -8;
+	if(play.comboType==CardComboType::ROCKET)
+		return -10;
+
+	//长顺子价值很高
+	if(play.comboType == CardComboType::STRAIGHT)
+	{
+		// 手数减少和出牌张数已经由 evaluatePlayGain 负责。
+		// 这里只给顺子这种结构本身的修正分，避免重复奖励“出得多”。
+		bonus += 1.5;
+		bonus += play.cards.size() * 0.12;
+
+		//高顺会消耗 QKA这种控牌，稍微扣分
+		bonus -= play.comboLevel * 0.06;
+	}
+	//连对价值略低
+	else if(play.comboType==CardComboType::STRAIGHT2)
+	{
+		bonus += 1.5;
+		bonus += play.cards.size() * 0.10;
+
+		//高顺子也会浪费控牌资源
+		bonus -= play.comboLevel * 0.05;
+	}
+	//飞机价值很高
+	else if(play.comboType==CardComboType::PLANE || play.comboType==CardComboType::PLANE1 || play.comboType==CardComboType::PLANE2)
+	{
+		bonus += 2.0;
+		bonus += play.cards.size() * 0.10;
+
+		//高飞机也会浪费资源
+		bonus -= play.comboLevel * 0.03;
+	}
+	//四带二
+	else if (play.comboType == CardComboType::QUADRUPLE2 || play.comboType == CardComboType::QUADRUPLE4)
+	{
+		// 四带二也能快速减少手牌，属于较强的整理牌型。
+		bonus += 1.2;
+		bonus += play.cards.size() * 0.06;
+		bonus -= play.comboLevel * 0.05;
+	}
+	else if (play.comboType == CardComboType::SSHUTTLE ||
+	         play.comboType == CardComboType::SSHUTTLE2 ||
+	         play.comboType == CardComboType::SSHUTTLE4)
+	{
+		// 航天飞机是更强的连续整理牌型，价值应略高于四带二。
+		bonus += 1.8;
+		bonus += play.cards.size() * 0.08;
+		bonus -= play.comboLevel * 0.03;
+	}
+
+	//三条带散
+	else if(play.comboType==CardComboType::TRIPLET1 || play.comboType==CardComboType::TRIPLET2)
+	{
+		bonus += 1.2;
+		bonus += play.cards.size() * 0.06;
+
+		//高三条
+		bonus -= play.comboLevel * 0.05;
+
+		// 三带二如果带走 A、2、王这类控牌，通常不是单纯的整理牌。
+		// 控牌损失函数会整体扣一次，这里只补一点自由轮结构层面的保守修正。
+		for(Card card : play.cards)
+		{
+			Level level = card2level(card);
+			if(level >= 11)
+				bonus -= 0.6;
+		}
+	}
+
+	else if (play.comboType == CardComboType::TRIPLET)
+	{
+		// 自由出牌时，裸三条通常很亏。
+		// 如果能三带一或三带二，就应该顺手带走散牌，而不是只出三张。
+		bonus -= 3.0;
+
+		// 高位三条还有控牌价值，更不应该裸出。
+		bonus -= play.comboLevel * 0.08;
+	}
+
+	else if (play.comboType == CardComboType::PAIR)
+	{
+		// 自由出牌时，低对子可以主动走掉，减少手牌碎片。
+		bonus += 0.8;
+
+		// 高对子仍然有一定控牌价值，所以点数越高扣得越多。
+		bonus -= play.comboLevel * 0.08;
+	}
+	else if (play.comboType == CardComboType::SINGLE)
+	{
+		// 自由出牌时，单张通常是最弱的主动出牌。
+		// 只有低单张适合先走，高单张应尽量保留控牌。
+		bonus -= play.comboLevel * 0.12;
+	}
+
+
+	return bonus;
+}
+
+// 判断一副手牌里是否还保留明显控牌。
+// 这里的控牌不是严格数学定义，而是策略层的近似：
+// 2、王、炸弹都可以在关键时刻抢回牌权。
+bool hasControlCard(vector<Card> &hand)
+{
+	// 先按点数分组，便于判断炸弹。
+	auto grouped = groupCardsByLevel(hand);
+
+	// 只要还有 2，就认为还有单牌/对子层面的控制力。
+	if(!grouped[12].empty())
+		return true;
+
+	// 小王是控制牌。
+	if(!grouped[level_joker].empty())
+		return true;
+
+	// 大王是控制牌。
+	if(!grouped[level_JOKER].empty())
+		return true;
+
+	// 任意炸弹也是控制牌。
+	for(Level level = 0; level < level_joker; level++)
+	{
+		if(grouped[level].size() == 4)
+			return true;
+	}
+
+	// 否则认为没有明显控牌。
+	return false;
+}
+
+// 计算一副手牌的控牌价值。
+// 这个值不是整手牌强度，只表示关键时刻抢回牌权的能力。
+// 后续可以用“出牌前控牌价值 - 出牌后控牌价值”判断一手牌消耗了多少控牌资源。
+double getControlValue(vector<Card> &hand)
+{
+	// 按点数分组，方便统计 2、王、炸弹。
+	auto grouped = groupCardsByLevel(hand);
+
+	// 从 0 开始累计控牌价值。
+	double value = 0.0;
+
+	// 统计 2 的数量。
+	int twoCount = grouped[12].size();
+
+	// 单张 2 是基本控牌。
+	if(twoCount == 1)
+		value += 2.5;
+
+	// 一对 2 可以压多数对子，也可以拆成两次单牌控制。
+	else if(twoCount == 2)
+		value += 5.8;
+
+	// 三张 2 控制力更强，既能拆，也能作为三条压制。
+	else if(twoCount == 3)
+		value += 8.5;
+
+	// 四个 2 极其特殊，既是高炸弹，也能拆成多次控牌。
+	else if(twoCount == 4)
+		value += 13.0;
+
+	// 小王是强控牌。
+	if(!grouped[level_joker].empty())
+		value += 4.0;
+
+	// 大王比小王略强。
+	if(!grouped[level_JOKER].empty())
+		value += 4.8;
+
+	// 双王同时存在时，额外计算火箭价值。
+	if(!grouped[level_joker].empty() && !grouped[level_JOKER].empty())
+		value += 5.0;
+
+	// 普通炸弹也有控牌价值。
+	for(Level level = 0; level < level_joker; level++)
+	{
+		// 只统计四张同点数的炸弹。
+		if(grouped[level].size() == 4)
+		{
+			// 低位炸弹价值较低，高位炸弹价值较高。
+			value += 4.0 + level * 0.25;
+		}
+	}
+
+	// 返回整手牌的控牌价值。
+	return value;
+}
+
+// 评估某一手牌造成的控牌资源损失。
+// 这个函数只看“我打出这手以后，手里还剩多少抢牌权能力”。
+// 返回值是负分：损失越大，扣分越多。
+double evaluateControlLoss(GameState &state, CardCombo &play)
+{
+	// PASS 不消耗手牌资源。
+	if(play.comboType == CardComboType::PASS)
+		return 0.0;
+
+	// 如果这一手直接出完，控牌损失不重要。
+	if(isWinningPlay(state, play))
+		return 0.0;
+
+	// 计算出牌后的手牌。
+	vector<Card> handAfter = removeCardsFromHand(state.myCards, play.cards);
+
+	// 如果出完后只剩一手，说明我已经接近胜利，不要因为控牌损失过度保守。
+	if(!handAfter.empty() && getMinHandCount(handAfter) == 1)
+		return 0.0;
+
+	// 计算出牌前后的控牌价值差。
+	double controlBefore = getControlValue(state.myCards);
+	double controlAfter = getControlValue(handAfter);
+	double controlLoss = controlBefore - controlAfter;
+
+	// 没有消耗控牌，或者控牌价值反而没下降，就不扣分。
+	if(controlLoss <= 0.0)
+		return 0.0;
+
+	// 判断当前是不是自由出牌。
+	bool freeTurn = state.lastValidCombo.comboType == CardComboType::PASS;
+
+	// 判断当前是不是压对手。
+	bool followingOpponent = !freeTurn && state.lastValidPlayer >= 0 && !isSameSidePlayer(state, state.lastValidPlayer);
+
+	// 判断当前是不是必须压住快出完的对手。
+	bool followingDangerousOpponent = followingOpponent && state.cardRemaining[state.lastValidPlayer] <= 2;
+
+	// 基础扣分系数。
+	double rate = 0.35;
+
+	// 自由轮主动交控牌更亏，因为不是被迫防守。
+	if(freeTurn)
+		rate = 0.45;
+
+	// 危险自由轮更要保留控牌，避免下一轮拦不住对手。
+	if(freeTurn && isDangerousSituation(state))
+		rate = 0.65;
+
+	// 如果正在压危险对手，交控牌是必要成本，扣分要降低。
+	if(followingDangerousOpponent)
+		rate = 0.15;
+
+	// 计算控牌损失扣分。
+	double penalty = controlLoss * rate;
+
+	// 四个 2 不能当普通炸弹处理。
+	// 除非是在压危险对手，否则主动或普通局面打出 2222 都要额外扣分。
+	if(play.comboType == CardComboType::BOMB && play.comboLevel == 12 && !followingDangerousOpponent)
+	{
+		if(freeTurn)
+			penalty += 4.0;
+		else
+			penalty += 2.0;
+	}
+
+	// 返回负分，表示这手牌消耗了控牌资源。
+	return -penalty;
+}
+
+//评估出完这手之后，只剩一手牌的质量
+// 这个函数只在 handAfter 的最小手数为 1 时有意义。
+// 返回值：好的一手加分，差的一手少加甚至扣分。
+double evaluateOneTurnLeftQuality(GameState &state,vector<Card> &handAfter)
+{
+	//如果已经出完不套路
+	if(handAfter.empty())
+		return 0;
+	
+	if(getMinHandCount(handAfter) != 1)
+		return 0;
+
+	//把剩余手牌识别成一个牌型
+	CardCombo remainCombo(handAfter.begin(), handAfter.end());
+
+	//累计质量分
+	double score = 0;
+
+	//剩一手多张牌通常更好
+	score += handAfter.size() * 0.4;
+
+	//剩单张，要看点数
+	if(remainCombo.comboType == CardComboType::SINGLE)
+	{
+		//低单张很危险
+		if(remainCombo.comboLevel <=6)
+			score -= 3;
+		else if(remainCombo.comboLevel<=10)
+			score -= 1;
+		else
+			score += 2;
+	}
+	//剩顺子、连对等，质量较好
+	else if(remainCombo.comboType==CardComboType::STRAIGHT || remainCombo.comboType==CardComboType::STRAIGHT2 || remainCombo.comboType==CardComboType::TRIPLET||
+			remainCombo.comboType==CardComboType::TRIPLET1 || remainCombo.comboType==CardComboType::TRIPLET2 || remainCombo.comboType==CardComboType::PLANE ||
+			remainCombo.comboType==CardComboType::PLANE1 || remainCombo.comboType==CardComboType::PLANE2)
+	{
+		score += 2.5;
+	}
+
+	//如果当前是危险局面，剩低单张更糟
+	if(isDangerousSituation(state) && remainCombo.comboType == CardComboType::SINGLE &&
+			remainCombo.comboLevel<=10)
+	{
+				score -= 2;
+	}
+
+	return score;
+}
+
+// 危险局面下，自由出牌额外评估。
+// 这个函数只处理一种情况：我有主动权，但对手快出完了。
+// 核心思想：自由轮不能只贪图“多出几张”，还要保留能拦住对手的控牌。
+double evaluateDangerousFreeTurn(GameState &state, CardCombo &play)
+{
+	// 如果不是自由出牌，这个函数不负责处理。
+	if(state.lastValidCombo.comboType != CardComboType::PASS)
+		return 0;
+
+	// PASS 在自由轮不会被选择，这里不额外处理。
+	if(play.comboType == CardComboType::PASS)
+		return 0;
+
+	// 如果这一手可以直接出完，永远应该优先出完，不扣分。
+	if(isWinningPlay(state, play))
+		return 0;
+
+	// 先计算出牌后的剩余手牌。
+	vector<Card> handAfter = removeCardsFromHand(state.myCards, play.cards);
+
+	// 计算出牌前后的控牌价值。
+	double controlBefore = getControlValue(state.myCards);
+	double controlAfter = getControlValue(handAfter);
+	double controlLoss = controlBefore - controlAfter;
+
+	// 如果出牌前有控牌，出牌后几乎没有控牌，说明这一手把最后的防守资源交掉了。
+	bool lostLastControl = controlBefore > 0.0 && controlAfter <= 0.1;
+
+	// 如果出完后只剩一手，说明我也很接近胜利，不要过度保守。
+	if(!handAfter.empty() && getMinHandCount(handAfter) == 1)
+		return 0;
+
+	// 从 0 开始累计危险惩罚。
+	double penalty = 0;
+
+	// 农民视角：地主剩牌越少，我越不能乱交控牌。
+	if(!state.isLandlord())
+	{
+		// 读取地主剩余牌数。
+		int landlordRemain = state.cardRemaining[state.landlordPosition];
+
+		// 找到我的农民队友。
+		// 农民局里除了我和地主，剩下的那个玩家就是队友。
+		int teammate = -1;
+		for(int player = 0; player < PLAYER_COUNT; player++)
+		{
+			if(player != state.myPosition && player != state.landlordPosition)
+				teammate = player;
+		}
+
+		// 地主剩 5 张以内已经进入预警。
+		if(landlordRemain <= 5)
+		{
+			// 主动打出硬控牌很危险，例如炸弹、火箭、四带二。
+			if(isHardControlPlay(play))
+				penalty -= 8.0;
+
+			// 主动打出 2 或王，也会削弱后续拦截能力。
+			for(Card card : play.cards)
+			{
+				Level level = card2level(card);
+
+				// 2 是重要控牌，地主快跑时不能随便主动打掉。
+				if(level == 12)
+					penalty -= 2.0;
+
+				// 小王更重要。
+				if(level == level_joker)
+					penalty -= 3.0;
+
+				// 大王最重要。
+				if(level == level_JOKER)
+					penalty -= 3.5;
+
+			}
+
+			// 如果这一手把我最后的控牌打没了，危险局面下要重罚。
+			// 典型错误就是地主还剩 2 张，我自由轮主动打掉最后一对 2。
+			if(lostLastControl)
+				penalty -= 6.0;
+
+			// 如果没有完全打光控牌，但控牌价值大幅下降，也要额外扣一点。
+			if(controlLoss > 6.0)
+				penalty -= (controlLoss - 6.0) * 0.25;
+
+			// 地主快出完时，如果我自己也不远了，就不要轻易把主动权交出去。
+			// 这里不是禁止队友接牌，而是提高我自己连续进攻的价值。
+			if(state.myCards.size() <= 10 && state.cardRemaining[teammate] > state.myCards.size())
+				penalty += 2.0;
+		}
+
+		// 地主剩 2 张以内是强危险状态，惩罚再加重。
+		if(landlordRemain <= 2)
+			penalty *= 1.6;
+	}
+
+	// 地主视角：任意农民快出完，也要避免自由轮乱交硬控。
+	else
+	{
+		for(int player = 0; player < PLAYER_COUNT; player++)
+		{
+			// 跳过自己。
+			if(player == state.myPosition)
+				continue;
+
+			// 地主没有队友，其他玩家都是对手。
+			if(state.cardRemaining[player] <= 5)
+			{
+				if(isHardControlPlay(play))
+					penalty -= 6.0;
+
+				// 地主自己没有队友，如果把最后控牌打没，后面可能完全拦不住农民。
+				if(lostLastControl)
+					penalty -= 5.0;
+
+				// 控牌价值大幅下降时，即使还没完全打光，也要有所保留。
+				if(controlLoss > 6.0)
+					penalty -= (controlLoss - 6.0) * 0.20;
+
+				for(Card card : play.cards)
+				{
+					Level level = card2level(card);
+
+					if(level == 12)
+						penalty -= 1.5;
+					if(level == level_joker)
+						penalty -= 2.5;
+					if(level == level_JOKER)
+						penalty -= 3.0;
+				}
+			}
+		}
+	}
+
+	// 返回危险自由轮的额外修正分。
+	return penalty;
+}
+
 
 //评估一手候选牌在当前真实局面下的启发式分数
 double evaluatePlayHScore(GameState &state ,CardCombo &play)
@@ -2409,35 +3070,129 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
 	// 判断当前是否是在压危险对手
 	bool followingDangerousOpponent = followingOpponent && state.cardRemaining[state.lastValidPlayer] <= 2;
 
+	// 判断当前是不是农民在跟地主的牌。
+	bool followingLandlord = followingOpponent && !state.isLandlord() && state.lastValidPlayer == state.landlordPosition;
+
+	// 判断我是不是地主下家。
+	// 地主下家是地主后手的第一个农民。
+	bool myIsLandlordNext = !state.isLandlord() && state.myPosition == (state.landlordPosition + 1) % PLAYER_COUNT;
+
+	// 判断我是不是地主上家。
+	// 地主上家是地主出牌前的最后一个农民，拦地主责任更重。
+	bool myIsLandlordPrev = !state.isLandlord() && state.myPosition == (state.landlordPosition + 2) % PLAYER_COUNT;
+
+	// 判断当前是不是“队友出了较大的牌，我最好别抢”。
+	bool teammateHighCardShouldHold = followingTeammate &&  state.lastValidCombo.comboLevel >= 9 &&
+                                  (
+                                      // 我是地主上家，队友是地主下家；队友先出了大牌，我不要乱压。
+                                      (myIsLandlordPrev && state.lastValidPlayer == (state.landlordPosition + 1) % PLAYER_COUNT) ||
+
+                                      // 我是地主下家，队友是地主上家；地主已经没压队友，我也不要乱压。
+                                      (myIsLandlordNext && state.lastValidPlayer == (state.landlordPosition + 2) % PLAYER_COUNT)
+                                  );
+
+	// 记录下一个出牌的人。
+	int nextPlayer = (state.myPosition + 1) % PLAYER_COUNT;
+
+	// 判断下家是不是我的队友。
+	bool nextPlayerIsTeammate = isSameSidePlayer(state, nextPlayer);
+
+	// 判断是否适合送队友报单。
+	// 只有自由出牌时才考虑，因为跟牌阶段不能随便选择牌型。
+	// 队友只剩 1 张时，出单张最可能让队友直接走完。	
+	bool shouldFeedTeammateSingle = freeTurn && nextPlayerIsTeammate && state.cardRemaining[nextPlayer] == 1;
+
+	// 判断地主是否只剩 1 张。
+	bool landlordOnlyOneLeft = !state.isLandlord() &&  state.cardRemaining[state.landlordPosition] == 1;
+
+	// 判断下一个出牌的人是不是地主。
+	bool nextPlayerIsLandlord = nextPlayer == state.landlordPosition;
+
+	// 判断自由出牌时是否不能出单张。
+	// 如果地主只剩 1 张，或者下家就是地主，出单张风险很高。
+	bool shouldAvoidSingleForLandlord = freeTurn && !state.isLandlord() && landlordOnlyOneLeft && play.comboType == CardComboType::SINGLE;
+
+	// 判断地主是否只剩 2 张。
+	bool landlordOnlyTwoLeft = !state.isLandlord() && state.cardRemaining[state.landlordPosition] == 2;
+
+	// 判断自由出牌时是否不能随便出对子。
+	bool shouldAvoidPairForLandlord = freeTurn && !state.isLandlord() && landlordOnlyTwoLeft && play.comboType == CardComboType::PAIR;
+
+	// 判断当前是否是农民自由出牌，但地主已经进入 3~5 张警戒区。
+	// 这种局面下，自由出牌不能只考虑整理自己的牌，还要考虑不能轻易把牌权交给地主。
+	bool freeTurnAgainstWarningLandlord = freeTurn && !state.isLandlord() && state.cardRemaining[state.landlordPosition] <= 5 && state.cardRemaining[state.landlordPosition] > 2;
+
+
+	// 地主剩 5 张以内时，就进入警戒状态。
+	// 注意这不是最高危险，最高危险仍然是 <= 2。
+	bool followingWarningLandlord = followingLandlord && state.cardRemaining[state.landlordPosition] <= 5;
+
 	// 判断当前是否应该主动争夺牌权
 	bool fightForControl = shouldFightControl(state);
 
 	//复用已有的基础收益评分,只看出牌后，我的手牌有没有变好
 	double score = evaluatePlayGain(state.myCards, play, state);
 
+	// 额外计算控牌资源损失。
+	// 这一步用来避免把 2、王、炸弹，尤其是 2222，轻易当普通牌型消耗掉。
+	score += evaluateControlLoss(state, play);
+
 	//压队友的情况
-	if(followingTeammate)
+	if(followingTeammate && play.comboType != CardComboType::PASS)
 	{
-		if(play.comboType == CardComboType::PASS)
-			//让队友继续控牌
-			score += 1.0;
-		else
-		{
-			//普通局面压队友扣分
-			score -= 1.0;
+			score -= 0.3;
+
+			 // 如果队友已经出了一手较大的牌，并且这手牌有机会卡住地主，
+    		// 我们再压队友就等于把队友的防守效果拆掉，要额外扣分。
+    		if(teammateHighCardShouldHold)
+        		score -= 3;
 			
 			//不应该用炸弹
-			if(isHardControlPlay(play) && !dangerous)
-				score -= 10.0;
+			if(isHardControlPlay(play))
+			{
+				//在用炸弹炸队友的情况下，考虑是不是危险局面及控牌局面
+				double teammateHardControl = 10;
+				if(fightForControl)
+					teammateHardControl *= 0.5;
+				if(dangerous)
+					teammateHardControl *= 0.25;
+
+				score -= teammateHardControl;
+			}
 
 			//用 2 或王压队友也比较亏，普通局面要扣分
+			
+			//如果在争夺牌权的情况下，用2或王需要分开处理
+			double teammateHighCardRate = 1;
+
+			//在抢牌权时
+			if(fightForControl)
+				teammateHighCardRate = 0.5;
+			//危险局面下
+			if(dangerous)
+				teammateHighCardRate = 0.25;
 			for(Card card:play.cards)
 			{
 				Level level = card2level(card);
-				if(level>=12 && !dangerous)
-					score -= 2.0;
+				if( level == 12)
+					score -= 1 * teammateHighCardRate;
+				if(level==level_joker)
+					score -= 1.5 * teammateHighCardRate;
+				if(level== level_JOKER)
+					score -= 1.8 * teammateHighCardRate;
 			}
-		}
+		
+			// 如果我是地主下家，而队友是地主上家
+    		if(myIsLandlordNext && state.lastValidPlayer == (state.landlordPosition + 2) % PLAYER_COUNT)
+    		{
+        		// 直接压队友会破坏队友对地主的拦截。
+        		score -= 5.0;
+
+        // 如果队友出的牌本来就比较大，说明它更可能卡住地主，
+        		if(state.lastValidCombo.comboLevel >= 9)
+            		score -= 3.0;
+    		}
+
 	}
 
 	// 如果当前要压的是危险对手出的牌，PASS 风险极高。
@@ -2464,31 +3219,78 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
 		{
 			//如果压队友，配合给奖励
 			if(followingTeammate)
-				score += 1.5;
+			{
+		
+    			// 如果我是地主下家，而队友是地主上家，
+    			if(myIsLandlordNext && state.lastValidPlayer == (state.landlordPosition + 2) % PLAYER_COUNT)
+   			 	{
+        			score += 2.0;
+        			// 队友牌本身越大，越可能卡住地主，PASS 更合理。
+        			if(state.lastValidCombo.comboLevel >= 9)
+            			score += 2.0;
+    			}
+    			else if(state.cardRemaining[state.lastValidPlayer] <= 2)
+    			{
+        			score += 1.0;
+    			}
+    			else if(fightForControl)
+    			{
+        			// 需要争牌权时，普通 PASS 队友会稍微亏
+        			score -= 2.0;
+    			}
+    			else
+    			{
+        			// 普通配合局面，小幅扣分，避免无脑过
+        			score -= 0.5;
+    			}
+
+
+			}
 			else if(followingOpponent)
 			{
-				//如果要主动出击，PASS代价更高
-				if(fightForControl)
-					score -= 5.0;
-				else
-					score -= 2.0;
+				//如果我是农民，并且当前在跟地主的牌
+				// 地主剩 3~5 张时，PASS 可能让地主直接续上牌权，所以要额外扣分。
+    			// 地主剩 <=2 张的情况已经由 followingDangerousOpponent 重罚，这里不重复处理
+				if(followingWarningLandlord && !followingDangerousOpponent)
+				{
+					//记录地主还剩几张牌
+					int landlordRemain = state.cardRemaining[state.landlordPosition];
+
+					//地主接近出完，PASS代价更高
+					// 剩 5 张扣 3，剩 4 张扣 4，剩 3 张扣 5
+					score -= 3 + (5 - landlordRemain) * 1;
+				}
+				
+			// 如果当前整体判断应该争夺牌权，PASS 继续扣分。
+			if(fightForControl)
+				score -= 5.0;
+			else
+				score -= 2.0;
 			}
 		}
 
 		//硬控牌
 		if(isHardControlPlay(play))
 		{
-			//如果不是在压危险对手，扣分
-			if(!followingDangerousOpponent)
-				score -= 6.0;
-			
-			//如果在压危险对手，加分
-			else
-				score += 2.0;
+			if(followingDangerousOpponent)
+    		{
+        		// 压危险对手时，硬控牌可以接受。
+        		score += 2.0;
+    		}
+    		else if(!followingTeammate)
+    		{
+        		// 不是压队友、也不是压危险对手时，正常扣资源成本。
+        		score -= 6.0;
+
+				// 如果当前要压的是炸弹，说明我也必须交更高级硬控。
+        		// 普通局面下这类资源非常贵，除非危险，否则更倾向 PASS 保留。
+        		if(state.lastValidCombo.comboType == CardComboType::BOMB)
+            		score -= 4.0;
+    		}
 		}
 
 		//普通局面下保护2和王
-		if(!followingDangerousOpponent && play.comboType!=CardComboType::PASS)
+		if(!followingDangerousOpponent && !followingTeammate &&play.comboType!=CardComboType::PASS)
 		{
 			//强牌权时，惩罚低
 			double rate = fightForControl ? 0.4 : 1.0;
@@ -2512,40 +3314,142 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
 
 			if(fightForControl)
 				score += 3.0;
+
+			// 如果我是农民，并且当前压的是地主的牌。
+    		// 地主剩 3~5 张时，压地主比压普通对手更重要。
+    		if(followingWarningLandlord && !followingDangerousOpponent)
+    		{
+        		// 记录地主剩牌数。
+        		int landlordRemain = state.cardRemaining[state.landlordPosition];
+
+        		// 地主剩牌越少，成功压住他的价值越高。
+        		// 剩 5 张奖励 2.0，剩 4 张奖励 2.8，剩 3 张奖励 3.6。
+        		score += 2.0 + (5 - landlordRemain) * 0.8;
+
+        		// 如果我是地主上家，且现在轮到我最后拦地主，
+        		// 这时不能指望队友再补救，所以额外鼓励压牌。
+        		if(state.myPosition == (state.landlordPosition + 2) % PLAYER_COUNT)
+            		score += 2.0;
+    		}
+
+			// 普通跟牌时，同牌型里优先用刚好能压过的低牌。
+    		// 否则样本分可能会把 AA、2、王这种高控牌推到前面。
+    		if(play.comboType == CardComboType::SINGLE ||play.comboType == CardComboType::PAIR ||play.comboType == CardComboType::TRIPLET)
+    		{
+        		double levelCostRate = fightForControl ? 0.08 : 0.12;
+        		score -= play.comboLevel * levelCostRate;
+    		}
+
+			// 如果我是地主上家，并且当前正在压地主的牌
+    		if(myIsLandlordPrev && state.lastValidPlayer == state.landlordPosition)
+    		{
+        		score += 3.0;
+
+        		int landlordRemain = state.cardRemaining[state.landlordPosition];
+
+        		if(landlordRemain <= 5)
+            		score += (6 - landlordRemain) * 1.0;
+    		}
+
 		}
 
 		//自由出牌
-		// 自由出牌时，我拥有主动权，应优先打出能整理手牌的组合。
+		// 自由出牌时，我拥有主动权，应优先打出能整理手牌的组合
 		if (freeTurn && play.comboType != CardComboType::PASS)
 		{
-    		// 多张牌组合通常比单张更能推进出完进度。
-    		if (play.cards.size() >= 5)
-        		score += 2.0;
-
-			//自由出牌时，同牌型更倾向先走低牌
-			//这样可以避免 333 和 AAA 启发式打平后，被样本分推去先出 AAA
-			if(play.comboType == CardComboType::SINGLE ||
-			   play.comboType == CardComboType::PAIR ||
-			   play.comboType == CardComboType::TRIPLET)
-			{
-				score -= play.comboLevel * 0.08;
-			}
-
-    		// 三带、顺子、连对、飞机等组合牌优先级更高。
-    		if (play.comboType == CardComboType::STRAIGHT ||
-        		play.comboType == CardComboType::STRAIGHT2 ||
-        		play.comboType == CardComboType::TRIPLET1 ||
-        		play.comboType == CardComboType::TRIPLET2 ||
-        		play.comboType == CardComboType::PLANE ||
-        		play.comboType == CardComboType::PLANE1 ||
-        		play.comboType == CardComboType::PLANE2)
+			// 如果下家队友只剩 1 张，我自由出牌时优先出单张送队友
+    		if(shouldFeedTeammateSingle)
     		{
-        		score += 2.0;
+        		if(play.comboType == CardComboType::SINGLE)
+        		{
+            		score += 8.0;
+
+            		// 单张越小越好
+            		score -= play.comboLevel * 0.15;
+        		}
+        		else
+        		{
+            		// 不出单张会错过送队友的机会，轻微扣分。
+            		score -= 4.0;
+        		}
+    		}
+			
+			// 如果地主只剩 1 张，我自由出牌时不能随便出单张
+    		if(shouldAvoidSingleForLandlord)
+    		{
+        		score -= 10.0;
+
+        		// 下家就是地主
+        		if(nextPlayerIsLandlord)
+            		score -= 4.0;
     		}
 
-    		// 自由出牌时不鼓励先出炸弹或火箭
-    		if (isHardControlPlay(play))
-        		score -= 8.0;
+			// 如果地主只剩 2 张，我自由出牌时不要轻易出对子
+    		if(shouldAvoidPairForLandlord)
+    		{
+        		score -= 9.0;
+        		// 下家就是地主
+        		if(nextPlayerIsLandlord)
+            		score -= 4.0;
+        		// 对子越小，风险越高
+        		score -= (14 - play.comboLevel) * 0.2;
+
+			
+
+    		}
+
+			// 如果我是农民自由出牌，并且地主只剩 3~5 张，
+    		// 这时要优先打地主不容易接的牌，避免小牌把牌权交出去。
+    		if(freeTurnAgainstWarningLandlord)
+    		{
+        		int landlordRemain = state.cardRemaining[state.landlordPosition];
+        		double warningRate = 6.0 - landlordRemain;
+        		// 出牌等级越高，地主越不容易接住，略微加分
+        		score += play.comboLevel * 0.08 * warningRate;
+        		// 小单张最容易把牌权送出去
+        		if(play.comboType == CardComboType::SINGLE && play.comboLevel < 10)
+            		score -= 2.0 * warningRate;
+
+        		// 小对子
+        		if(play.comboType == CardComboType::PAIR && play.comboLevel < 10)
+            		score -= 1.5 * warningRate;
+
+        		// 如果下家就是地主，地主马上可以接牌
+        		if(nextPlayerIsLandlord && play.comboLevel < 10)
+            		score -= 2.0;
+
+				// 高单、高对、高三张在这种局面下更安全
+        		if(play.comboType == CardComboType::SINGLE || play.comboType == CardComboType::PAIR || play.comboType == CardComboType::TRIPLET)
+        		{
+            		if(play.comboLevel >= 10)
+                		score += 1.2 * warningRate;
+            		if(play.comboLevel >= 12)
+                		score += 1.5 * warningRate;
+        		}
+
+        		// 顺子、连对、飞机这类一次走多张的牌，如果能明显减少我的手牌，也可以主动打出去抢节奏
+        		if(play.comboType == CardComboType::STRAIGHT ||
+           		play.comboType == CardComboType::STRAIGHT2 ||
+           		play.comboType == CardComboType::PLANE ||
+           		play.comboType == CardComboType::PLANE1 ||
+           		play.comboType == CardComboType::PLANE2)
+       		 	{
+            		score += 1.0 * warningRate;
+
+            		// 一次出得越多越好
+            		score += play.cards.size() * 0.15 * warningRate;
+      		  	}
+
+    		}
+
+
+			// 自由出牌时，额外评估这手牌主动打出去是否能整理手牌结构。
+			// 例如长顺、连对、飞机应该加分；炸弹、火箭主动打出应该扣分。
+			score += evaluateFreeTurn(play);
+
+			// 如果当前是危险自由轮，例如地主或对手快出完了，
+			// 额外惩罚主动打掉 2、王、炸弹这类控牌的行为。
+			score += evaluateDangerousFreeTurn(state, play);
 		}
 
 		// 只剩一手牌
@@ -2554,9 +3458,18 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
     		// 计算出牌后的剩余手牌。
     		vector<Card> handAfter = removeCardsFromHand(state.myCards, play.cards);
 
-    		// 如果剩余手牌只需要一手出完，给较高奖励。
+			//直接出完，最高奖励
+			if(handAfter.empty())
+				return score + 100;
+
+			// 如果剩余手牌只需要一手出完，给较高奖励。
     		if (!handAfter.empty() && getMinHandCount(handAfter) == 1)
-        		score += 8.0;
+        	{
+				//基础奖励
+				score += 5;
+				//质量修正
+				score += evaluateOneTurnLeftQuality(state, handAfter);
+			}
 
 			if(fightForControl)
 			{
@@ -2588,11 +3501,12 @@ double evaluatePlayInDeal(GameState &state,InferredDeal &deal,CardCombo &play)
 
 	//如果出完，直接出
 	if(myHandAfter.empty())
-		return 10000;
+		return 100;
 	
 	//比较手数
 	int beforeCount = getMinHandCount(myHandBefore);
 	int afterCount = getMinHandCount(myHandAfter);
+	bool oneTurnLeftAfter = afterCount == 1;
 
 	//样本收益
 	double score = 0;
@@ -2602,33 +3516,51 @@ double evaluatePlayInDeal(GameState &state,InferredDeal &deal,CardCombo &play)
 	//出得多，接近出完
 	score += play.cards.size() * 0.3;
 
+	//出完只剩一手，给额外奖励
+	if(oneTurnLeftAfter)
+	{
+		score += 5.0;
+		score += evaluateOneTurnLeftQuality(state, myHandAfter);
+	}
+
 	//===接入随机补全
-	int nextPlayer = (state.myPosition + 1) % PLAYER_COUNT;
-	bool nextPlaySameSide = isSameSidePlayer(state, nextPlayer);
+	//估计这手牌打出去后，其他玩家是否有能力压过我
+	bool opponentCanBeat = false;
+	bool teammateCanBeat = false;
+	bool dangerousOpponentCanBeat = false;
 
-	if(canPlayerBeatInDeal(deal,nextPlayer,play))
+	for (int player = 0; player < PLAYER_COUNT;player++)
 	{
-		//下家是对手
-		if(!nextPlaySameSide)
-		{
-			//普通情况
-			score -= 4.0;
+		if(player==state.myPosition)
+		continue;
 
-			//如果只剩3张牌，风险大
-			if(state.cardRemaining[nextPlayer]<=3)
-				score -= 8.0;
-		}
-		//下家是队友
-		else
+		if(canPlayerBeatInDeal(deal,player,play))
 		{
-			score -= 1.0;
+			if(isSameSidePlayer(state,player))
+				teammateCanBeat = true;
+			else
+				{
+					opponentCanBeat = true;
+					//如果能压过我的对手只剩很少的牌，风险很大
+					if(state.cardRemaining[player] <=3 )
+						dangerousOpponentCanBeat = true;
+				}
 		}
 	}
-	else
-	{
-		//下家压不了我
-		score += 2.0;
-	}
+
+	//如果对手能压，这手牌的控场价值下降
+	if(opponentCanBeat)
+		score -= 4;
+	if(dangerousOpponentCanBeat)
+		score -= 6;
+	//如果队友能压，风险较小
+	if(teammateCanBeat)
+		score -= 1;
+	
+	//如果没人能压，说明这手牌在该样本下很可能拿到一轮牌权
+	if(!opponentCanBeat && !teammateCanBeat)
+		score += 2;
+
 
 	return score;
 }
@@ -2661,6 +3593,30 @@ double evaluatePlayBySamples(GameState &state,vector<InferredDeal> &deals,CardCo
 		return 0;
 
 	return totalScore / totalWeight;
+}
+
+// 返回随机补全样本分在最终评分中的权重。
+// 这个函数只负责“样本分占多少比例”，不直接评价某一手牌好坏。
+// debugTopPlays 和 decidePlay 都调用它，避免调试分数和真实决策使用两套规则。
+double getSampleWeight(GameState &state, CardCombo &play)
+{
+	// 默认跟牌局面：随机补全样本有一定参考价值。
+	double sampleWeight = 0.4;
+
+	// 自由出牌主要看启发式整理牌型，样本只做弱参考。
+	if(state.lastValidCombo.comboType == CardComboType::PASS)
+		sampleWeight = 0.1;
+
+	// 危险自由轮更需要判断这手牌会不会被对手接住。
+	if(state.lastValidCombo.comboType == CardComboType::PASS && isDangerousSituation(state))
+		sampleWeight = 0.35;
+
+	// 普通局面下，硬控牌的样本分容易虚高。
+	// 这种牌是否该出，优先交给启发式资源保护逻辑判断。
+	if(isHardControlPlay(play) && !isDangerousSituation(state))
+		sampleWeight = 0.0;
+
+	return sampleWeight;
 }
 
 //从所有合法出牌中选出启发式评分最高的前 topK个候选
@@ -2728,11 +3684,7 @@ void debugTopPlays(GameState &state,vector<CardCombo> &validPlays)
 		scored.sampleScore = evaluatePlayBySamples(state, deals, scored.play);
 
 		// 使用和 decidePlay 一致的样本权重规则。
-		double sampleWeight = 0.4;
-		if(state.lastValidCombo.comboType == CardComboType::PASS)
-			sampleWeight = 0.1;
-		if(isHardControlPlay(scored.play) && !isDangerousSituation(state))
-			sampleWeight = 0;
+		double sampleWeight = getSampleWeight(state, scored.play);
 
 		// 融合成最终分。
 		double finalScore = scored.score + scored.sampleScore * sampleWeight;
@@ -2802,11 +3754,7 @@ CardCombo decidePlay(GameState &state, vector<CardCombo> &validPlays)
 	for(ScoredPlay &scored:topPlays)
 	{
 		//设定随机样本的权重
-		double sampleWeight = 0.4;
-		if(state.lastValidCombo.comboType == CardComboType::PASS)
-			sampleWeight = 0.1;
-		if(isHardControlPlay(scored.play) && !isDangerousSituation(state))
-			sampleWeight = 0;
+		double sampleWeight = getSampleWeight(state, scored.play);
 
 		//启发式评分和样本评分
 		double finalScore = scored.score + scored.sampleScore * sampleWeight;
