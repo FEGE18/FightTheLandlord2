@@ -78,19 +78,6 @@ static string comboSummary(const CardCombo &play)
     return out.str();
 }
 
-static double effectiveSampleWeight(GameState &state, CardCombo &play)
-{
-    double sampleWeight = 0.4;
-
-    if (state.lastValidCombo.comboType == CardComboType::PASS)
-        sampleWeight = 0.1;
-
-    if (isHardControlPlay(play) && !isDangerousSituation(state))
-        sampleWeight = 0.0;
-
-    return sampleWeight;
-}
-
 int main()
 {
     std::srand(20260508);
@@ -125,7 +112,7 @@ int main()
     for (size_t index = 0; index < topPlays.size(); ++index)
     {
         topPlays[index].sampleScore = evaluatePlayBySamples(state, deals, topPlays[index].play);
-        double sampleWeight = effectiveSampleWeight(state, topPlays[index].play);
+        double sampleWeight = getSampleWeight(state, topPlays[index].play);
         double finalScore = topPlays[index].score + topPlays[index].sampleScore * sampleWeight;
 
         cout << (index + 1) << '\t'

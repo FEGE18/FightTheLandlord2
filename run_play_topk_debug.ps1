@@ -1,4 +1,4 @@
-param(
+﻿param(
     [string[]]$ChangeNote = @('调试测试：输出 TopK 表，辅助分析 PIMC 接入后的出牌偏移。')
 )
 
@@ -102,9 +102,10 @@ function New-OpponentPressurePayload {
     $firstRequest = $true
 
     while ($priorPlayed -gt 0) {
-        $take = [Math]::Min(4, $priorPlayed)
-        $chunk = @($pool[$cursor..($cursor + $take - 1)])
-        $cursor += $take
+        # 最新 test.cpp 会重放历史牌型，调试历史必须保持为合法出牌。
+        # 这里只用单张来消耗目标玩家手牌，避免随机凑出的非法四张把状态重建打崩。
+        $chunk = @($pool[$cursor])
+        $cursor += 1
 
         if ($firstRequest) {
             $requests.Add([ordered]@{
@@ -124,7 +125,7 @@ function New-OpponentPressurePayload {
         }
 
         $responses.Add(@())
-        $priorPlayed -= $take
+        $priorPlayed -= 1
     }
 
     if ($firstRequest) {
