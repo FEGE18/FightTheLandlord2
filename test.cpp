@@ -143,7 +143,7 @@ struct CardCombo
 	vector<Card> cards;		 // 原始的牌，未排序
 	vector<CardPack> packs;	 // 按数目和大小排序的牌种
 	CardComboType comboType; // 算出的牌型
-	Level comboLevel = 0;	 // 算出的大小序（主牌的等级，如果是顺子型的以最低等级为准）
+	Level comboLevel = 0;	 // 算出的大小序（主牌的等级，如果是顺子型的以最高等级为准）
 
 	/**
 						  * 检查个数最多的CardPack递减了几个
