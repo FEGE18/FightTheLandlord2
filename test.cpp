@@ -143,7 +143,7 @@ struct CardCombo
 	vector<Card> cards;		 // 原始的牌，未排序
 	vector<CardPack> packs;	 // 按数目和大小排序的牌种
 	CardComboType comboType; // 算出的牌型
-	Level comboLevel = 0;	 // 算出的大小序
+	Level comboLevel = 0;	 // 算出的大小序（主牌的等级，如果是顺子型的以最高等级为准）
 
 	/**
 						  * 检查个数最多的CardPack递减了几个
@@ -1336,9 +1336,169 @@ int getMinHandCount(const vector<Card> &hand){
 
 // 快速判断 hand 是否存在任意一手牌可以压过 lastCombo
 // 这个函数只回答“能不能压”，不需要返回具体出哪几张牌
-/*bool canBeatComboFast(const vector<Card> &hand, const CardCombo &lastCombo){
+// 用counts频率表加快查找
+bool canBeatComboFast(const vector<Card> &hand, const CardCombo &lastCombo){
+	if(lastCombo.comboType==CardComboType::PASS)return true;
+	if(hand.empty()||lastCombo.comboType==CardComboType::ROCKET)return false;	// hand判空好像有点没必要，但还是写一下
+
+	short counts[15]={0};
+	for(Card c:hand){
+		counts[card2level(c)]++;
+	}
+
+	// 有火箭，必能压过
+	if(counts[level_JOKER]==1&&counts[level_joker]==1)return true;
+
+	// 有炸弹
+	//// 如果上家是炸弹
+	if(lastCombo.comboType==CardComboType::BOMB){
+		for(Level i=lastCombo.comboLevel;i<level_joker;i++){
+			// 手牌中有能压过上家的炸弹
+			if(counts[i]==4)return true;
+		}
+		// 没有
+		return false;
+	}
+	//// 如果上家不是炸弹
+	else{
+		for(Level i=0;i<level_joker;i++){
+			if(counts[i]==4)return true;
+		}
+	}
+
+	// 常规的同牌型对比
+	//// 首先考虑手牌数量够不够，接着再考虑是否有对应牌型 & 能否压制
+	if(hand.size()<lastCombo.cards.size())return false;
 	
-}*/
+	int seqL=lastCombo.findMaxSeq();	// 上家主牌连续了多少组
+
+	// 判断副牌够不够
+	//// mStart：主牌起点；mLen：主牌长度；need：需要的副牌数；wingType：1-单张，2-对子
+	auto canAttach=[&](int mStart,int mLen,int need,int wingType){
+		int validWing=0;
+		for(Level i=0;i<=MAX_LEVEL;){
+			if(i>=mStart&&i<mStart+mLen){
+				i=mStart+mLen;
+				continue;
+			}
+			if(counts[i]>=wingType){
+				validWing++;
+			}
+			i++;
+		}
+		return validWing>=need;
+	};
+
+	//// 开始同牌型比较
+	switch(lastCombo.comboType){
+		case CardComboType::SINGLE:{
+			for(Level i=lastCombo.comboLevel+1;i<=MAX_LEVEL;i++){
+				if(counts[i]>=1)return true;
+			}
+			return false;
+		}
+
+		case CardComboType::PAIR:{
+			for(Level i=lastCombo.comboLevel+1;i<=MAX_LEVEL;i++){
+				if(counts[i]>=2)return true;
+			}
+			return false;
+		}
+
+		case CardComboType::TRIPLET:
+		case CardComboType::TRIPLET1:
+		case CardComboType::TRIPLET2:{
+			int wingType;
+			if(lastCombo.comboType==CardComboType::TRIPLET)wingType=0;
+			if(lastCombo.comboType==CardComboType::TRIPLET1)wingType=1;
+			if(lastCombo.comboType==CardComboType::TRIPLET2)wingType=2;
+			for(Level i=lastCombo.comboLevel+1;i<=MAX_LEVEL;i++){
+				if(counts[i]>=3&&(wingType==0||canAttach(i,1,1,wingType)))return true;
+			}
+			return false;
+		}
+
+		case CardComboType::STRAIGHT:
+		case CardComboType::STRAIGHT2:{
+			int type=(lastCombo.comboType==CardComboType::STRAIGHT)? 1:2;
+			int start=lastCombo.comboLevel-seqL+2;	// 从上家高一级开始
+			for(Level i=start;i<=MAX_STRAIGHT_LEVEL-seqL+1;i++){
+				bool valid=true;
+				for(int j=0;j<seqL;j++){
+					if(counts[i+j]<type){
+						valid=false;
+						break;
+					}
+				}
+				if(valid)return true;
+			}
+			return false;
+		}
+
+		case CardComboType::PLANE:
+		case CardComboType::PLANE1:
+		case CardComboType::PLANE2:{
+			int wingType;
+			if(lastCombo.comboType==CardComboType::PLANE)wingType=0;
+			if(lastCombo.comboType==CardComboType::PLANE1)wingType=1;
+			if(lastCombo.comboType==CardComboType::PLANE2)wingType=2;
+
+			int start=lastCombo.comboLevel-seqL+2;
+			for(Level i=start;i<=MAX_STRAIGHT_LEVEL-seqL+1;i++){
+				bool valid=true;
+				for(int j=0;j<seqL;j++){
+					if(counts[i+j]<3){
+						valid=false;
+						break;
+					}
+				}
+				if(valid||canAttach(i,seqL,seqL,wingType)){
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		case CardComboType::QUADRUPLE2:
+        case CardComboType::QUADRUPLE4:{
+			int wingType=(lastCombo.comboType==CardComboType::QUADRUPLE2)? 1:2;
+			for(Level i=lastCombo.comboLevel+1;i<level_joker;i++){
+				if(counts[i]==4&&canAttach(i,1,2,wingType)){
+					return true;
+				}
+			}
+			return false;
+		}
+
+		case CardComboType::SSHUTTLE:
+        case CardComboType::SSHUTTLE2:
+        case CardComboType::SSHUTTLE4:{
+			int wingType;
+			if(lastCombo.comboType==CardComboType::SSHUTTLE)wingType=0;
+			if(lastCombo.comboType==CardComboType::SSHUTTLE2)wingType=1;
+			if(lastCombo.comboType==CardComboType::SSHUTTLE4)wingType=2;
+
+			int start=lastCombo.comboLevel-seqL+2;
+			for(Level i=start;i<=MAX_STRAIGHT_LEVEL-seqL+1;i++){
+				bool valid=true;
+				for(int j=0;j<seqL;j++){
+					if(counts[i+j]<4){
+						valid=false;
+						break;
+					}
+				}
+				if(valid||canAttach(i,seqL,seqL*2,wingType)){
+					return true;
+				}
+			}
+			return false;
+		}
+
+		default: return false;
+	}
+
+	
+}
 
 // ==================================================
 // 单文件骨架：评估层
