@@ -1,0 +1,42 @@
+2026-05-15 三方对战记录：TEST3 4.0 vs TEST3BEFORE vs REF round2
+
+执行命令
+python run_three_bot_match.py --bots TEST3,TEST3BEFORE,REF --games 60 --seed 20261286 --timeout 30 --no-build --log reference_match_log_test3_v4_vs_test3before_vs_ref_20260515_round2.txt
+
+执行说明
+1. 使用当前 Test3.cpp 4.0 的已编译版本继续跑样本。
+2. 对手为 Test3Before.cpp 与 Reference.cpp。
+3. 种子范围为 20261286 到 20261345。
+4. 每步超时为 30 秒。
+
+本批60局结果
+- TEST3：27/60，45.0%
+- TEST3BEFORE：30/60，50.0%
+- REF：18/60，30.0%
+- illegalOrStopped：1
+
+角色侧结果
+- TEST3 地主：18/25，72.0%
+- TEST3 农民：9/35，25.7%
+- TEST3BEFORE 地主：20/26，76.9%
+- TEST3BEFORE 农民：10/34，29.4%
+- REF 地主：5/9，55.6%
+- REF 农民：13/51，25.5%
+
+异常说明
+- 唯一 1 个 illegal 来自 REF，不是 TEST3。
+- 对局为 GAME 37，seed=20261322。
+- REF 作为地主在 turn=1 自由出牌时提交了非法组合，reason=invalid_combo_on_free_turn。
+
+TEST3 4.0 累计120局结果
+- TEST3：53/120，44.2%
+- TEST3BEFORE：57/120，47.5%
+- REF：42/120，35.0%
+
+结论
+- 第二批 60 局里，TEST3 4.0 仍然强于 REF，但继续略低于 TEST3BEFORE。
+- 累计 120 局后，TEST3 4.0 没有继续追上 TEST3BEFORE，差距反而变成 4 胜。
+- 4.0 的主要问题仍然是农民位，连续两批都明显低于地主位。
+
+日志文件
+- reference_match_log_test3_v4_vs_test3before_vs_ref_20260515_round2.txt

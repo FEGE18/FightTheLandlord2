@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(g++ -O2 -std=c++17 -o Test3.exe Test3.cpp)",
+      "Bash(g++ -O2 -std=c++17 -o Test3.exe Test3.cpp -DONLINE_JUDGE)",
+      "Bash(timeout 5 ./Test3.exe)",
+      "Bash(g++ -O2 -std=c++17 -o Test3Before.exe Test3Before.cpp -DONLINE_JUDGE)",
+      "Bash(g++ -O2 -std=c++17 -o Reference.exe Reference.cpp -DONLINE_JUDGE)",
+      "Bash(python run_three_bot_match.py --bot1 Test3.exe --bot2 Test3Before.exe --bot3 Reference.exe --games 30 --log reference_match_log_test3_v5_vs_test3before_vs_ref_20260515.txt)",
+      "Bash(python run_three_bot_match.py --help)",
+      "Bash(python run_three_bot_match.py --bots TEST3,TEST3BEFORE,REF --games 30 --log reference_match_log_test3_v5_vs_test3before_vs_ref_20260515.txt)",
+      "Bash(python run_three_bot_match.py --bots TEST3,TEST3BEFORE,REF --games 30 --log reference_match_log_test3_v6_vs_test3before_vs_ref_20260515.txt)",
+      "Bash(python run_three_bot_match.py --bots TEST3,TEST3BEFORE,REF --games 30 --log reference_match_log_test3_v7_vs_test3before_vs_ref_20260515.txt)",
+      "Bash(python run_three_bot_match.py --bots TEST3,TEST3BEFORE,REF --games 30 --log reference_match_log_test3_v8_vs_test3before_vs_ref_20260515.txt)",
+      "Bash(python run_three_bot_match.py --bots TEST3,TEST3BEFORE,REF --games 60 --log reference_match_log_test3_v9_60games_20260515.txt)",
+      "Bash(tasklist)",
+      "Bash(g++ -O2 -o test3_v10.exe Test3.cpp)",
+      "Bash(python run_three_bot_match.py --bot1 test3_v10.exe --bot2 test3before.exe --ref reference.exe --games 30 --seed 20260860 --log reference_match_log_test3_v10_30games_20260515.txt)",
+      "Bash(python run_three_bot_match.py --bots \"TEST3,TEST3BEFORE,REF\" --games 30 --seed 20260860 --log reference_match_log_test3_v10_30games_20260515.txt)",
+      "Bash(python run_three_bot_match.py --bots \"TEST3,TEST3BEFORE,REF\" --games 30 --seed 20260890 --log reference_match_log_test3_v10_round2_20260515.txt)",
+      "Bash(g++ -O2 -o test3_v11.exe Test3.cpp)",
+      "Bash(python run_three_bot_match.py --bots \"TEST3,TEST3BEFORE,REF\" --games 30 --seed 20260920 --log reference_match_log_test3_v11_30games_20260515.txt)",
+      "Bash(python run_three_bot_match.py --bots \"TEST3,TEST3BEFORE,REF\" --games 30 --seed 20260950 --log reference_match_log_test3_v11_round2_20260515.txt)",
+      "Bash(python run_three_bot_match.py --bots \"TEST3,TEST3BEFORE,REF\" --games 60 --seed 20260980 --log reference_match_log_test3_v11_60games_20260515.txt)",
+      "Bash(g++ -O2 -o Test3.exe Test3.cpp)",
+      "Bash(python run_three_bot_match.py --bots \"TEST3,TEST3BEFORE,REF\" --games 30 --seed 20261100 --log reference_match_log_verify_v11_20260516.txt)",
+      "Bash(python run_three_bot_match.py --bots \"TEST3,TEST3BEFORE,REF\" --games 60 --seed 20261346 --log reference_match_log_reproduce_your_test_20260516.txt)",
+      "Bash(python run_three_bot_match.py --bots \"TEST3,TEST3BEFORE,REF\" --games 60 --seed 20261500 --log reference_match_log_v11_seed1500_20260516.txt)",
+      "Bash(g++ -O2 -o test3_v12.exe Test3.cpp)",
+      "Bash(python run_three_bot_match.py --bots \"TEST3,TEST3BEFORE,REF\" --games 60 --seed 20261346 --log reference_match_log_v12_yourseed_20260516.txt)"
+    ]
+  }
+}

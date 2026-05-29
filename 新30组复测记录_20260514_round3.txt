@@ -1,0 +1,24 @@
+2026-05-14 新30组复测记录 round3
+
+执行命令
+python run_reference_match.py --games 30 --seed 20260680 --rotate-seat --timeout 30 --log reference_match_log_new30_retest_20260514_round3.txt
+
+执行说明
+1. 这次按用户最新修改后的当前代码重新构建并运行。
+2. 种子范围为 20260680 到 20260709。
+3. 保留默认 OUR_TOPK 调试输出。
+
+结果汇总
+- 总局数：30
+- 胜局：16
+- 负局：14
+- 非法或中止：0
+- PIMC 记录行数：1290
+
+与上一轮新30组对比
+- round2：17 胜 13 负
+- round3：16 胜 14 负
+- 本次较上一轮少赢 1 局
+
+日志文件
+- reference_match_log_new30_retest_20260514_round3.txt

@@ -1,0 +1,2154 @@
+================ TRI MATCH SUMMARY ================
+games=6 illegalOrStopped=0 seedBase=20261630 bots=TEST3,TEST3BEFORE,REF
+TEST3 wins=1/6 winRate=16.7% landlord=0/0 landlordRate=0.0% farmers=1/6 farmerRate=16.7%
+TEST3BEFORE wins=4/6 winRate=66.7% landlord=4/5 landlordRate=80.0% farmers=0/1 farmerRate=0.0%
+REF wins=2/6 winRate=33.3% landlord=1/1 landlordRate=100.0% farmers=1/5 farmerRate=20.0%
+
+================ GAME 1 seed=20261630 ================
+bots: P0=TEST3, P1=TEST3BEFORE, P2=REF
+initial P0 TEST3 hand=3x2 4x2 5x1 6x3 7x1 8x1 9x1 Jx2 Qx2 Kx1 2x1 [1,3,4,6,10,12,13,14,17,21,24,32,34,37,38,40,48]
+initial P1 TEST3BEFORE hand=3x1 4x1 5x2 7x2 8x1 9x1 10x2 Jx1 Kx2 2x2 jokerx1 JOKERx1 [2,7,8,9,16,18,23,26,29,30,33,42,43,49,51,52,53]
+initial P2 REF hand=3x1 4x1 5x1 6x1 7x1 8x1 9x1 10x2 Jx1 Qx2 Kx1 Ax3 2x1 [0,5,11,15,19,22,25,28,31,35,36,39,41,44,45,46,50]
+public=8x1 9x1 Ax1 [20,27,47]
+BID P0 TEST3 bid=0 ok=True elapsedMs=38.2 reason=
+BID P1 TEST3BEFORE bid=3 ok=True elapsedMs=46.8 reason=
+landlord=P1 landlordBot=TEST3BEFORE finalBid=3
+playStart P0 count=17 hand=3x2 4x2 5x1 6x3 7x1 8x1 9x1 Jx2 Qx2 Kx1 2x1 [1,3,4,6,10,12,13,14,17,21,24,32,34,37,38,40,48]
+playStart P1 count=20 hand=3x1 4x1 5x2 7x2 8x2 9x2 10x2 Jx1 Kx2 Ax1 2x2 jokerx1 JOKERx1 [2,7,8,9,16,18,20,23,26,27,29,30,33,42,43,47,49,51,52,53]
+playStart P2 count=17 hand=3x1 4x1 5x1 6x1 7x1 8x1 9x1 10x2 Jx1 Qx2 Kx1 Ax3 2x1 [0,5,11,15,19,22,25,28,31,35,36,39,41,44,45,46,50]
+
+TURN 1 P1 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=515.6
+  handBefore count=20 3x1 4x1 5x2 7x2 8x2 9x2 10x2 Jx1 Kx2 Ax1 2x2 jokerx1 JOKERx1 [2,7,8,9,16,18,20,23,26,27,29,30,33,42,43,47,49,51,52,53]
+  historyForBot=[[],[]]
+  action=PAIR 5x2 [8,9] level=2 legal=True reason=
+  rawOutput={"response":[8,9]}
+  stderr=[PIMC] freeTurn=1 dangerous=0 topCount=6 totalVisits=2893
+[PIMC]  [0] type=4 lvl=7 sz=8 cards=16,18,20,23,26,27,29,30, heur=7.1 avgSample=-13.6432 visits=482 sw=0.118525 final=5.48295
+[PIMC]  [1] type=2 lvl=2 sz=2 cards=8,9, heur=6.2 avgSample=4.08299 visits=482 sw=0.118525 final=6.68393 <BEST>
+[PIMC]  [2] type=1 lvl=0 sz=1 cards=2, heur=5.65 avgSample=3.36128 visits=483 sw=0.118528 final=6.0484
+[PIMC]  [3] type=17 lvl=14 sz=2 cards=53,52, heur=-28.21 avgSample=-21.0124 visits=482 sw=0.0355574 final=-28.9571
+[PIMC]  [4] type=3 lvl=8 sz=5 cards=16,20,26,29,33, heur=-8.45 avgSample=-21.7095 visits=482 sw=0.118525 final=-11.0231
+[PIMC]  [5] type=1 lvl=1 sz=1 cards=7, heur=5.65 avgSample=2.88797 visits=482 sw=0.118525 final=5.9923
+  remain=P0:17, P1:18, P2:17
+
+TURN 2 P2 REF team=farmers need=PAIR 5x2 [8,9] level=2 lastValidPlayer=1 passCount=0 elapsedMs=32.8
+  handBefore count=17 3x1 4x1 5x1 6x1 7x1 8x1 9x1 10x2 Jx1 Qx2 Kx1 Ax3 2x1 [0,5,11,15,19,22,25,28,31,35,36,39,41,44,45,46,50]
+  historyForBot=[[],[8,9]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:17, P1:18, P2:17
+
+TURN 3 P0 TEST3 team=farmers need=PAIR 5x2 [8,9] level=2 lastValidPlayer=1 passCount=1 elapsedMs=513.5
+  handBefore count=17 3x2 4x2 5x1 6x3 7x1 8x1 9x1 Jx2 Qx2 Kx1 2x1 [1,3,4,6,10,12,13,14,17,21,24,32,34,37,38,40,48]
+  historyForBot=[[8,9],[]]
+  action=PAIR 6x2 [12,13] level=3 legal=True reason=
+  rawOutput={"response":[12,13]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=4 totalVisits=2625
+[PIMC]  [0] type=2 lvl=3 sz=2 cards=12,13, heur=8 avgSample=2.38718 visits=657 sw=0.237828 final=8.56774 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=3.08374 visits=656 sw=0.237825 final=-0.266609
+[PIMC]  [2] type=2 lvl=8 sz=2 cards=32,34, heur=5 avgSample=3.39985 visits=656 sw=0.237825 final=5.80857
+[PIMC]  [3] type=2 lvl=9 sz=2 cards=37,38, heur=2.9 avgSample=3.50962 visits=656 sw=0.237825 final=3.73468
+  remain=P0:15, P1:18, P2:17
+
+TURN 4 P1 TEST3BEFORE team=landlord need=PAIR 6x2 [12,13] level=3 lastValidPlayer=0 passCount=0 elapsedMs=514.9
+  handBefore count=18 3x1 4x1 7x2 8x2 9x2 10x2 Jx1 Kx2 Ax1 2x2 jokerx1 JOKERx1 [2,7,16,18,20,23,26,27,29,30,33,42,43,47,49,51,52,53]
+  historyForBot=[[],[12,13]]
+  action=PAIR Kx2 [42,43] level=10 legal=True reason=
+  rawOutput={"response":[42,43]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=6 totalVisits=3494
+[PIMC]  [0] type=2 lvl=10 sz=2 cards=42,43, heur=5.26 avgSample=9.18948 visits=583 sw=0.237555 final=7.44301 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1.6 avgSample=2.69819 visits=583 sw=0.237555 final=-0.959031
+[PIMC]  [2] type=2 lvl=12 sz=2 cards=49,51, heur=0.99 avgSample=6.51731 visits=582 sw=0.237551 final=2.53819
+[PIMC]  [3] type=2 lvl=4 sz=2 cards=16,18, heur=0.98 avgSample=3.88418 visits=582 sw=0.237551 final=1.90269
+[PIMC]  [4] type=17 lvl=14 sz=2 cards=53,52, heur=-16.03 avgSample=-11.4604 visits=582 sw=0.0712653 final=-16.8467
+[PIMC]  [5] type=2 lvl=7 sz=2 cards=29,30, heur=0.62 avgSample=4.13167 visits=582 sw=0.237551 final=1.60148
+  remain=P0:15, P1:16, P2:17
+
+TURN 5 P2 REF team=farmers need=PAIR Kx2 [42,43] level=10 lastValidPlayer=1 passCount=0 elapsedMs=992.7
+  handBefore count=17 3x1 4x1 5x1 6x1 7x1 8x1 9x1 10x2 Jx1 Qx2 Kx1 Ax3 2x1 [0,5,11,15,19,22,25,28,31,35,36,39,41,44,45,46,50]
+  historyForBot=[[12,13],[42,43]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":44,"response":[]}
+  remain=P0:15, P1:16, P2:17
+
+TURN 6 P0 TEST3 team=farmers need=PAIR Kx2 [42,43] level=10 lastValidPlayer=1 passCount=1 elapsedMs=525.8
+  handBefore count=15 3x2 4x2 5x1 6x1 7x1 8x1 9x1 Jx2 Qx2 Kx1 2x1 [1,3,4,6,10,14,17,21,24,32,34,37,38,40,48]
+  historyForBot=[[42,43],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=2393
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=4.62593 visits=2393 sw=0.2394 final=0.107447 <BEST>
+  remain=P0:15, P1:16, P2:17
+
+TURN 7 P1 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=516.6
+  handBefore count=16 3x1 4x1 7x2 8x2 9x2 10x2 Jx1 Ax1 2x2 jokerx1 JOKERx1 [2,7,16,18,20,23,26,27,29,30,33,47,49,51,52,53]
+  historyForBot=[[],[]]
+  action=STRAIGHT2 7x2 8x2 9x2 10x2 [16,18,20,23,26,27,29,30] level=7 legal=True reason=
+  rawOutput={"response":[16,18,20,23,26,27,29,30]}
+  stderr=[PIMC] freeTurn=1 dangerous=0 topCount=6 totalVisits=4047
+[PIMC]  [0] type=4 lvl=7 sz=8 cards=16,18,20,23,26,27,29,30, heur=7.1 avgSample=14.1263 visits=674 sw=0.118941 final=8.7802 <BEST>
+[PIMC]  [1] type=2 lvl=12 sz=2 cards=49,51, heur=-2.66 avgSample=13.0473 visits=674 sw=0.118941 final=-1.10814
+[PIMC]  [2] type=1 lvl=0 sz=1 cards=2, heur=5.65 avgSample=19.5797 visits=675 sw=0.118943 final=7.97887
+[PIMC]  [3] type=17 lvl=14 sz=2 cards=53,52, heur=-28.21 avgSample=-15.1306 visits=675 sw=0.0356828 final=-28.7499
+[PIMC]  [4] type=3 lvl=8 sz=5 cards=16,20,26,29,33, heur=-8.45 avgSample=-15.4701 visits=675 sw=0.118943 final=-10.2901
+[PIMC]  [5] type=1 lvl=1 sz=1 cards=7, heur=5.65 avgSample=19.424 visits=674 sw=0.118941 final=7.96031
+  remain=P0:15, P1:8, P2:17
+
+TURN 8 P2 REF team=farmers need=STRAIGHT2 7x2 8x2 9x2 10x2 [16,18,20,23,26,27,29,30] level=7 lastValidPlayer=1 passCount=0 elapsedMs=974.2
+  handBefore count=17 3x1 4x1 5x1 6x1 7x1 8x1 9x1 10x2 Jx1 Qx2 Kx1 Ax3 2x1 [0,5,11,15,19,22,25,28,31,35,36,39,41,44,45,46,50]
+  historyForBot=[[],[16,18,20,23,26,27,29,30]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:15, P1:8, P2:17
+
+TURN 9 P0 TEST3 team=farmers need=STRAIGHT2 7x2 8x2 9x2 10x2 [16,18,20,23,26,27,29,30] level=7 lastValidPlayer=1 passCount=1 elapsedMs=520.2
+  handBefore count=15 3x2 4x2 5x1 6x1 7x1 8x1 9x1 Jx2 Qx2 Kx1 2x1 [1,3,4,6,10,14,17,21,24,32,34,37,38,40,48]
+  historyForBot=[[16,18,20,23,26,27,29,30],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=3551
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=5.96006 visits=3551 sw=0.239595 final=0.428002 <BEST>
+  remain=P0:15, P1:8, P2:17
+
+TURN 10 P1 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=519.1
+  handBefore count=8 3x1 4x1 Jx1 Ax1 2x2 jokerx1 JOKERx1 [2,7,33,47,49,51,52,53]
+  historyForBot=[[],[]]
+  action=SINGLE 3x1 [2] level=0 legal=True reason=
+  rawOutput={"response":[2]}
+  stderr=[PIMC] freeTurn=1 dangerous=0 topCount=6 totalVisits=4582
+[PIMC]  [0] type=1 lvl=0 sz=1 cards=2, heur=5.65 avgSample=19.6742 visits=763 sw=0.119064 final=7.99249 <BEST>
+[PIMC]  [1] type=2 lvl=12 sz=2 cards=49,51, heur=-2.66 avgSample=14.201 visits=764 sw=0.119065 final=-0.969164
+[PIMC]  [2] type=1 lvl=1 sz=1 cards=7, heur=5.65 avgSample=19.6017 visits=764 sw=0.119065 final=7.98388
+[PIMC]  [3] type=17 lvl=14 sz=2 cards=53,52, heur=-28.21 avgSample=-15.4972 visits=764 sw=0.0357195 final=-28.7636
+[PIMC]  [4] type=1 lvl=8 sz=1 cards=33, heur=4.45 avgSample=3.91527 visits=764 sw=0.119065 final=4.91617
+[PIMC]  [5] type=1 lvl=11 sz=1 cards=47, heur=3.25 avgSample=5.88251 visits=763 sw=0.119064 final=3.95039
+  remain=P0:15, P1:7, P2:17
+
+TURN 11 P2 REF team=farmers need=SINGLE 3x1 [2] level=0 lastValidPlayer=1 passCount=0 elapsedMs=975.9
+  handBefore count=17 3x1 4x1 5x1 6x1 7x1 8x1 9x1 10x2 Jx1 Qx2 Kx1 Ax3 2x1 [0,5,11,15,19,22,25,28,31,35,36,39,41,44,45,46,50]
+  historyForBot=[[],[2]]
+  action=SINGLE 10x1 [28] level=7 legal=True reason=
+  rawOutput={"debug":10,"response":[28]}
+  remain=P0:15, P1:7, P2:16
+
+TURN 12 P0 TEST3 team=farmers need=SINGLE 10x1 [28] level=7 lastValidPlayer=2 passCount=0 elapsedMs=511.6
+  handBefore count=15 3x2 4x2 5x1 6x1 7x1 8x1 9x1 Jx2 Qx2 Kx1 2x1 [1,3,4,6,10,14,17,21,24,32,34,37,38,40,48]
+  historyForBot=[[2],[28]]
+  action=SINGLE Kx1 [40] level=10 legal=True reason=
+  rawOutput={"response":[40]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=5 totalVisits=4585
+[PIMC]  [0] type=1 lvl=10 sz=1 cards=40, heur=4.85 avgSample=6.12437 visits=917 sw=0.25831 final=6.43198 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-0.5 avgSample=4.92624 visits=917 sw=0.25831 final=0.772495
+[PIMC]  [2] type=1 lvl=12 sz=1 cards=48, heur=2.575 avgSample=7.62205 visits=917 sw=0.25831 final=4.54385
+[PIMC]  [3] type=1 lvl=8 sz=1 cards=32, heur=-0.15 avgSample=5.42187 visits=917 sw=0.25831 final=1.25052
+[PIMC]  [4] type=1 lvl=9 sz=1 cards=37, heur=-0.15 avgSample=5.93446 visits=917 sw=0.25831 final=1.38293
+  remain=P0:14, P1:7, P2:16
+
+TURN 13 P1 TEST3BEFORE team=landlord need=SINGLE Kx1 [40] level=10 lastValidPlayer=0 passCount=0 elapsedMs=523.3
+  handBefore count=7 4x1 Jx1 Ax1 2x2 jokerx1 JOKERx1 [7,33,47,49,51,52,53]
+  historyForBot=[[28],[40]]
+  action=SINGLE Ax1 [47] level=11 legal=True reason=
+  rawOutput={"response":[47]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=6 totalVisits=5799
+[PIMC]  [0] type=1 lvl=11 sz=1 cards=47, heur=10.87 avgSample=17.9652 visits=967 sw=0.23852 final=15.1551 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=16.7765 visits=967 sw=0.23852 final=1.00154
+[PIMC]  [2] type=17 lvl=14 sz=2 cards=53,52, heur=-9.05 avgSample=4.43054 visits=967 sw=0.071556 final=-8.73297
+[PIMC]  [3] type=1 lvl=12 sz=1 cards=49, heur=1.235 avgSample=23.0028 visits=966 sw=0.238519 final=6.72159
+[PIMC]  [4] type=1 lvl=14 sz=1 cards=53, heur=-1.52 avgSample=5.141 visits=966 sw=0.238519 final=-0.293776
+[PIMC]  [5] type=1 lvl=13 sz=1 cards=52, heur=-1.04 avgSample=22.6288 visits=966 sw=0.238519 final=4.35739
+  remain=P0:14, P1:6, P2:16
+
+TURN 14 P2 REF team=farmers need=SINGLE Ax1 [47] level=11 lastValidPlayer=1 passCount=0 elapsedMs=972.6
+  handBefore count=16 3x1 4x1 5x1 6x1 7x1 8x1 9x1 10x1 Jx1 Qx2 Kx1 Ax3 2x1 [0,5,11,15,19,22,25,31,35,36,39,41,44,45,46,50]
+  historyForBot=[[40],[47]]
+  action=SINGLE 2x1 [50] level=12 legal=True reason=
+  rawOutput={"debug":36,"response":[50]}
+  remain=P0:14, P1:6, P2:15
+
+TURN 15 P0 TEST3 team=farmers need=SINGLE 2x1 [50] level=12 lastValidPlayer=2 passCount=0 elapsedMs=514.2
+  handBefore count=14 3x2 4x2 5x1 6x1 7x1 8x1 9x1 Jx2 Qx2 2x1 [1,3,4,6,10,14,17,21,24,32,34,37,38,48]
+  historyForBot=[[47],[50]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=4171
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-0.5 avgSample=5.24487 visits=4171 sw=0.399425 final=1.59493 <BEST>
+  remain=P0:14, P1:6, P2:15
+
+TURN 16 P1 TEST3BEFORE team=landlord need=SINGLE 2x1 [50] level=12 lastValidPlayer=2 passCount=1 elapsedMs=516.9
+  handBefore count=6 4x1 Jx1 2x2 jokerx1 JOKERx1 [7,33,49,51,52,53]
+  historyForBot=[[50],[]]
+  action=SINGLE jokerx1 [52] level=13 legal=True reason=
+  rawOutput={"response":[52]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=4 totalVisits=4972
+[PIMC]  [0] type=1 lvl=13 sz=1 cards=52, heur=-0.88 avgSample=23.2347 visits=1243 sw=0.238847 final=4.66954 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=12.6803 visits=1243 sw=0.238847 final=0.0286495
+[PIMC]  [2] type=17 lvl=14 sz=2 cards=53,52, heur=-9.05 avgSample=-4.56415 visits=1243 sw=0.0716541 final=-9.37704
+[PIMC]  [3] type=1 lvl=14 sz=1 cards=53, heur=-1.36 avgSample=-3.17078 visits=1243 sw=0.238847 final=-2.11733
+  remain=P0:14, P1:5, P2:15
+
+TURN 17 P2 REF team=farmers need=SINGLE jokerx1 [52] level=13 lastValidPlayer=1 passCount=0 elapsedMs=975.7
+  handBefore count=15 3x1 4x1 5x1 6x1 7x1 8x1 9x1 10x1 Jx1 Qx2 Kx1 Ax3 [0,5,11,15,19,22,25,31,35,36,39,41,44,45,46]
+  historyForBot=[[],[52]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:14, P1:5, P2:15
+
+TURN 18 P0 TEST3 team=farmers need=SINGLE jokerx1 [52] level=13 lastValidPlayer=1 passCount=1 elapsedMs=509.9
+  handBefore count=14 3x2 4x2 5x1 6x1 7x1 8x1 9x1 Jx2 Qx2 2x1 [1,3,4,6,10,14,17,21,24,32,34,37,38,48]
+  historyForBot=[[52],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=4445
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-5.4 avgSample=2.92729 visits=4445 sw=0.399461 final=-4.23066 <BEST>
+  remain=P0:14, P1:5, P2:15
+
+TURN 19 P1 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=514.9
+  handBefore count=5 4x1 Jx1 2x2 JOKERx1 [7,33,49,51,53]
+  historyForBot=[[],[]]
+  action=SINGLE 4x1 [7] level=1 legal=True reason=
+  rawOutput={"response":[7]}
+  stderr=[PIMC] freeTurn=1 dangerous=0 topCount=5 totalVisits=10188
+[PIMC]  [0] type=1 lvl=1 sz=1 cards=7, heur=8.65 avgSample=23.8282 visits=2037 sw=0.119648 final=11.501 <BEST>
+[PIMC]  [1] type=2 lvl=12 sz=2 cards=49,51, heur=1.54 avgSample=22.8891 visits=2037 sw=0.119648 final=4.27863
+[PIMC]  [2] type=1 lvl=8 sz=1 cards=33, heur=7.45 avgSample=23.7766 visits=2038 sw=0.119648 final=10.2948
+[PIMC]  [3] type=1 lvl=14 sz=1 cards=53, heur=-0.43 avgSample=-4.5951 visits=2038 sw=0.119648 final=-0.979793
+[PIMC]  [4] type=1 lvl=12 sz=1 cards=49, heur=-5.035 avgSample=23.2435 visits=2038 sw=0.119648 final=-2.25396
+  remain=P0:14, P1:4, P2:15
+
+TURN 20 P2 REF team=farmers need=SINGLE 4x1 [7] level=1 lastValidPlayer=1 passCount=0 elapsedMs=990.8
+  handBefore count=15 3x1 4x1 5x1 6x1 7x1 8x1 9x1 10x1 Jx1 Qx2 Kx1 Ax3 [0,5,11,15,19,22,25,31,35,36,39,41,44,45,46]
+  historyForBot=[[],[7]]
+  action=SINGLE Kx1 [41] level=10 legal=True reason=
+  rawOutput={"debug":98,"response":[41]}
+  remain=P0:14, P1:4, P2:14
+
+TURN 21 P0 TEST3 team=farmers need=SINGLE Kx1 [41] level=10 lastValidPlayer=2 passCount=0 elapsedMs=513.4
+  handBefore count=14 3x2 4x2 5x1 6x1 7x1 8x1 9x1 Jx2 Qx2 2x1 [1,3,4,6,10,14,17,21,24,32,34,37,38,48]
+  historyForBot=[[7],[41]]
+  action=SINGLE 2x1 [48] level=12 legal=True reason=
+  rawOutput={"response":[48]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=2 totalVisits=6439
+[PIMC]  [0] type=1 lvl=12 sz=1 cards=48, heur=0.475 avgSample=9.98543 visits=3219 sw=0.379293 final=4.2624 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-0.5 avgSample=-1.58779 visits=3220 sw=0.419219 final=-1.16563
+  remain=P0:13, P1:4, P2:14
+
+TURN 22 P1 TEST3BEFORE team=landlord need=SINGLE 2x1 [48] level=12 lastValidPlayer=0 passCount=0 elapsedMs=516.4
+  handBefore count=4 Jx1 2x2 JOKERx1 [33,49,51,53]
+  historyForBot=[[41],[48]]
+  action=SINGLE JOKERx1 [53] level=14 legal=True reason=
+  rawOutput={"response":[53]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=2 totalVisits=13050
+[PIMC]  [0] type=1 lvl=14 sz=1 cards=53, heur=8.39 avgSample=23.9106 visits=6525 sw=0.23978 final=14.1233 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=22.061 visits=6525 sw=0.23978 final=2.28977
+  remain=P0:13, P1:3, P2:14
+
+TURN 23 P2 REF team=farmers need=SINGLE JOKERx1 [53] level=14 lastValidPlayer=1 passCount=0 elapsedMs=987.4
+  handBefore count=14 3x1 4x1 5x1 6x1 7x1 8x1 9x1 10x1 Jx1 Qx2 Ax3 [0,5,11,15,19,22,25,31,35,36,39,44,45,46]
+  historyForBot=[[48],[53]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:13, P1:3, P2:14
+
+TURN 24 P0 TEST3 team=farmers need=SINGLE JOKERx1 [53] level=14 lastValidPlayer=1 passCount=1 elapsedMs=510.6
+  handBefore count=13 3x2 4x2 5x1 6x1 7x1 8x1 9x1 Jx2 Qx2 [1,3,4,6,10,14,17,21,24,32,34,37,38]
+  historyForBot=[[53],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=6772
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-8.8 avgSample=-1.94039 visits=6772 sw=0.419628 final=-9.61424 <BEST>
+  remain=P0:13, P1:3, P2:14
+
+TURN 25 P1 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=511.6
+  handBefore count=3 Jx1 2x2 [33,49,51]
+  historyForBot=[[],[]]
+  action=SINGLE Jx1 [33] level=8 legal=True reason=
+  rawOutput={"response":[33]}
+  stderr=[PIMC] freeTurn=1 dangerous=0 topCount=3 totalVisits=26681
+[PIMC]  [0] type=1 lvl=8 sz=1 cards=33, heur=13.25 avgSample=23.8799 visits=8893 sw=0.119919 final=16.1137 <BEST>
+[PIMC]  [1] type=2 lvl=12 sz=2 cards=49,51, heur=8.55 avgSample=23.1207 visits=8894 sw=0.119919 final=11.3226
+[PIMC]  [2] type=1 lvl=12 sz=1 cards=49, heur=-5.035 avgSample=23.755 visits=8894 sw=0.119919 final=-2.18632
+  remain=P0:13, P1:2, P2:14
+
+TURN 26 P2 REF team=farmers need=SINGLE Jx1 [33] level=8 lastValidPlayer=1 passCount=0 elapsedMs=979.6
+  handBefore count=14 3x1 4x1 5x1 6x1 7x1 8x1 9x1 10x1 Jx1 Qx2 Ax3 [0,5,11,15,19,22,25,31,35,36,39,44,45,46]
+  historyForBot=[[],[33]]
+  action=SINGLE Qx1 [36] level=9 legal=True reason=
+  rawOutput={"debug":10,"response":[36]}
+  remain=P0:13, P1:2, P2:13
+
+TURN 27 P0 TEST3 team=farmers need=SINGLE Qx1 [36] level=9 lastValidPlayer=2 passCount=0 elapsedMs=510.0
+  handBefore count=13 3x2 4x2 5x1 6x1 7x1 8x1 9x1 Jx2 Qx2 [1,3,4,6,10,14,17,21,24,32,34,37,38]
+  historyForBot=[[33],[36]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=9674
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-2 avgSample=-3.95091 visits=9674 sw=0.41974 final=-3.65835 <BEST>
+  remain=P0:13, P1:2, P2:13
+
+TURN 28 P1 TEST3BEFORE team=landlord need=SINGLE Qx1 [36] level=9 lastValidPlayer=2 passCount=1 elapsedMs=509.8
+  handBefore count=2 2x2 [49,51]
+  historyForBot=[[36],[]]
+  action=SINGLE 2x1 [49] level=12 legal=True reason=
+  rawOutput={"response":[49]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=2 totalVisits=26384
+[PIMC]  [0] type=1 lvl=12 sz=1 cards=49, heur=9.71 avgSample=24 visits=13192 sw=0.239891 final=15.4674 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=24 visits=13192 sw=0.239891 final=2.75738
+  remain=P0:13, P1:1, P2:13
+
+TURN 29 P2 REF team=farmers need=SINGLE 2x1 [49] level=12 lastValidPlayer=1 passCount=0 elapsedMs=981.0
+  handBefore count=13 3x1 4x1 5x1 6x1 7x1 8x1 9x1 10x1 Jx1 Qx1 Ax3 [0,5,11,15,19,22,25,31,35,39,44,45,46]
+  historyForBot=[[],[49]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:13, P1:1, P2:13
+
+TURN 30 P0 TEST3 team=farmers need=SINGLE 2x1 [49] level=12 lastValidPlayer=1 passCount=1 elapsedMs=510.8
+  handBefore count=13 3x2 4x2 5x1 6x1 7x1 8x1 9x1 Jx2 Qx2 [1,3,4,6,10,14,17,21,24,32,34,37,38]
+  historyForBot=[[49],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=27406
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-27.2 avgSample=-24 visits=27406 sw=0.419908 final=-37.2778 <BEST>
+  remain=P0:13, P1:1, P2:13
+
+TURN 31 P1 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=9.0
+  handBefore count=1 2x1 [51]
+  historyForBot=[[],[]]
+  action=SINGLE 2x1 [51] level=12 legal=True reason=
+  rawOutput={"response":[51]}
+  remain=P0:13, P1:0, P2:13
+WINNER P1 TEST3BEFORE team=landlord
+SUMMARY winner=P1 winnerBot=TEST3BEFORE winnerTeam=landlord landlord=P1 landlordBot=TEST3BEFORE finalBid=3 multiplier=1 spring=False antiSpring=False forcedByCrash=False test3Won=False test3beforeWon=True refWon=False
+
+================ GAME 2 seed=20261631 ================
+bots: P0=TEST3, P1=REF, P2=TEST3BEFORE
+initial P0 TEST3 hand=3x1 4x2 5x1 6x2 7x1 8x2 9x1 10x3 Qx2 Ax1 2x1 [2,4,7,9,12,13,16,22,23,25,28,29,30,36,39,44,48]
+initial P1 REF hand=3x2 4x1 6x2 8x1 9x1 Jx1 Qx1 Kx3 Ax2 2x3 [0,3,5,14,15,21,26,35,38,41,42,43,45,47,49,50,51]
+initial P2 TEST3BEFORE hand=3x1 4x1 5x3 7x3 9x1 Jx3 Qx1 Kx1 Ax1 jokerx1 JOKERx1 [1,6,8,10,11,17,18,19,27,32,33,34,37,40,46,52,53]
+public=8x1 9x1 10x1 [20,24,31]
+BID P0 TEST3 bid=0 ok=True elapsedMs=8.0 reason=
+BID P1 REF bid=3 ok=True elapsedMs=7.1 reason=
+landlord=P1 landlordBot=REF finalBid=3
+playStart P0 count=17 hand=3x1 4x2 5x1 6x2 7x1 8x2 9x1 10x3 Qx2 Ax1 2x1 [2,4,7,9,12,13,16,22,23,25,28,29,30,36,39,44,48]
+playStart P1 count=20 hand=3x2 4x1 6x2 8x2 9x2 10x1 Jx1 Qx1 Kx3 Ax2 2x3 [0,3,5,14,15,20,21,24,26,31,35,38,41,42,43,45,47,49,50,51]
+playStart P2 count=17 hand=3x1 4x1 5x3 7x3 9x1 Jx3 Qx1 Kx1 Ax1 jokerx1 JOKERx1 [1,6,8,10,11,17,18,19,27,32,33,34,37,40,46,52,53]
+
+TURN 1 P1 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=7.9
+  handBefore count=20 3x2 4x1 6x2 8x2 9x2 10x1 Jx1 Qx1 Kx3 Ax2 2x3 [0,3,5,14,15,20,21,24,26,31,35,38,41,42,43,45,47,49,50,51]
+  historyForBot=[[],[]]
+  action=TRIPLET1 4x1 Kx3 [41,42,43,5] level=10 legal=True reason=
+  rawOutput={"debug":0,"response":[41,42,43,5]}
+  remain=P0:17, P1:16, P2:17
+
+TURN 2 P2 TEST3BEFORE team=farmers need=TRIPLET1 4x1 Kx3 [41,42,43,5] level=10 lastValidPlayer=1 passCount=0 elapsedMs=513.0
+  handBefore count=17 3x1 4x1 5x3 7x3 9x1 Jx3 Qx1 Kx1 Ax1 jokerx1 JOKERx1 [1,6,8,10,11,17,18,19,27,32,33,34,37,40,46,52,53]
+  historyForBot=[[],[41,42,43,5]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=2 totalVisits=2070
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=14.4928 visits=1035 sw=0.238617 final=2.45821 <BEST>
+[PIMC]  [1] type=17 lvl=14 sz=2 cards=53,52, heur=-29.23 avgSample=10.9526 visits=1035 sw=0.071585 final=-28.446
+  remain=P0:17, P1:16, P2:17
+
+TURN 3 P0 TEST3 team=farmers need=TRIPLET1 4x1 Kx3 [41,42,43,5] level=10 lastValidPlayer=1 passCount=1 elapsedMs=522.4
+  handBefore count=17 3x1 4x2 5x1 6x2 7x1 8x2 9x1 10x3 Qx2 Ax1 2x1 [2,4,7,9,12,13,16,22,23,25,28,29,30,36,39,44,48]
+  historyForBot=[[41,42,43,5],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=2088
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=4.10771 visits=2088 sw=0.239312 final=-0.0169754 <BEST>
+  remain=P0:17, P1:16, P2:17
+
+TURN 4 P1 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=991.4
+  handBefore count=16 3x2 6x2 8x2 9x2 10x1 Jx1 Qx1 Ax2 2x3 [0,3,14,15,20,21,24,26,31,35,38,45,47,49,50,51]
+  historyForBot=[[],[]]
+  action=SINGLE 8x1 [20] level=5 legal=True reason=
+  rawOutput={"debug":353,"response":[20]}
+  remain=P0:17, P1:15, P2:17
+
+TURN 5 P2 TEST3BEFORE team=farmers need=SINGLE 8x1 [20] level=5 lastValidPlayer=1 passCount=0 elapsedMs=511.6
+  handBefore count=17 3x1 4x1 5x3 7x3 9x1 Jx3 Qx1 Kx1 Ax1 jokerx1 JOKERx1 [1,6,8,10,11,17,18,19,27,32,33,34,37,40,46,52,53]
+  historyForBot=[[],[20]]
+  action=SINGLE 9x1 [27] level=6 legal=True reason=
+  rawOutput={"response":[27]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=6 totalVisits=2543
+[PIMC]  [0] type=1 lvl=6 sz=1 cards=27, heur=5.15 avgSample=20.4931 visits=424 sw=0.236651 final=9.99973 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=16.7416 visits=424 sw=0.236651 final=2.96191
+[PIMC]  [2] type=1 lvl=9 sz=1 cards=37, heur=1.25 avgSample=20.2476 visits=423 sw=0.236643 final=6.04147
+[PIMC]  [3] type=1 lvl=8 sz=1 cards=32, heur=-6.45 avgSample=17.5862 visits=424 sw=0.236651 final=-2.28821
+[PIMC]  [4] type=17 lvl=14 sz=2 cards=53,52, heur=-29.23 avgSample=14.4134 visits=424 sw=0.0709953 final=-28.2067
+[PIMC]  [5] type=1 lvl=10 sz=1 cards=40, heur=0.45 avgSample=20.2573 visits=424 sw=0.236651 final=5.24392
+  remain=P0:17, P1:15, P2:16
+
+TURN 6 P0 TEST3 team=farmers need=SINGLE 9x1 [27] level=6 lastValidPlayer=2 passCount=0 elapsedMs=515.8
+  handBefore count=17 3x1 4x2 5x1 6x2 7x1 8x2 9x1 10x3 Qx2 Ax1 2x1 [2,4,7,9,12,13,16,22,23,25,28,29,30,36,39,44,48]
+  historyForBot=[[20],[27]]
+  action=SINGLE Ax1 [44] level=11 legal=True reason=
+  rawOutput={"response":[44]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=5 totalVisits=3145
+[PIMC]  [0] type=1 lvl=11 sz=1 cards=44, heur=4.85 avgSample=7.42763 visits=629 sw=0.237732 final=6.61579 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-0.5 avgSample=7.63939 visits=629 sw=0.237732 final=1.31613
+[PIMC]  [2] type=1 lvl=12 sz=1 cards=48, heur=2.575 avgSample=8.55125 visits=629 sw=0.237732 final=4.60791
+[PIMC]  [3] type=1 lvl=7 sz=1 cards=28, heur=-5.15 avgSample=7.45957 visits=629 sw=0.237732 final=-3.37662
+[PIMC]  [4] type=1 lvl=9 sz=1 cards=36, heur=-0.15 avgSample=10.2846 visits=629 sw=0.237732 final=2.29499
+  remain=P0:16, P1:15, P2:16
+
+TURN 7 P1 REF team=landlord need=SINGLE Ax1 [44] level=11 lastValidPlayer=0 passCount=0 elapsedMs=990.0
+  handBefore count=15 3x2 6x2 8x1 9x2 10x1 Jx1 Qx1 Ax2 2x3 [0,3,14,15,21,24,26,31,35,38,45,47,49,50,51]
+  historyForBot=[[27],[44]]
+  action=SINGLE 2x1 [49] level=12 legal=True reason=
+  rawOutput={"debug":228,"response":[49]}
+  remain=P0:16, P1:14, P2:16
+
+TURN 8 P2 TEST3BEFORE team=farmers need=SINGLE 2x1 [49] level=12 lastValidPlayer=1 passCount=0 elapsedMs=515.5
+  handBefore count=16 3x1 4x1 5x3 7x3 Jx3 Qx1 Kx1 Ax1 jokerx1 JOKERx1 [1,6,8,10,11,17,18,19,32,33,34,37,40,46,52,53]
+  historyForBot=[[44],[49]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=4 totalVisits=2990
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=19.0924 visits=748 sw=0.23809 final=3.5457 <BEST>
+[PIMC]  [1] type=17 lvl=14 sz=2 cards=53,52, heur=-29.23 avgSample=14.3915 visits=747 sw=0.0714263 final=-28.2021
+[PIMC]  [2] type=1 lvl=13 sz=1 cards=52, heur=-10.5 avgSample=21.7782 visits=747 sw=0.238088 final=-5.31489
+[PIMC]  [3] type=1 lvl=14 sz=1 cards=53, heur=-13.08 avgSample=21.7813 visits=748 sw=0.23809 final=-7.8941
+  remain=P0:16, P1:14, P2:16
+
+TURN 9 P0 TEST3 team=farmers need=SINGLE 2x1 [49] level=12 lastValidPlayer=1 passCount=1 elapsedMs=515.1
+  handBefore count=16 3x1 4x2 5x1 6x2 7x1 8x2 9x1 10x3 Qx2 2x1 [2,4,7,9,12,13,16,22,23,25,28,29,30,36,39,48]
+  historyForBot=[[49],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=2704
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=7.20324 visits=2704 sw=0.239469 final=0.724949 <BEST>
+  remain=P0:16, P1:14, P2:16
+
+TURN 10 P1 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=986.6
+  handBefore count=14 3x2 6x2 8x1 9x2 10x1 Jx1 Qx1 Ax2 2x2 [0,3,14,15,21,24,26,31,35,38,45,47,50,51]
+  historyForBot=[[],[]]
+  action=PAIR 6x2 [14,15] level=3 legal=True reason=
+  rawOutput={"debug":6,"response":[14,15]}
+  remain=P0:16, P1:12, P2:16
+
+TURN 11 P2 TEST3BEFORE team=farmers need=PAIR 6x2 [14,15] level=3 lastValidPlayer=1 passCount=0 elapsedMs=511.8
+  handBefore count=16 3x1 4x1 5x3 7x3 Jx3 Qx1 Kx1 Ax1 jokerx1 JOKERx1 [1,6,8,10,11,17,18,19,32,33,34,37,40,46,52,53]
+  historyForBot=[[],[14,15]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=4 totalVisits=3253
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=20.3688 visits=813 sw=0.238242 final=3.8527 <BEST>
+[PIMC]  [1] type=17 lvl=14 sz=2 cards=53,52, heur=-29.23 avgSample=17.9673 visits=814 sw=0.0714732 final=-27.9458
+[PIMC]  [2] type=2 lvl=4 sz=2 cards=17,18, heur=-4.7 avgSample=13.5569 visits=813 sw=0.238242 final=-1.47018
+[PIMC]  [3] type=2 lvl=8 sz=2 cards=32,33, heur=-7.9 avgSample=15.3696 visits=813 sw=0.238242 final=-4.23831
+  remain=P0:16, P1:12, P2:16
+
+TURN 12 P0 TEST3 team=farmers need=PAIR 6x2 [14,15] level=3 lastValidPlayer=1 passCount=1 elapsedMs=514.4
+  handBefore count=16 3x1 4x2 5x1 6x2 7x1 8x2 9x1 10x3 Qx2 2x1 [2,4,7,9,12,13,16,22,23,25,28,29,30,36,39,48]
+  historyForBot=[[14,15],[]]
+  action=PAIR Qx2 [36,39] level=9 legal=True reason=
+  rawOutput={"response":[36,39]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=4 totalVisits=3486
+[PIMC]  [0] type=2 lvl=9 sz=2 cards=36,39, heur=3.5 avgSample=11.8274 visits=872 sw=0.23836 final=6.31917 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=9.07437 visits=871 sw=0.238358 final=1.16295
+[PIMC]  [2] type=2 lvl=5 sz=2 cards=22,23, heur=2.4 avgSample=7.92003 visits=871 sw=0.238358 final=4.2878
+[PIMC]  [3] type=2 lvl=7 sz=2 cards=28,29, heur=1.2 avgSample=6.68689 visits=872 sw=0.23836 final=2.79389
+  remain=P0:14, P1:12, P2:16
+
+TURN 13 P1 REF team=landlord need=PAIR Qx2 [36,39] level=9 lastValidPlayer=0 passCount=0 elapsedMs=986.9
+  handBefore count=12 3x2 8x1 9x2 10x1 Jx1 Qx1 Ax2 2x2 [0,3,21,24,26,31,35,38,45,47,50,51]
+  historyForBot=[[],[36,39]]
+  action=PAIR Ax2 [45,47] level=11 legal=True reason=
+  rawOutput={"debug":160,"response":[45,47]}
+  remain=P0:14, P1:10, P2:16
+
+TURN 14 P2 TEST3BEFORE team=farmers need=PAIR Ax2 [45,47] level=11 lastValidPlayer=1 passCount=0 elapsedMs=512.8
+  handBefore count=16 3x1 4x1 5x3 7x3 Jx3 Qx1 Kx1 Ax1 jokerx1 JOKERx1 [1,6,8,10,11,17,18,19,32,33,34,37,40,46,52,53]
+  historyForBot=[[36,39],[45,47]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=2 totalVisits=3645
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=21.0176 visits=1823 sw=0.259147 final=4.44664 <BEST>
+[PIMC]  [1] type=17 lvl=14 sz=2 cards=53,52, heur=-29.23 avgSample=19.6339 visits=1822 sw=0.077744 final=-27.7036
+  remain=P0:14, P1:10, P2:16
+
+TURN 15 P0 TEST3 team=farmers need=PAIR Ax2 [45,47] level=11 lastValidPlayer=1 passCount=1 elapsedMs=514.2
+  handBefore count=14 3x1 4x2 5x1 6x2 7x1 8x2 9x1 10x3 2x1 [2,4,7,9,12,13,16,22,23,25,28,29,30,48]
+  historyForBot=[[45,47],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=3157
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=10.3816 visits=3157 sw=0.239545 final=1.48687 <BEST>
+  remain=P0:14, P1:10, P2:16
+
+TURN 16 P1 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=989.8
+  handBefore count=10 3x2 8x1 9x2 10x1 Jx1 Qx1 2x2 [0,3,21,24,26,31,35,38,50,51]
+  historyForBot=[[],[]]
+  action=STRAIGHT 8x1 9x1 10x1 Jx1 Qx1 [21,24,31,35,38] level=9 legal=True reason=
+  rawOutput={"debug":8,"response":[21,24,31,35,38]}
+  remain=P0:14, P1:5, P2:16
+
+TURN 17 P2 TEST3BEFORE team=farmers need=STRAIGHT 8x1 9x1 10x1 Jx1 Qx1 [21,24,31,35,38] level=9 lastValidPlayer=1 passCount=0 elapsedMs=512.8
+  handBefore count=16 3x1 4x1 5x3 7x3 Jx3 Qx1 Kx1 Ax1 jokerx1 JOKERx1 [1,6,8,10,11,17,18,19,32,33,34,37,40,46,52,53]
+  historyForBot=[[],[21,24,31,35,38]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=2 totalVisits=4745
+[PIMC]  [0] type=17 lvl=14 sz=2 cards=53,52, heur=-2.75 avgSample=20.8951 visits=2373 sw=0.269319 final=2.87744
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-4.6 avgSample=21.9155 visits=2372 sw=0.398991 final=4.14409 <BEST>
+  remain=P0:14, P1:5, P2:16
+
+TURN 18 P0 TEST3 team=farmers need=STRAIGHT 8x1 9x1 10x1 Jx1 Qx1 [21,24,31,35,38] level=9 lastValidPlayer=1 passCount=1 elapsedMs=512.0
+  handBefore count=14 3x1 4x2 5x1 6x2 7x1 8x2 9x1 10x3 2x1 [2,4,7,9,12,13,16,22,23,25,28,29,30,48]
+  historyForBot=[[21,24,31,35,38],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=3691
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-5.4 avgSample=4.90712 visits=3691 sw=0.399351 final=-3.44034 <BEST>
+  remain=P0:14, P1:5, P2:16
+
+TURN 19 P1 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=995.9
+  handBefore count=5 3x2 9x1 2x2 [0,3,26,50,51]
+  historyForBot=[[],[]]
+  action=PAIR 3x2 [0,3] level=0 legal=True reason=
+  rawOutput={"debug":32,"response":[0,3]}
+  remain=P0:14, P1:3, P2:16
+
+TURN 20 P2 TEST3BEFORE team=farmers need=PAIR 3x2 [0,3] level=0 lastValidPlayer=1 passCount=0 elapsedMs=508.9
+  handBefore count=16 3x1 4x1 5x3 7x3 Jx3 Qx1 Kx1 Ax1 jokerx1 JOKERx1 [1,6,8,10,11,17,18,19,32,33,34,37,40,46,52,53]
+  historyForBot=[[],[0,3]]
+  action=PAIR Jx2 [32,33] level=8 legal=True reason=
+  rawOutput={"response":[32,33]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=5 totalVisits=5075
+[PIMC]  [0] type=2 lvl=2 sz=2 cards=8,10, heur=1.6 avgSample=12.4637 visits=1015 sw=0.377767 final=6.30837
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-6.6 avgSample=20.9526 visits=1015 sw=0.417532 final=2.14836
+[PIMC]  [2] type=17 lvl=14 sz=2 cards=53,52, heur=-1.15 avgSample=20.3895 visits=1015 sw=0.283325 final=4.62685
+[PIMC]  [3] type=2 lvl=4 sz=2 cards=17,18, heur=1.2 avgSample=14.4574 visits=1015 sw=0.377767 final=6.66155
+[PIMC]  [4] type=2 lvl=8 sz=2 cards=32,33, heur=0.4 avgSample=23.5822 visits=1015 sw=0.377767 final=9.30856 <BEST>
+  remain=P0:14, P1:3, P2:14
+
+TURN 21 P0 TEST3 team=farmers need=PAIR Jx2 [32,33] level=8 lastValidPlayer=2 passCount=0 elapsedMs=508.9
+  handBefore count=14 3x1 4x2 5x1 6x2 7x1 8x2 9x1 10x3 2x1 [2,4,7,9,12,13,16,22,23,25,28,29,30,48]
+  historyForBot=[[0,3],[32,33]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=4617
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-2 avgSample=4.41882 visits=4617 sw=0.419455 final=-0.146504 <BEST>
+  remain=P0:14, P1:3, P2:14
+
+TURN 22 P1 REF team=landlord need=PAIR Jx2 [32,33] level=8 lastValidPlayer=2 passCount=1 elapsedMs=983.5
+  handBefore count=3 9x1 2x2 [26,50,51]
+  historyForBot=[[32,33],[]]
+  action=PAIR 2x2 [50,51] level=12 legal=True reason=
+  rawOutput={"debug":1390,"response":[50,51]}
+  remain=P0:14, P1:1, P2:14
+
+TURN 23 P2 TEST3BEFORE team=farmers need=PAIR 2x2 [50,51] level=12 lastValidPlayer=1 passCount=0 elapsedMs=508.4
+  handBefore count=14 3x1 4x1 5x3 7x3 Jx1 Qx1 Kx1 Ax1 jokerx1 JOKERx1 [1,6,8,10,11,17,18,19,34,37,40,46,52,53]
+  historyForBot=[[],[50,51]]
+  action=ROCKET jokerx1 JOKERx1 [53,52] level=14 legal=True reason=
+  rawOutput={"response":[53,52]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=2 totalVisits=14464
+[PIMC]  [0] type=17 lvl=14 sz=2 cards=53,52, heur=21.03 avgSample=20.8938 visits=7232 sw=0.284764 final=26.9798 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-27.2 avgSample=-24 visits=7232 sw=0.419652 final=-37.2716
+  remain=P0:14, P1:1, P2:12
+
+TURN 24 P0 TEST3 team=farmers need=ROCKET jokerx1 JOKERx1 [53,52] level=14 lastValidPlayer=2 passCount=0 elapsedMs=509.6
+  handBefore count=14 3x1 4x2 5x1 6x2 7x1 8x2 9x1 10x3 2x1 [2,4,7,9,12,13,16,22,23,25,28,29,30,48]
+  historyForBot=[[50,51],[53,52]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=5803
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-2 avgSample=5.84199 visits=5803 sw=0.419566 final=0.4511 <BEST>
+  remain=P0:14, P1:1, P2:12
+
+TURN 25 P1 REF team=landlord need=ROCKET jokerx1 JOKERx1 [53,52] level=14 lastValidPlayer=2 passCount=1 elapsedMs=985.1
+  handBefore count=1 9x1 [26]
+  historyForBot=[[53,52],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:14, P1:1, P2:12
+
+TURN 26 P2 TEST3BEFORE team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=509.6
+  handBefore count=12 3x1 4x1 5x3 7x3 Jx1 Qx1 Kx1 Ax1 [1,6,8,10,11,17,18,19,34,37,40,46]
+  historyForBot=[[],[]]
+  action=TRIPLET1 3x1 5x3 [8,10,11,1] level=2 legal=True reason=
+  rawOutput={"response":[8,10,11,1]}
+  stderr=[PIMC] freeTurn=1 dangerous=1 topCount=6 totalVisits=10727
+[PIMC]  [0] type=6 lvl=2 sz=4 cards=8,10,11,1, heur=9.48 avgSample=20.4027 visits=1788 sw=0.239197 final=14.3603 <BEST>
+[PIMC]  [1] type=6 lvl=4 sz=4 cards=17,18,19,1, heur=9.3 avgSample=20.4027 visits=1788 sw=0.239197 final=14.1803
+[PIMC]  [2] type=1 lvl=0 sz=1 cards=1, heur=-1.35 avgSample=5.18121 visits=1788 sw=0.239197 final=-0.110669
+[PIMC]  [3] type=7 lvl=4 sz=5 cards=17,18,19,8,10, heur=-3.51 avgSample=-0.226202 visits=1788 sw=0.239197 final=-3.56411
+[PIMC]  [4] type=5 lvl=2 sz=3 cards=8,10,11, heur=-2.71 avgSample=5.17068 visits=1787 sw=0.239197 final=-1.47319
+[PIMC]  [5] type=2 lvl=2 sz=2 cards=8,10, heur=-3.8 avgSample=0.823266 visits=1788 sw=0.239197 final=-3.60308
+  remain=P0:14, P1:1, P2:8
+
+TURN 27 P0 TEST3 team=farmers need=TRIPLET1 3x1 5x3 [8,10,11,1] level=2 lastValidPlayer=2 passCount=0 elapsedMs=509.5
+  handBefore count=14 3x1 4x2 5x1 6x2 7x1 8x2 9x1 10x3 2x1 [2,4,7,9,12,13,16,22,23,25,28,29,30,48]
+  historyForBot=[[],[8,10,11,1]]
+  action=TRIPLET1 4x1 10x3 [28,29,30,4] level=7 legal=True reason=
+  rawOutput={"response":[28,29,30,4]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=3 totalVisits=12307
+[PIMC]  [0] type=6 lvl=7 sz=4 cards=28,29,30,4, heur=8.3 avgSample=-3.61775 visits=4102 sw=0.419387 final=6.78277 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-2 avgSample=-1.76866 visits=4103 sw=0.419387 final=-2.74175
+[PIMC]  [2] type=6 lvl=7 sz=4 cards=28,29,30,12, heur=8.3 avgSample=-3.61775 visits=4102 sw=0.419387 final=6.78277
+  remain=P0:10, P1:1, P2:8
+
+TURN 28 P1 REF team=landlord need=TRIPLET1 4x1 10x3 [28,29,30,4] level=7 lastValidPlayer=0 passCount=0 elapsedMs=995.9
+  handBefore count=1 9x1 [26]
+  historyForBot=[[8,10,11,1],[28,29,30,4]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:10, P1:1, P2:8
+
+TURN 29 P2 TEST3BEFORE team=farmers need=TRIPLET1 4x1 10x3 [28,29,30,4] level=7 lastValidPlayer=0 passCount=1 elapsedMs=512.1
+  handBefore count=8 4x1 7x3 Jx1 Qx1 Kx1 Ax1 [6,17,18,19,34,37,40,46]
+  historyForBot=[[28,29,30,4],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=11961
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=3 avgSample=6.37873 visits=11961 sw=0.419789 final=5.67772 <BEST>
+  remain=P0:10, P1:1, P2:8
+
+TURN 30 P0 TEST3 team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=509.6
+  handBefore count=10 3x1 4x1 5x1 6x2 7x1 8x2 9x1 2x1 [2,7,9,12,13,16,22,23,25,48]
+  historyForBot=[[],[]]
+  action=STRAIGHT 3x1 4x1 5x1 6x1 7x1 8x1 9x1 [2,7,9,12,16,22,25] level=6 legal=True reason=
+  rawOutput={"response":[2,7,9,12,16,22,25]}
+  stderr=[PIMC] freeTurn=1 dangerous=1 topCount=6 totalVisits=30623
+[PIMC]  [0] type=3 lvl=6 sz=7 cards=2,7,9,12,16,22,25, heur=17.66 avgSample=-3.18809 visits=5104 sw=0.279671 final=16.7684 <BEST>
+[PIMC]  [1] type=1 lvl=12 sz=1 cards=48, heur=-1.975 avgSample=-3.19174 visits=5104 sw=0.279671 final=-2.86764
+[PIMC]  [2] type=1 lvl=0 sz=1 cards=2, heur=-13.35 avgSample=-24 visits=5103 sw=0.279671 final=-20.0621
+[PIMC]  [3] type=3 lvl=6 sz=6 cards=7,9,12,16,22,25, heur=9.88 avgSample=-19.9091 visits=5104 sw=0.279671 final=4.312
+[PIMC]  [4] type=2 lvl=5 sz=2 cards=22,23, heur=7.9 avgSample=1.0674 visits=5104 sw=0.279671 final=8.19852
+[PIMC]  [5] type=3 lvl=5 sz=6 cards=2,7,9,12,16,22, heur=9.98 avgSample=-1.71944 visits=5104 sw=0.279671 final=9.49912
+  remain=P0:3, P1:1, P2:8
+
+TURN 31 P1 REF team=landlord need=STRAIGHT 3x1 4x1 5x1 6x1 7x1 8x1 9x1 [2,7,9,12,16,22,25] level=6 lastValidPlayer=0 passCount=0 elapsedMs=1014.0
+  handBefore count=1 9x1 [26]
+  historyForBot=[[],[2,7,9,12,16,22,25]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:3, P1:1, P2:8
+
+TURN 32 P2 TEST3BEFORE team=farmers need=STRAIGHT 3x1 4x1 5x1 6x1 7x1 8x1 9x1 [2,7,9,12,16,22,25] level=6 lastValidPlayer=0 passCount=1 elapsedMs=512.8
+  handBefore count=8 4x1 7x3 Jx1 Qx1 Kx1 Ax1 [6,17,18,19,34,37,40,46]
+  historyForBot=[[2,7,9,12,16,22,25],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=31545
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=3 avgSample=0.257917 visits=31545 sw=0.41992 final=3.1083 <BEST>
+  remain=P0:3, P1:1, P2:8
+
+TURN 33 P0 TEST3 team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=513.9
+  handBefore count=3 6x1 8x1 2x1 [13,23,48]
+  historyForBot=[[],[]]
+  action=SINGLE 2x1 [48] level=12 legal=True reason=
+  rawOutput={"response":[48]}
+  stderr=[PIMC] freeTurn=1 dangerous=1 topCount=3 totalVisits=44209
+[PIMC]  [0] type=1 lvl=12 sz=1 cards=48, heur=1.225 avgSample=-3.64595 visits=14737 sw=0.279886 final=0.20455 <BEST>
+[PIMC]  [1] type=1 lvl=3 sz=1 cards=13, heur=-2.15 avgSample=-19.5972 visits=14736 sw=0.279886 final=-7.63498
+[PIMC]  [2] type=1 lvl=5 sz=1 cards=23, heur=-2.55 avgSample=-3.64604 visits=14736 sw=0.279886 final=-3.57047
+  remain=P0:2, P1:1, P2:8
+
+TURN 34 P1 REF team=landlord need=SINGLE 2x1 [48] level=12 lastValidPlayer=0 passCount=0 elapsedMs=1001.3
+  handBefore count=1 9x1 [26]
+  historyForBot=[[],[48]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:2, P1:1, P2:8
+
+TURN 35 P2 TEST3BEFORE team=farmers need=SINGLE 2x1 [48] level=12 lastValidPlayer=0 passCount=1 elapsedMs=514.6
+  handBefore count=8 4x1 7x3 Jx1 Qx1 Kx1 Ax1 [6,17,18,19,34,37,40,46]
+  historyForBot=[[48],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=26077
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=6 avgSample=8.06244 visits=26077 sw=0.419903 final=9.38545 <BEST>
+  remain=P0:2, P1:1, P2:8
+
+TURN 36 P0 TEST3 team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=509.7
+  handBefore count=2 6x1 8x1 [13,23]
+  historyForBot=[[],[]]
+  action=SINGLE 8x1 [23] level=5 legal=True reason=
+  rawOutput={"response":[23]}
+  stderr=[PIMC] freeTurn=1 dangerous=1 topCount=2 totalVisits=43096
+[PIMC]  [0] type=1 lvl=5 sz=1 cards=23, heur=-1.35 avgSample=-3.47003 visits=21548 sw=0.279922 final=-2.32134 <BEST>
+[PIMC]  [1] type=1 lvl=3 sz=1 cards=13, heur=-8.95 avgSample=-19.4836 visits=21548 sw=0.279922 final=-14.4039
+  remain=P0:1, P1:1, P2:8
+
+TURN 37 P1 REF team=landlord need=SINGLE 8x1 [23] level=5 lastValidPlayer=0 passCount=0 elapsedMs=1019.8
+  handBefore count=1 9x1 [26]
+  historyForBot=[[],[23]]
+  action=SINGLE 9x1 [26] level=6 legal=True reason=
+  rawOutput={"debug":36003,"response":[26]}
+  remain=P0:1, P1:0, P2:8
+WINNER P1 REF team=landlord
+SUMMARY winner=P1 winnerBot=REF winnerTeam=landlord landlord=P1 landlordBot=REF finalBid=3 multiplier=2 spring=False antiSpring=False forcedByCrash=False test3Won=False refWon=True test3beforeWon=False
+
+================ GAME 3 seed=20261632 ================
+bots: P0=TEST3BEFORE, P1=TEST3, P2=REF
+initial P0 TEST3BEFORE hand=3x1 4x1 6x1 7x2 8x2 10x3 Jx1 Qx1 Ax2 2x2 jokerx1 [2,6,13,16,18,20,21,28,30,31,33,36,45,47,48,49,52]
+initial P1 TEST3 hand=4x1 5x2 6x1 7x2 8x1 9x1 10x1 Jx3 Qx2 2x2 JOKERx1 [4,8,10,15,17,19,23,27,29,32,34,35,37,39,50,51,53]
+initial P2 REF hand=3x2 4x2 5x2 6x2 8x1 9x2 Qx1 Kx4 Ax1 [0,1,5,7,9,11,12,14,22,24,26,38,40,41,42,43,44]
+public=3x1 9x1 Ax1 [3,25,46]
+BID P0 TEST3BEFORE bid=2 ok=True elapsedMs=9.1 reason=
+BID P1 TEST3 bid=0 ok=True elapsedMs=7.5 reason=
+BID P2 REF bid=0 ok=True elapsedMs=6.9 reason=
+landlord=P0 landlordBot=TEST3BEFORE finalBid=2
+playStart P0 count=20 hand=3x2 4x1 6x1 7x2 8x2 9x1 10x3 Jx1 Qx1 Ax3 2x2 jokerx1 [2,3,6,13,16,18,20,21,25,28,30,31,33,36,45,46,47,48,49,52]
+playStart P1 count=17 hand=4x1 5x2 6x1 7x2 8x1 9x1 10x1 Jx3 Qx2 2x2 JOKERx1 [4,8,10,15,17,19,23,27,29,32,34,35,37,39,50,51,53]
+playStart P2 count=17 hand=3x2 4x2 5x2 6x2 8x1 9x2 Qx1 Kx4 Ax1 [0,1,5,7,9,11,12,14,22,24,26,38,40,41,42,43,44]
+
+TURN 1 P0 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=512.8
+  handBefore count=20 3x2 4x1 6x1 7x2 8x2 9x1 10x3 Jx1 Qx1 Ax3 2x2 jokerx1 [2,3,6,13,16,18,20,21,25,28,30,31,33,36,45,46,47,48,49,52]
+  historyForBot=[[],[]]
+  action=PAIR 3x2 [2,3] level=0 legal=True reason=
+  rawOutput={"response":[2,3]}
+  stderr=[PIMC] freeTurn=1 dangerous=0 topCount=6 totalVisits=2693
+[PIMC]  [0] type=2 lvl=0 sz=2 cards=2,3, heur=6.2 avgSample=-19.8307 visits=449 sw=0.118418 final=3.85169 <BEST>
+[PIMC]  [1] type=3 lvl=9 sz=7 cards=13,16,20,25,28,33,36, heur=5.51 avgSample=-21.8619 visits=449 sw=0.118418 final=2.92116
+[PIMC]  [2] type=1 lvl=0 sz=1 cards=2, heur=0.65 avgSample=-22.4606 visits=449 sw=0.118418 final=-2.00973
+[PIMC]  [3] type=3 lvl=9 sz=6 cards=16,20,25,28,33,36, heur=0.88 avgSample=-23.6786 visits=448 sw=0.118414 final=-1.92388
+[PIMC]  [4] type=7 lvl=11 sz=5 cards=45,46,47,2,3, heur=4.86 avgSample=-21.3274 visits=449 sw=0.118418 final=2.33446
+[PIMC]  [5] type=6 lvl=11 sz=4 cards=45,46,47,6, heur=4.67 avgSample=-18.8686 visits=449 sw=0.118418 final=2.43563
+  remain=P0:18, P1:17, P2:17
+
+TURN 2 P1 TEST3 team=farmers need=PAIR 3x2 [2,3] level=0 lastValidPlayer=0 passCount=0 elapsedMs=518.2
+  handBefore count=17 4x1 5x2 6x1 7x2 8x1 9x1 10x1 Jx3 Qx2 2x2 JOKERx1 [4,8,10,15,17,19,23,27,29,32,34,35,37,39,50,51,53]
+  historyForBot=[[],[2,3]]
+  action=PAIR 5x2 [8,10] level=2 legal=True reason=
+  rawOutput={"response":[8,10]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=6 totalVisits=3133
+[PIMC]  [0] type=2 lvl=2 sz=2 cards=8,10, heur=-0.5 avgSample=16.1062 visits=523 sw=0.237278 final=3.32165 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=15.6628 visits=522 sw=0.237273 final=2.71636
+[PIMC]  [2] type=2 lvl=9 sz=2 cards=37,39, heur=-2.6 avgSample=18.1609 visits=522 sw=0.237273 final=1.70909
+[PIMC]  [3] type=2 lvl=4 sz=2 cards=17,19, heur=-12.1 avgSample=10.8966 visits=522 sw=0.237273 final=-9.51455
+[PIMC]  [4] type=2 lvl=12 sz=2 cards=50,51, heur=-18.53 avgSample=14.8966 visits=522 sw=0.237273 final=-14.9955
+[PIMC]  [5] type=2 lvl=8 sz=2 cards=32,34, heur=-5.3 avgSample=17.7625 visits=522 sw=0.237273 final=-1.08545
+  remain=P0:18, P1:15, P2:17
+
+TURN 3 P2 REF team=farmers need=PAIR 5x2 [8,10] level=2 lastValidPlayer=1 passCount=0 elapsedMs=8.8
+  handBefore count=17 3x2 4x2 5x2 6x2 8x1 9x2 Qx1 Kx4 Ax1 [0,1,5,7,9,11,12,14,22,24,26,38,40,41,42,43,44]
+  historyForBot=[[2,3],[8,10]]
+  action=PAIR 6x2 [12,14] level=3 legal=True reason=
+  rawOutput={"debug":0,"response":[12,14]}
+  remain=P0:18, P1:15, P2:15
+
+TURN 4 P0 TEST3BEFORE team=landlord need=PAIR 6x2 [12,14] level=3 lastValidPlayer=2 passCount=0 elapsedMs=511.9
+  handBefore count=18 4x1 6x1 7x2 8x2 9x1 10x3 Jx1 Qx1 Ax3 2x2 jokerx1 [6,13,16,18,20,21,25,28,30,31,33,36,45,46,47,48,49,52]
+  historyForBot=[[8,10],[12,14]]
+  action=PAIR 10x2 [28,30] level=7 legal=True reason=
+  rawOutput={"response":[28,30]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=6 totalVisits=3303
+[PIMC]  [0] type=2 lvl=7 sz=2 cards=28,30, heur=5.62 avgSample=-15.258 visits=551 sw=0.237415 final=1.99753 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1.6 avgSample=-15.9709 visits=550 sw=0.23741 final=-5.39165
+[PIMC]  [2] type=2 lvl=12 sz=2 cards=48,49, heur=0.99 avgSample=-18.7636 visits=550 sw=0.23741 final=-3.46468
+[PIMC]  [3] type=2 lvl=4 sz=2 cards=16,18, heur=0.98 avgSample=-17.28 visits=550 sw=0.23741 final=-3.12245
+[PIMC]  [4] type=2 lvl=11 sz=2 cards=45,46, heur=-4.86 avgSample=-16.2468 visits=551 sw=0.237415 final=-8.71724
+[PIMC]  [5] type=2 lvl=5 sz=2 cards=20,21, heur=-4.14 avgSample=-14.853 visits=551 sw=0.237415 final=-7.66632
+  remain=P0:16, P1:15, P2:15
+
+TURN 5 P1 TEST3 team=farmers need=PAIR 10x2 [28,30] level=7 lastValidPlayer=0 passCount=0 elapsedMs=518.7
+  handBefore count=15 4x1 6x1 7x2 8x1 9x1 10x1 Jx3 Qx2 2x2 JOKERx1 [4,15,17,19,23,27,29,32,34,35,37,39,50,51,53]
+  historyForBot=[[12,14],[28,30]]
+  action=PAIR Qx2 [37,39] level=9 legal=True reason=
+  rawOutput={"response":[37,39]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=4 totalVisits=4244
+[PIMC]  [0] type=2 lvl=9 sz=2 cards=37,39, heur=3 avgSample=17.8699 visits=1061 sw=0.23865 final=7.26467 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=17.4628 visits=1061 sw=0.23865 final=3.1675
+[PIMC]  [2] type=2 lvl=12 sz=2 cards=50,51, heur=-12.93 avgSample=14.1527 visits=1061 sw=0.23865 final=-9.55246
+[PIMC]  [3] type=2 lvl=8 sz=2 cards=32,34, heur=0.3 avgSample=20.146 visits=1061 sw=0.23865 final=5.10786
+  remain=P0:16, P1:13, P2:15
+
+TURN 6 P2 REF team=farmers need=PAIR Qx2 [37,39] level=9 lastValidPlayer=1 passCount=0 elapsedMs=987.9
+  handBefore count=15 3x2 4x2 5x2 8x1 9x2 Qx1 Kx4 Ax1 [0,1,5,7,9,11,22,24,26,38,40,41,42,43,44]
+  historyForBot=[[28,30],[37,39]]
+  action=BOMB Kx4 [40,41,42,43] level=10 legal=True reason=
+  rawOutput={"debug":78,"response":[40,41,42,43]}
+  remain=P0:16, P1:13, P2:11
+
+TURN 7 P0 TEST3BEFORE team=landlord need=BOMB Kx4 [40,41,42,43] level=10 lastValidPlayer=2 passCount=0 elapsedMs=511.3
+  handBefore count=16 4x1 6x1 7x2 8x2 9x1 10x1 Jx1 Qx1 Ax3 2x2 jokerx1 [6,13,16,18,20,21,25,31,33,36,45,46,47,48,49,52]
+  historyForBot=[[37,39],[40,41,42,43]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=4138
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1.6 avgSample=-15.4566 visits=4138 sw=0.259624 final=-5.6129 <BEST>
+  remain=P0:16, P1:13, P2:11
+
+TURN 8 P1 TEST3 team=farmers need=BOMB Kx4 [40,41,42,43] level=10 lastValidPlayer=2 passCount=1 elapsedMs=519.6
+  handBefore count=13 4x1 6x1 7x2 8x1 9x1 10x1 Jx3 2x2 JOKERx1 [4,15,17,19,23,27,29,32,34,35,50,51,53]
+  historyForBot=[[40,41,42,43],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=4371
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=6 avgSample=12.2556 visits=4371 sw=0.239671 final=8.93732 <BEST>
+  remain=P0:16, P1:13, P2:11
+
+TURN 9 P2 REF team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=985.5
+  handBefore count=11 3x2 4x2 5x2 8x1 9x2 Qx1 Ax1 [0,1,5,7,9,11,22,24,26,38,44]
+  historyForBot=[[],[]]
+  action=STRAIGHT2 3x2 4x2 5x2 [0,1,5,7,9,11] level=2 legal=True reason=
+  rawOutput={"debug":99,"response":[0,1,5,7,9,11]}
+  remain=P0:16, P1:13, P2:5
+
+TURN 10 P0 TEST3BEFORE team=landlord need=STRAIGHT2 3x2 4x2 5x2 [0,1,5,7,9,11] level=2 lastValidPlayer=2 passCount=0 elapsedMs=515.3
+  handBefore count=16 4x1 6x1 7x2 8x2 9x1 10x1 Jx1 Qx1 Ax3 2x2 jokerx1 [6,13,16,18,20,21,25,31,33,36,45,46,47,48,49,52]
+  historyForBot=[[],[0,1,5,7,9,11]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=5342
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1.6 avgSample=-9.96367 visits=5342 sw=0.279686 final=-4.3867 <BEST>
+  remain=P0:16, P1:13, P2:5
+
+TURN 11 P1 TEST3 team=farmers need=STRAIGHT2 3x2 4x2 5x2 [0,1,5,7,9,11] level=2 lastValidPlayer=2 passCount=1 elapsedMs=509.0
+  handBefore count=13 4x1 6x1 7x2 8x1 9x1 10x1 Jx3 2x2 JOKERx1 [4,15,17,19,23,27,29,32,34,35,50,51,53]
+  historyForBot=[[0,1,5,7,9,11],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=5349
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=3 avgSample=4.79876 visits=5349 sw=0.259709 final=4.24628 <BEST>
+  remain=P0:16, P1:13, P2:5
+
+TURN 12 P2 REF team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=985.1
+  handBefore count=5 8x1 9x2 Qx1 Ax1 [22,24,26,38,44]
+  historyForBot=[[],[]]
+  action=SINGLE 8x1 [22] level=5 legal=True reason=
+  rawOutput={"debug":31,"response":[22]}
+  remain=P0:16, P1:13, P2:4
+
+TURN 13 P0 TEST3BEFORE team=landlord need=SINGLE 8x1 [22] level=5 lastValidPlayer=2 passCount=0 elapsedMs=512.0
+  handBefore count=16 4x1 6x1 7x2 8x2 9x1 10x1 Jx1 Qx1 Ax3 2x2 jokerx1 [6,13,16,18,20,21,25,31,33,36,45,46,47,48,49,52]
+  historyForBot=[[],[22]]
+  action=SINGLE jokerx1 [52] level=13 legal=True reason=
+  rawOutput={"response":[52]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=6 totalVisits=4907
+[PIMC]  [0] type=1 lvl=13 sz=1 cards=52, heur=2.09 avgSample=-18.1836 visits=817 sw=0.277959 final=-2.96429 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1.6 avgSample=-13.2616 visits=818 sw=0.277961 final=-5.28621
+[PIMC]  [2] type=1 lvl=9 sz=1 cards=36, heur=0.47 avgSample=-21.3594 visits=818 sw=0.277961 final=-5.46709
+[PIMC]  [3] type=1 lvl=6 sz=1 cards=25, heur=-14.17 avgSample=-22.9438 visits=818 sw=0.277961 final=-20.5475
+[PIMC]  [4] type=1 lvl=12 sz=1 cards=48, heur=-2.045 avgSample=-13.8484 visits=818 sw=0.277961 final=-5.89432
+[PIMC]  [5] type=1 lvl=8 sz=1 cards=33, heur=-4.41 avgSample=-19.9367 visits=818 sw=0.277961 final=-9.95162
+  remain=P0:15, P1:13, P2:4
+
+TURN 14 P1 TEST3 team=farmers need=SINGLE jokerx1 [52] level=13 lastValidPlayer=0 passCount=0 elapsedMs=510.8
+  handBefore count=13 4x1 6x1 7x2 8x1 9x1 10x1 Jx3 2x2 JOKERx1 [4,15,17,19,23,27,29,32,34,35,50,51,53]
+  historyForBot=[[22],[52]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=2 totalVisits=5332
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=11.24 visits=2666 sw=0.259416 final=1.91584 <BEST>
+[PIMC]  [1] type=1 lvl=14 sz=1 cards=53, heur=-5.53 avgSample=3.3125 visits=2666 sw=0.259416 final=-4.67068
+  remain=P0:15, P1:13, P2:4
+
+TURN 15 P2 REF team=farmers need=SINGLE jokerx1 [52] level=13 lastValidPlayer=0 passCount=1 elapsedMs=1006.3
+  handBefore count=4 9x2 Qx1 Ax1 [24,26,38,44]
+  historyForBot=[[52],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:15, P1:13, P2:4
+
+TURN 16 P0 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=514.3
+  handBefore count=15 4x1 6x1 7x2 8x2 9x1 10x1 Jx1 Qx1 Ax3 2x2 [6,13,16,18,20,21,25,31,33,36,45,46,47,48,49]
+  historyForBot=[[],[]]
+  action=SINGLE 4x1 [6] level=1 legal=True reason=
+  rawOutput={"response":[6]}
+  stderr=[PIMC] freeTurn=1 dangerous=0 topCount=6 totalVisits=7117
+[PIMC]  [0] type=1 lvl=1 sz=1 cards=6, heur=8.65 avgSample=7.7516 visits=1186 sw=0.159195 final=9.88401 <BEST>
+[PIMC]  [1] type=3 lvl=9 sz=7 cards=13,16,20,25,31,33,36, heur=8.51 avgSample=-24 visits=1186 sw=0.159195 final=4.68933
+[PIMC]  [2] type=1 lvl=3 sz=1 cards=13, heur=0.65 avgSample=-9.94668 visits=1186 sw=0.159195 final=-0.933457
+[PIMC]  [3] type=3 lvl=9 sz=6 cards=16,20,25,31,33,36, heur=0.88 avgSample=-24 visits=1186 sw=0.159195 final=-2.94067
+[PIMC]  [4] type=6 lvl=11 sz=4 cards=45,46,47,6, heur=7.67 avgSample=-23.5876 visits=1187 sw=0.159195 final=3.91496
+[PIMC]  [5] type=2 lvl=4 sz=2 cards=16,18, heur=1.2 avgSample=-22.137 visits=1186 sw=0.159195 final=-2.3241
+  remain=P0:14, P1:13, P2:4
+
+TURN 17 P1 TEST3 team=farmers need=SINGLE 4x1 [6] level=1 lastValidPlayer=0 passCount=0 elapsedMs=512.1
+  handBefore count=13 4x1 6x1 7x2 8x1 9x1 10x1 Jx3 2x2 JOKERx1 [4,15,17,19,23,27,29,32,34,35,50,51,53]
+  historyForBot=[[],[6]]
+  action=SINGLE 7x1 [17] level=4 legal=True reason=
+  rawOutput={"response":[17]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=6 totalVisits=6667
+[PIMC]  [0] type=1 lvl=4 sz=1 cards=17, heur=3.55 avgSample=-9.10882 visits=1111 sw=0.278496 final=1.01323 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=1.86536 visits=1112 sw=0.278497 final=-0.480501
+[PIMC]  [2] type=1 lvl=14 sz=1 cards=53, heur=-18.13 avgSample=-5.87679 visits=1111 sw=0.278496 final=-19.7667
+[PIMC]  [3] type=1 lvl=3 sz=1 cards=15, heur=-5.65 avgSample=-15.8474 visits=1111 sw=0.278496 final=-10.0635
+[PIMC]  [4] type=1 lvl=12 sz=1 cards=50, heur=-17.005 avgSample=7.44072 visits=1111 sw=0.278496 final=-14.9328
+[PIMC]  [5] type=1 lvl=8 sz=1 cards=32, heur=-9.65 avgSample=2.36817 visits=1111 sw=0.278496 final=-8.99047
+  remain=P0:14, P1:12, P2:4
+
+TURN 18 P2 REF team=farmers need=SINGLE 7x1 [17] level=4 lastValidPlayer=1 passCount=0 elapsedMs=1000.9
+  handBefore count=4 9x2 Qx1 Ax1 [24,26,38,44]
+  historyForBot=[[6],[17]]
+  action=SINGLE Ax1 [44] level=11 legal=True reason=
+  rawOutput={"debug":66,"response":[44]}
+  remain=P0:14, P1:12, P2:3
+
+TURN 19 P0 TEST3BEFORE team=landlord need=SINGLE Ax1 [44] level=11 lastValidPlayer=2 passCount=0 elapsedMs=509.0
+  handBefore count=14 6x1 7x2 8x2 9x1 10x1 Jx1 Qx1 Ax3 2x2 [13,16,18,20,21,25,31,33,36,45,46,47,48,49]
+  historyForBot=[[17],[44]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=2 totalVisits=8231
+[PIMC]  [0] type=1 lvl=12 sz=1 cards=48, heur=1.315 avgSample=-7.92883 visits=4115 sw=0.379447 final=-1.69357
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=9.95729 visits=4116 sw=0.419389 final=1.17597 <BEST>
+  remain=P0:14, P1:12, P2:3
+
+TURN 20 P1 TEST3 team=farmers need=SINGLE Ax1 [44] level=11 lastValidPlayer=2 passCount=1 elapsedMs=508.3
+  handBefore count=12 4x1 6x1 7x1 8x1 9x1 10x1 Jx3 2x2 JOKERx1 [4,15,19,23,27,29,32,34,35,50,51,53]
+  historyForBot=[[44],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=3 totalVisits=8576
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=6 avgSample=11.1089 visits=2859 sw=0.279414 final=9.10398 <BEST>
+[PIMC]  [1] type=1 lvl=14 sz=1 cards=53, heur=-10.35 avgSample=13.6348 visits=2858 sw=0.279413 final=-6.54026
+[PIMC]  [2] type=1 lvl=12 sz=1 cards=50, heur=-13.705 avgSample=14.8624 visits=2859 sw=0.279414 final=-9.55224
+  remain=P0:14, P1:12, P2:3
+
+TURN 21 P2 REF team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=1001.9
+  handBefore count=3 9x2 Qx1 [24,26,38]
+  historyForBot=[[],[]]
+  action=PAIR 9x2 [24,26] level=6 legal=True reason=
+  rawOutput={"debug":757,"response":[24,26]}
+  remain=P0:14, P1:12, P2:1
+
+TURN 22 P0 TEST3BEFORE team=landlord need=PAIR 9x2 [24,26] level=6 lastValidPlayer=2 passCount=0 elapsedMs=512.5
+  handBefore count=14 6x1 7x2 8x2 9x1 10x1 Jx1 Qx1 Ax3 2x2 [13,16,18,20,21,25,31,33,36,45,46,47,48,49]
+  historyForBot=[[],[24,26]]
+  action=PAIR 2x2 [48,49] level=12 legal=True reason=
+  rawOutput={"response":[48,49]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=3 totalVisits=19083
+[PIMC]  [0] type=2 lvl=12 sz=2 cards=48,49, heur=17.75 avgSample=24 visits=6361 sw=0.379642 final=26.8614 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-28 avgSample=-24 visits=6361 sw=0.419604 final=-38.0705
+[PIMC]  [2] type=2 lvl=11 sz=2 cards=45,46, heur=5.7 avgSample=-23.9999 visits=6361 sw=0.379642 final=-3.41137
+  remain=P0:12, P1:12, P2:1
+
+TURN 23 P1 TEST3 team=farmers need=PAIR 2x2 [48,49] level=12 lastValidPlayer=0 passCount=0 elapsedMs=511.8
+  handBefore count=12 4x1 6x1 7x1 8x1 9x1 10x1 Jx3 2x2 JOKERx1 [4,15,19,23,27,29,32,34,35,50,51,53]
+  historyForBot=[[24,26],[48,49]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=10754
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=-3.08178 visits=10754 sw=0.279844 final=-1.86242 <BEST>
+  remain=P0:12, P1:12, P2:1
+
+TURN 24 P2 REF team=farmers need=PAIR 2x2 [48,49] level=12 lastValidPlayer=0 passCount=1 elapsedMs=989.8
+  handBefore count=1 Qx1 [38]
+  historyForBot=[[48,49],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:12, P1:12, P2:1
+
+TURN 25 P0 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=510.2
+  handBefore count=12 6x1 7x2 8x2 9x1 10x1 Jx1 Qx1 Ax3 [13,16,18,20,21,25,31,33,36,45,46,47]
+  historyForBot=[[],[]]
+  action=STRAIGHT 6x1 7x1 8x1 9x1 10x1 Jx1 Qx1 [13,16,20,25,31,33,36] level=9 legal=True reason=
+  rawOutput={"response":[13,16,20,25,31,33,36]}
+  stderr=[PIMC] freeTurn=1 dangerous=1 topCount=6 totalVisits=19530
+[PIMC]  [0] type=1 lvl=4 sz=1 cards=16, heur=8.65 avgSample=-24 visits=3255 sw=0.239558 final=2.9006
+[PIMC]  [1] type=3 lvl=9 sz=7 cards=13,16,20,25,31,33,36, heur=8.51 avgSample=23.9881 visits=3255 sw=0.239558 final=14.2566 <BEST>
+[PIMC]  [2] type=1 lvl=3 sz=1 cards=13, heur=0.65 avgSample=-19.5521 visits=3255 sw=0.239558 final=-4.03387
+[PIMC]  [3] type=3 lvl=9 sz=6 cards=16,20,25,31,33,36, heur=0.88 avgSample=-24 visits=3255 sw=0.239558 final=-4.8694
+[PIMC]  [4] type=6 lvl=11 sz=4 cards=45,46,47,16, heur=7.67 avgSample=24 visits=3255 sw=0.239558 final=13.4194
+[PIMC]  [5] type=2 lvl=4 sz=2 cards=16,18, heur=1.2 avgSample=-8.4245 visits=3255 sw=0.239558 final=-0.81816
+  remain=P0:5, P1:12, P2:1
+
+TURN 26 P1 TEST3 team=farmers need=STRAIGHT 6x1 7x1 8x1 9x1 10x1 Jx1 Qx1 [13,16,20,25,31,33,36] level=9 lastValidPlayer=0 passCount=0 elapsedMs=514.1
+  handBefore count=12 4x1 6x1 7x1 8x1 9x1 10x1 Jx3 2x2 JOKERx1 [4,15,19,23,27,29,32,34,35,50,51,53]
+  historyForBot=[[],[13,16,20,25,31,33,36]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=25407
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-4.6 avgSample=-5.00016 visits=25407 sw=0.419901 final=-6.69957 <BEST>
+  remain=P0:5, P1:12, P2:1
+
+TURN 27 P2 REF team=farmers need=STRAIGHT 6x1 7x1 8x1 9x1 10x1 Jx1 Qx1 [13,16,20,25,31,33,36] level=9 lastValidPlayer=0 passCount=1 elapsedMs=1008.8
+  handBefore count=1 Qx1 [38]
+  historyForBot=[[13,16,20,25,31,33,36],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:5, P1:12, P2:1
+
+TURN 28 P0 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=509.6
+  handBefore count=5 7x1 8x1 Ax3 [18,21,45,46,47]
+  historyForBot=[[],[]]
+  action=TRIPLET1 7x1 Ax3 [45,46,47,18] level=11 legal=True reason=
+  rawOutput={"response":[45,46,47,18]}
+  stderr=[PIMC] freeTurn=1 dangerous=1 topCount=6 totalVisits=22612
+[PIMC]  [0] type=1 lvl=4 sz=1 cards=18, heur=17.75 avgSample=-24 visits=3769 sw=0.239619 final=11.9992
+[PIMC]  [1] type=6 lvl=11 sz=4 cards=45,46,47,18, heur=8.07 avgSample=24 visits=3769 sw=0.239619 final=13.8208 <BEST>
+[PIMC]  [2] type=1 lvl=5 sz=1 cards=21, heur=17.35 avgSample=-24 visits=3769 sw=0.239619 final=11.5992
+[PIMC]  [3] type=1 lvl=11 sz=1 cards=45, heur=-6.75 avgSample=-23.9987 visits=3769 sw=0.239619 final=-12.5005
+[PIMC]  [4] type=5 lvl=11 sz=3 cards=45,46,47, heur=-3.43 avgSample=-24 visits=3768 sw=0.239618 final=-9.18084
+[PIMC]  [5] type=2 lvl=11 sz=2 cards=45,46, heur=-6.5 avgSample=-24 visits=3768 sw=0.239618 final=-12.2508
+  remain=P0:1, P1:12, P2:1
+
+TURN 29 P1 TEST3 team=farmers need=TRIPLET1 7x1 Ax3 [45,46,47,18] level=11 lastValidPlayer=0 passCount=0 elapsedMs=509.7
+  handBefore count=12 4x1 6x1 7x1 8x1 9x1 10x1 Jx3 2x2 JOKERx1 [4,15,19,23,27,29,32,34,35,50,51,53]
+  historyForBot=[[],[45,46,47,18]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=196615
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-27.2 avgSample=-24 visits=196615 sw=0.419987 final=-37.2797 <BEST>
+  remain=P0:1, P1:12, P2:1
+
+TURN 30 P2 REF team=farmers need=TRIPLET1 7x1 Ax3 [45,46,47,18] level=11 lastValidPlayer=0 passCount=1 elapsedMs=1034.9
+  handBefore count=1 Qx1 [38]
+  historyForBot=[[45,46,47,18],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:1, P1:12, P2:1
+
+TURN 31 P0 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=14.0
+  handBefore count=1 8x1 [21]
+  historyForBot=[[],[]]
+  action=SINGLE 8x1 [21] level=5 legal=True reason=
+  rawOutput={"response":[21]}
+  remain=P0:0, P1:12, P2:1
+WINNER P0 TEST3BEFORE team=landlord
+SUMMARY winner=P0 winnerBot=TEST3BEFORE winnerTeam=landlord landlord=P0 landlordBot=TEST3BEFORE finalBid=2 multiplier=2 spring=False antiSpring=False forcedByCrash=False test3beforeWon=True test3Won=False refWon=False
+
+================ GAME 4 seed=20261633 ================
+bots: P0=TEST3BEFORE, P1=REF, P2=TEST3
+initial P0 TEST3BEFORE hand=3x1 4x1 5x3 6x1 7x3 8x1 9x1 10x1 Jx2 Ax1 2x1 jokerx1 [2,5,9,10,11,14,16,17,19,20,25,30,32,33,44,48,52]
+initial P1 REF hand=3x1 4x2 6x1 8x2 9x1 10x2 Jx1 Qx2 Kx1 Ax1 2x2 JOKERx1 [3,4,6,13,21,22,26,29,31,35,38,39,40,46,50,51,53]
+initial P2 TEST3 hand=3x2 4x1 5x1 6x2 7x1 9x2 10x1 Qx2 Kx3 Ax1 2x1 [0,1,7,8,12,15,18,24,27,28,36,37,41,42,43,45,49]
+public=8x1 Jx1 Ax1 [23,34,47]
+BID P0 TEST3BEFORE bid=1 ok=True elapsedMs=9.1 reason=
+BID P1 REF bid=0 ok=True elapsedMs=8.0 reason=
+BID P2 TEST3 bid=0 ok=True elapsedMs=7.3 reason=
+landlord=P0 landlordBot=TEST3BEFORE finalBid=1
+playStart P0 count=20 hand=3x1 4x1 5x3 6x1 7x3 8x2 9x1 10x1 Jx3 Ax2 2x1 jokerx1 [2,5,9,10,11,14,16,17,19,20,23,25,30,32,33,34,44,47,48,52]
+playStart P1 count=17 hand=3x1 4x2 6x1 8x2 9x1 10x2 Jx1 Qx2 Kx1 Ax1 2x2 JOKERx1 [3,4,6,13,21,22,26,29,31,35,38,39,40,46,50,51,53]
+playStart P2 count=17 hand=3x2 4x1 5x1 6x2 7x1 9x2 10x1 Qx2 Kx3 Ax1 2x1 [0,1,7,8,12,15,18,24,27,28,36,37,41,42,43,45,49]
+
+TURN 1 P0 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=518.0
+  handBefore count=20 3x1 4x1 5x3 6x1 7x3 8x2 9x1 10x1 Jx3 Ax2 2x1 jokerx1 [2,5,9,10,11,14,16,17,19,20,23,25,30,32,33,34,44,47,48,52]
+  historyForBot=[[],[]]
+  action=STRAIGHT 3x1 4x1 5x1 6x1 7x1 8x1 9x1 10x1 [2,5,9,14,16,20,25,30] level=7 legal=True reason=
+  rawOutput={"response":[2,5,9,14,16,20,25,30]}
+  stderr=[PIMC] freeTurn=1 dangerous=0 topCount=6 totalVisits=2883
+[PIMC]  [0] type=3 lvl=7 sz=8 cards=2,5,9,14,16,20,25,30, heur=6.49 avgSample=8.33264 visits=481 sw=0.118522 final=7.4776 <BEST>
+[PIMC]  [1] type=7 lvl=8 sz=5 cards=32,33,34,9,10, heur=6.13 avgSample=4.24116 visits=481 sw=0.118522 final=6.63267
+[PIMC]  [2] type=1 lvl=0 sz=1 cards=2, heur=0.65 avgSample=6.04459 visits=481 sw=0.118522 final=1.36641
+[PIMC]  [3] type=3 lvl=8 sz=9 cards=2,5,9,14,16,20,25,30,32, heur=1.37 avgSample=4.8 visits=480 sw=0.118519 final=1.93889
+[PIMC]  [4] type=2 lvl=2 sz=2 cards=9,10, heur=6.2 avgSample=6.7 visits=480 sw=0.118519 final=6.99407
+[PIMC]  [5] type=6 lvl=8 sz=4 cards=32,33,34,20, heur=5.94 avgSample=4.5 visits=480 sw=0.118519 final=6.47333
+  remain=P0:12, P1:17, P2:17
+
+TURN 2 P1 REF team=farmers need=STRAIGHT 3x1 4x1 5x1 6x1 7x1 8x1 9x1 10x1 [2,5,9,14,16,20,25,30] level=7 lastValidPlayer=0 passCount=0 elapsedMs=9.0
+  handBefore count=17 3x1 4x2 6x1 8x2 9x1 10x2 Jx1 Qx2 Kx1 Ax1 2x2 JOKERx1 [3,4,6,13,21,22,26,29,31,35,38,39,40,46,50,51,53]
+  historyForBot=[[],[2,5,9,14,16,20,25,30]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:12, P1:17, P2:17
+
+TURN 3 P2 TEST3 team=farmers need=STRAIGHT 3x1 4x1 5x1 6x1 7x1 8x1 9x1 10x1 [2,5,9,14,16,20,25,30] level=7 lastValidPlayer=0 passCount=1 elapsedMs=518.4
+  handBefore count=17 3x2 4x1 5x1 6x2 7x1 9x2 10x1 Qx2 Kx3 Ax1 2x1 [0,1,7,8,12,15,18,24,27,28,36,37,41,42,43,45,49]
+  historyForBot=[[2,5,9,14,16,20,25,30],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=2929
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=6.31254 visits=2929 sw=0.239509 final=0.511912 <BEST>
+  remain=P0:12, P1:17, P2:17
+
+TURN 4 P0 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=526.3
+  handBefore count=12 5x2 7x2 8x1 Jx3 Ax2 2x1 jokerx1 [10,11,17,19,23,32,33,34,44,47,48,52]
+  historyForBot=[[],[]]
+  action=PAIR 7x2 [17,19] level=4 legal=True reason=
+  rawOutput={"response":[17,19]}
+  stderr=[PIMC] freeTurn=1 dangerous=0 topCount=6 totalVisits=3535
+[PIMC]  [0] type=2 lvl=2 sz=2 cards=10,11, heur=6.2 avgSample=8.60373 visits=589 sw=0.11879 final=7.22204
+[PIMC]  [1] type=7 lvl=8 sz=5 cards=32,33,34,10,11, heur=6.13 avgSample=7.64883 visits=590 sw=0.118792 final=7.03862
+[PIMC]  [2] type=1 lvl=2 sz=1 cards=10, heur=0.65 avgSample=-1.82064 visits=589 sw=0.11879 final=0.433727
+[PIMC]  [3] type=6 lvl=8 sz=4 cards=32,33,34,23, heur=5.94 avgSample=9.2045 visits=589 sw=0.11879 final=7.0334
+[PIMC]  [4] type=5 lvl=8 sz=3 cards=32,33,34, heur=-3.19 avgSample=5.81317 visits=589 sw=0.11879 final=-2.49945
+[PIMC]  [5] type=2 lvl=4 sz=2 cards=17,19, heur=6.2 avgSample=8.83805 visits=589 sw=0.11879 final=7.24987 <BEST>
+  remain=P0:10, P1:17, P2:17
+
+TURN 5 P1 REF team=farmers need=PAIR 7x2 [17,19] level=4 lastValidPlayer=0 passCount=0 elapsedMs=982.8
+  handBefore count=17 3x1 4x2 6x1 8x2 9x1 10x2 Jx1 Qx2 Kx1 Ax1 2x2 JOKERx1 [3,4,6,13,21,22,26,29,31,35,38,39,40,46,50,51,53]
+  historyForBot=[[],[17,19]]
+  action=PAIR 2x2 [50,51] level=12 legal=True reason=
+  rawOutput={"debug":28,"response":[50,51]}
+  remain=P0:10, P1:15, P2:17
+
+TURN 6 P2 TEST3 team=farmers need=PAIR 2x2 [50,51] level=12 lastValidPlayer=1 passCount=0 elapsedMs=518.3
+  handBefore count=17 3x2 4x1 5x1 6x2 7x1 9x2 10x1 Qx2 Kx3 Ax1 2x1 [0,1,7,8,12,15,18,24,27,28,36,37,41,42,43,45,49]
+  historyForBot=[[17,19],[50,51]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=3633
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-0.5 avgSample=5.609 visits=3633 sw=0.239604 final=0.84394 <BEST>
+  remain=P0:10, P1:15, P2:17
+
+TURN 7 P0 TEST3BEFORE team=landlord need=PAIR 2x2 [50,51] level=12 lastValidPlayer=1 passCount=1 elapsedMs=522.4
+  handBefore count=10 5x2 8x1 Jx3 Ax2 2x1 jokerx1 [10,11,23,32,33,34,44,47,48,52]
+  historyForBot=[[50,51],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=3017
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=14.7413 visits=3017 sw=0.239524 final=0.5309 <BEST>
+  remain=P0:10, P1:15, P2:17
+
+TURN 8 P1 REF team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=999.2
+  handBefore count=15 3x1 4x2 6x1 8x2 9x1 10x2 Jx1 Qx2 Kx1 Ax1 JOKERx1 [3,4,6,13,21,22,26,29,31,35,38,39,40,46,53]
+  historyForBot=[[],[]]
+  action=STRAIGHT 9x1 10x1 Jx1 Qx1 Kx1 Ax1 [26,29,35,38,40,46] level=11 legal=True reason=
+  rawOutput={"debug":12,"response":[26,29,35,38,40,46]}
+  remain=P0:10, P1:9, P2:17
+
+TURN 9 P2 TEST3 team=farmers need=STRAIGHT 9x1 10x1 Jx1 Qx1 Kx1 Ax1 [26,29,35,38,40,46] level=11 lastValidPlayer=1 passCount=0 elapsedMs=510.8
+  handBefore count=17 3x2 4x1 5x1 6x2 7x1 9x2 10x1 Qx2 Kx3 Ax1 2x1 [0,1,7,8,12,15,18,24,27,28,36,37,41,42,43,45,49]
+  historyForBot=[[],[26,29,35,38,40,46]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=4955
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-0.5 avgSample=6.33306 visits=4955 sw=0.259686 final=1.1446 <BEST>
+  remain=P0:10, P1:9, P2:17
+
+TURN 10 P0 TEST3BEFORE team=landlord need=STRAIGHT 9x1 10x1 Jx1 Qx1 Kx1 Ax1 [26,29,35,38,40,46] level=11 lastValidPlayer=1 passCount=1 elapsedMs=513.3
+  handBefore count=10 5x2 8x1 Jx3 Ax2 2x1 jokerx1 [10,11,23,32,33,34,44,47,48,52]
+  historyForBot=[[26,29,35,38,40,46],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=4236
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=17.75 visits=4236 sw=0.239661 final=1.25397 <BEST>
+  remain=P0:10, P1:9, P2:17
+
+TURN 11 P1 REF team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=986.7
+  handBefore count=9 3x1 4x2 6x1 8x2 10x1 Qx1 JOKERx1 [3,4,6,13,21,22,31,39,53]
+  historyForBot=[[],[]]
+  action=SINGLE 3x1 [3] level=0 legal=True reason=
+  rawOutput={"debug":23,"response":[3]}
+  remain=P0:10, P1:8, P2:17
+
+TURN 12 P2 TEST3 team=farmers need=SINGLE 3x1 [3] level=0 lastValidPlayer=1 passCount=0 elapsedMs=509.6
+  handBefore count=17 3x2 4x1 5x1 6x2 7x1 9x2 10x1 Qx2 Kx3 Ax1 2x1 [0,1,7,8,12,15,18,24,27,28,36,37,41,42,43,45,49]
+  historyForBot=[[],[3]]
+  action=SINGLE 6x1 [12] level=3 legal=True reason=
+  rawOutput={"response":[12]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=6 totalVisits=5999
+[PIMC]  [0] type=1 lvl=3 sz=1 cards=12, heur=4.85 avgSample=10.5835 visits=1000 sw=0.27833 final=7.7957 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-0.5 avgSample=0.322341 visits=1000 sw=0.27833 final=-0.410283
+[PIMC]  [2] type=1 lvl=7 sz=1 cards=28, heur=4.85 avgSample=8.76775 visits=999 sw=0.278328 final=7.29031
+[PIMC]  [3] type=1 lvl=1 sz=1 cards=7, heur=-5.15 avgSample=0.283912 visits=1000 sw=0.27833 final=-5.07098
+[PIMC]  [4] type=1 lvl=12 sz=1 cards=49, heur=2.575 avgSample=4.35295 visits=1000 sw=0.27833 final=3.78656
+[PIMC]  [5] type=1 lvl=11 sz=1 cards=45, heur=4.85 avgSample=7.62975 visits=1000 sw=0.27833 final=6.97359
+  remain=P0:10, P1:8, P2:16
+
+TURN 13 P0 TEST3BEFORE team=landlord need=SINGLE 6x1 [12] level=3 lastValidPlayer=2 passCount=0 elapsedMs=511.8
+  handBefore count=10 5x2 8x1 Jx3 Ax2 2x1 jokerx1 [10,11,23,32,33,34,44,47,48,52]
+  historyForBot=[[3],[12]]
+  action=SINGLE 8x1 [23] level=5 legal=True reason=
+  rawOutput={"response":[23]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=6 totalVisits=6811
+[PIMC]  [0] type=1 lvl=5 sz=1 cards=23, heur=10.79 avgSample=22.2661 visits=1135 sw=0.258633 final=16.5487 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=21.4225 visits=1136 sw=0.258634 final=2.5406
+[PIMC]  [2] type=1 lvl=12 sz=1 cards=48, heur=8.955 avgSample=22.0123 visits=1135 sw=0.258633 final=14.6481
+[PIMC]  [3] type=1 lvl=8 sz=1 cards=32, heur=-2.45 avgSample=16.0493 visits=1135 sw=0.258633 final=1.70089
+[PIMC]  [4] type=1 lvl=13 sz=1 cards=52, heur=8.15 avgSample=21.2934 visits=1135 sw=0.258633 final=13.6572
+[PIMC]  [5] type=1 lvl=11 sz=1 cards=44, heur=2.31 avgSample=20.3207 visits=1135 sw=0.258633 final=7.5656
+  remain=P0:9, P1:8, P2:16
+
+TURN 14 P1 REF team=farmers need=SINGLE 8x1 [23] level=5 lastValidPlayer=0 passCount=0 elapsedMs=990.0
+  handBefore count=8 4x2 6x1 8x2 10x1 Qx1 JOKERx1 [4,6,13,21,22,31,39,53]
+  historyForBot=[[12],[23]]
+  action=SINGLE 10x1 [31] level=7 legal=True reason=
+  rawOutput={"debug":36,"response":[31]}
+  remain=P0:9, P1:7, P2:16
+
+TURN 15 P2 TEST3 team=farmers need=SINGLE 10x1 [31] level=7 lastValidPlayer=1 passCount=0 elapsedMs=509.8
+  handBefore count=16 3x2 4x1 5x1 6x1 7x1 9x2 10x1 Qx2 Kx3 Ax1 2x1 [0,1,7,8,15,18,24,27,28,36,37,41,42,43,45,49]
+  historyForBot=[[23],[31]]
+  action=SINGLE Ax1 [45] level=11 legal=True reason=
+  rawOutput={"response":[45]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=5 totalVisits=7377
+[PIMC]  [0] type=1 lvl=11 sz=1 cards=45, heur=4.85 avgSample=14.9823 visits=1476 sw=0.278866 final=9.02807 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-0.5 avgSample=11.8787 visits=1476 sw=0.278866 final=2.81258
+[PIMC]  [2] type=1 lvl=12 sz=1 cards=49, heur=2.575 avgSample=12.6116 visits=1475 sw=0.278866 final=6.09195
+[PIMC]  [3] type=1 lvl=9 sz=1 cards=36, heur=-0.15 avgSample=11.0033 visits=1475 sw=0.278866 final=2.91844
+[PIMC]  [4] type=1 lvl=10 sz=1 cards=41, heur=-5.15 avgSample=10.6229 visits=1475 sw=0.278866 final=-2.18763
+  remain=P0:9, P1:7, P2:15
+
+TURN 16 P0 TEST3BEFORE team=landlord need=SINGLE Ax1 [45] level=11 lastValidPlayer=2 passCount=0 elapsedMs=513.3
+  handBefore count=9 5x2 Jx3 Ax2 2x1 jokerx1 [10,11,32,33,34,44,47,48,52]
+  historyForBot=[[31],[45]]
+  action=SINGLE 2x1 [48] level=12 legal=True reason=
+  rawOutput={"response":[48]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=3 totalVisits=8343
+[PIMC]  [0] type=1 lvl=12 sz=1 cards=48, heur=9.595 avgSample=21.6872 visits=2781 sw=0.25944 final=15.2215 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=20.4189 visits=2781 sw=0.25944 final=2.29748
+[PIMC]  [2] type=1 lvl=13 sz=1 cards=52, heur=8.79 avgSample=20.8069 visits=2781 sw=0.25944 final=14.1881
+  remain=P0:8, P1:7, P2:15
+
+TURN 17 P1 REF team=farmers need=SINGLE 2x1 [48] level=12 lastValidPlayer=0 passCount=0 elapsedMs=1002.8
+  handBefore count=7 4x2 6x1 8x2 Qx1 JOKERx1 [4,6,13,21,22,39,53]
+  historyForBot=[[45],[48]]
+  action=SINGLE JOKERx1 [53] level=14 legal=True reason=
+  rawOutput={"debug":182,"response":[53]}
+  remain=P0:8, P1:6, P2:15
+
+TURN 18 P2 TEST3 team=farmers need=SINGLE JOKERx1 [53] level=14 lastValidPlayer=1 passCount=0 elapsedMs=510.1
+  handBefore count=15 3x2 4x1 5x1 6x1 7x1 9x2 10x1 Qx2 Kx3 2x1 [0,1,7,8,15,18,24,27,28,36,37,41,42,43,49]
+  historyForBot=[[48],[53]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=8440
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-0.5 avgSample=14.4104 visits=8440 sw=0.279801 final=3.53205 <BEST>
+  remain=P0:8, P1:6, P2:15
+
+TURN 19 P0 TEST3BEFORE team=landlord need=SINGLE JOKERx1 [53] level=14 lastValidPlayer=1 passCount=1 elapsedMs=510.1
+  handBefore count=8 5x2 Jx3 Ax2 jokerx1 [10,11,32,33,34,44,47,52]
+  historyForBot=[[53],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=9916
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=20.2702 visits=9916 sw=0.259843 final=2.26705 <BEST>
+  remain=P0:8, P1:6, P2:15
+
+TURN 20 P1 REF team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=1007.4
+  handBefore count=6 4x2 6x1 8x2 Qx1 [4,6,13,21,22,39]
+  historyForBot=[[],[]]
+  action=PAIR 4x2 [4,6] level=1 legal=True reason=
+  rawOutput={"debug":214,"response":[4,6]}
+  remain=P0:8, P1:4, P2:15
+
+TURN 21 P2 TEST3 team=farmers need=PAIR 4x2 [4,6] level=1 lastValidPlayer=1 passCount=0 elapsedMs=509.2
+  handBefore count=15 3x2 4x1 5x1 6x1 7x1 9x2 10x1 Qx2 Kx3 2x1 [0,1,7,8,15,18,24,27,28,36,37,41,42,43,49]
+  historyForBot=[[],[4,6]]
+  action=PAIR 9x2 [24,27] level=6 legal=True reason=
+  rawOutput={"response":[24,27]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=4 totalVisits=12155
+[PIMC]  [0] type=2 lvl=6 sz=2 cards=24,27, heur=5 avgSample=11.8596 visits=3039 sw=0.319369 final=8.78759 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-0.5 avgSample=8.46083 visits=3038 sw=0.319369 final=2.20213
+[PIMC]  [2] type=2 lvl=9 sz=2 cards=36,37, heur=5 avgSample=9.46364 visits=3039 sw=0.319369 final=8.0224
+[PIMC]  [3] type=2 lvl=10 sz=2 cards=41,42, heur=-5 avgSample=3.52748 visits=3039 sw=0.319369 final=-3.87343
+  remain=P0:8, P1:4, P2:13
+
+TURN 22 P0 TEST3BEFORE team=landlord need=PAIR 9x2 [24,27] level=6 lastValidPlayer=2 passCount=0 elapsedMs=511.2
+  handBefore count=8 5x2 Jx3 Ax2 jokerx1 [10,11,32,33,34,44,47,52]
+  historyForBot=[[4,6],[24,27]]
+  action=PAIR Ax2 [44,47] level=11 legal=True reason=
+  rawOutput={"response":[44,47]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=3 totalVisits=15489
+[PIMC]  [0] type=2 lvl=11 sz=2 cards=44,47, heur=10.7 avgSample=20.7833 visits=5163 sw=0.279675 final=16.5126 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=22.8658 visits=5163 sw=0.279675 final=3.39499
+[PIMC]  [2] type=2 lvl=8 sz=2 cards=32,33, heur=-2.06 avgSample=22.1778 visits=5163 sw=0.279675 final=4.14258
+  remain=P0:6, P1:4, P2:13
+
+TURN 23 P1 REF team=farmers need=PAIR Ax2 [44,47] level=11 lastValidPlayer=0 passCount=0 elapsedMs=993.5
+  handBefore count=4 6x1 8x2 Qx1 [13,21,22,39]
+  historyForBot=[[24,27],[44,47]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:6, P1:4, P2:13
+
+TURN 24 P2 TEST3 team=farmers need=PAIR Ax2 [44,47] level=11 lastValidPlayer=0 passCount=1 elapsedMs=509.8
+  handBefore count=13 3x2 4x1 5x1 6x1 7x1 10x1 Qx2 Kx3 2x1 [0,1,7,8,15,18,28,36,37,41,42,43,49]
+  historyForBot=[[44,47],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=12213
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-3.2 avgSample=14.853 visits=12213 sw=0.419794 final=3.03521 <BEST>
+  remain=P0:6, P1:4, P2:13
+
+TURN 25 P0 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=511.7
+  handBefore count=6 5x2 Jx3 jokerx1 [10,11,32,33,34,52]
+  historyForBot=[[],[]]
+  action=PAIR 5x2 [10,11] level=2 legal=True reason=
+  rawOutput={"response":[10,11]}
+  stderr=[PIMC] freeTurn=1 dangerous=0 topCount=6 totalVisits=24589
+[PIMC]  [0] type=2 lvl=2 sz=2 cards=10,11, heur=18.3 avgSample=18.0789 visits=4099 sw=0.159766 final=21.1884 <BEST>
+[PIMC]  [1] type=7 lvl=8 sz=5 cards=32,33,34,10,11, heur=16.53 avgSample=20.6501 visits=4098 sw=0.159766 final=19.8292
+[PIMC]  [2] type=6 lvl=8 sz=4 cards=32,33,34,52, heur=13.24 avgSample=-8.62079 visits=4098 sw=0.159766 final=11.8627
+[PIMC]  [3] type=1 lvl=2 sz=1 cards=10, heur=0.65 avgSample=24 visits=4098 sw=0.159766 final=4.48439
+[PIMC]  [4] type=1 lvl=13 sz=1 cards=52, heur=12.55 avgSample=24 visits=4098 sw=0.159766 final=16.3844
+[PIMC]  [5] type=5 lvl=8 sz=3 cards=32,33,34, heur=-3.19 avgSample=22.0439 visits=4098 sw=0.159766 final=0.331871
+  remain=P0:4, P1:4, P2:13
+
+TURN 26 P1 REF team=farmers need=PAIR 5x2 [10,11] level=2 lastValidPlayer=0 passCount=0 elapsedMs=1005.0
+  handBefore count=4 6x1 8x2 Qx1 [13,21,22,39]
+  historyForBot=[[],[10,11]]
+  action=PAIR 8x2 [21,22] level=5 legal=True reason=
+  rawOutput={"debug":110,"response":[21,22]}
+  remain=P0:4, P1:2, P2:13
+
+TURN 27 P2 TEST3 team=farmers need=PAIR 8x2 [21,22] level=5 lastValidPlayer=1 passCount=0 elapsedMs=513.1
+  handBefore count=13 3x2 4x1 5x1 6x1 7x1 10x1 Qx2 Kx3 2x1 [0,1,7,8,15,18,28,36,37,41,42,43,49]
+  historyForBot=[[10,11],[21,22]]
+  action=PAIR Qx2 [36,37] level=9 legal=True reason=
+  rawOutput={"response":[36,37]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=3 totalVisits=17950
+[PIMC]  [0] type=2 lvl=9 sz=2 cards=36,37, heur=5 avgSample=8.29818 visits=5983 sw=0.419579 final=8.48174 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=1 avgSample=5.84858 visits=5984 sw=0.419579 final=3.45394
+[PIMC]  [2] type=2 lvl=10 sz=2 cards=41,42, heur=-5 avgSample=-2.95103 visits=5983 sw=0.419579 final=-6.23819
+  remain=P0:4, P1:2, P2:11
+
+TURN 28 P0 TEST3BEFORE team=landlord need=PAIR Qx2 [36,37] level=9 lastValidPlayer=2 passCount=0 elapsedMs=514.0
+  handBefore count=4 Jx3 jokerx1 [32,33,34,52]
+  historyForBot=[[21,22],[36,37]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=16627
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=22.1244 visits=16627 sw=0.419848 final=6.2889 <BEST>
+  remain=P0:4, P1:2, P2:11
+
+TURN 29 P1 REF team=farmers need=PAIR Qx2 [36,37] level=9 lastValidPlayer=2 passCount=1 elapsedMs=1004.6
+  handBefore count=2 6x1 Qx1 [13,39]
+  historyForBot=[[36,37],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:4, P1:2, P2:11
+
+TURN 30 P2 TEST3 team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=510.3
+  handBefore count=11 3x2 4x1 5x1 6x1 7x1 10x1 Kx3 2x1 [0,1,7,8,15,18,28,41,42,43,49]
+  historyForBot=[[],[]]
+  action=STRAIGHT 3x1 4x1 5x1 6x1 7x1 [0,7,8,15,18] level=4 legal=True reason=
+  rawOutput={"response":[0,7,8,15,18]}
+  stderr=[PIMC] freeTurn=1 dangerous=1 topCount=6 totalVisits=35308
+[PIMC]  [0] type=3 lvl=4 sz=5 cards=0,7,8,15,18, heur=12.09 avgSample=7.93883 visits=5885 sw=0.379613 final=15.1037 <BEST>
+[PIMC]  [1] type=6 lvl=10 sz=4 cards=41,42,43,0, heur=10.36 avgSample=7.93883 visits=5885 sw=0.379613 final=13.3737
+[PIMC]  [2] type=1 lvl=0 sz=1 cards=0, heur=2.65 avgSample=5.07682 visits=5884 sw=0.379613 final=4.57723
+[PIMC]  [3] type=7 lvl=10 sz=5 cards=41,42,43,0,1, heur=-7.45 avgSample=-8.43236 visits=5884 sw=0.379613 final=-10.651
+[PIMC]  [4] type=5 lvl=10 sz=3 cards=41,42,43, heur=0.65 avgSample=-8.435 visits=5885 sw=0.379613 final=-2.55204
+[PIMC]  [5] type=2 lvl=10 sz=2 cards=41,42, heur=-2.15 avgSample=-3.45149 visits=5885 sw=0.379613 final=-3.46023
+  remain=P0:4, P1:2, P2:6
+
+TURN 31 P0 TEST3BEFORE team=landlord need=STRAIGHT 3x1 4x1 5x1 6x1 7x1 [0,7,8,15,18] level=4 lastValidPlayer=2 passCount=0 elapsedMs=511.6
+  handBefore count=4 Jx3 jokerx1 [32,33,34,52]
+  historyForBot=[[],[0,7,8,15,18]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=31155
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=23.9986 visits=31155 sw=0.419919 final=7.07748 <BEST>
+  remain=P0:4, P1:2, P2:6
+
+TURN 32 P1 REF team=farmers need=STRAIGHT 3x1 4x1 5x1 6x1 7x1 [0,7,8,15,18] level=4 lastValidPlayer=2 passCount=1 elapsedMs=1017.2
+  handBefore count=2 6x1 Qx1 [13,39]
+  historyForBot=[[0,7,8,15,18],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:4, P1:2, P2:6
+
+TURN 33 P2 TEST3 team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=511.0
+  handBefore count=6 3x1 10x1 Kx3 2x1 [1,28,41,42,43,49]
+  historyForBot=[[],[]]
+  action=TRIPLET1 3x1 Kx3 [41,42,43,1] level=10 legal=True reason=
+  rawOutput={"response":[41,42,43,1]}
+  stderr=[PIMC] freeTurn=1 dangerous=1 topCount=6 totalVisits=56021
+[PIMC]  [0] type=6 lvl=10 sz=4 cards=41,42,43,1, heur=10.36 avgSample=7.81579 visits=9337 sw=0.379756 final=13.3281 <BEST>
+[PIMC]  [1] type=1 lvl=7 sz=1 cards=28, heur=3.37 avgSample=6.2941 visits=9337 sw=0.379756 final=5.76022
+[PIMC]  [2] type=1 lvl=0 sz=1 cards=1, heur=2.65 avgSample=4.67988 visits=9337 sw=0.379756 final=4.42721
+[PIMC]  [3] type=5 lvl=10 sz=3 cards=41,42,43, heur=0.65 avgSample=-8.31616 visits=9337 sw=0.379756 final=-2.50811
+[PIMC]  [4] type=2 lvl=10 sz=2 cards=41,42, heur=-2.15 avgSample=-3.39258 visits=9337 sw=0.379756 final=-3.43835
+[PIMC]  [5] type=1 lvl=12 sz=1 cards=49, heur=2.145 avgSample=1.31105 visits=9336 sw=0.379756 final=2.64288
+  remain=P0:4, P1:2, P2:2
+
+TURN 34 P0 TEST3BEFORE team=landlord need=TRIPLET1 3x1 Kx3 [41,42,43,1] level=10 lastValidPlayer=2 passCount=0 elapsedMs=517.4
+  handBefore count=4 Jx3 jokerx1 [32,33,34,52]
+  historyForBot=[[],[41,42,43,1]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=58813
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-28 avgSample=24 visits=58813 sw=0.419957 final=-17.921 <BEST>
+  remain=P0:4, P1:2, P2:2
+
+TURN 35 P1 REF team=farmers need=TRIPLET1 3x1 Kx3 [41,42,43,1] level=10 lastValidPlayer=2 passCount=1 elapsedMs=1017.4
+  handBefore count=2 6x1 Qx1 [13,39]
+  historyForBot=[[41,42,43,1],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:4, P1:2, P2:2
+
+TURN 36 P2 TEST3 team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=515.7
+  handBefore count=2 10x1 2x1 [28,49]
+  historyForBot=[[],[]]
+  action=SINGLE 10x1 [28] level=7 legal=True reason=
+  rawOutput={"response":[28]}
+  stderr=[PIMC] freeTurn=1 dangerous=1 topCount=2 totalVisits=70229
+[PIMC]  [0] type=1 lvl=12 sz=1 cards=49, heur=14.17 avgSample=-6.28894 visits=35115 sw=0.379935 final=11.7806
+[PIMC]  [1] type=1 lvl=7 sz=1 cards=28, heur=10.77 avgSample=7.21604 visits=35114 sw=0.379935 final=13.5116 <BEST>
+  remain=P0:4, P1:2, P2:1
+
+TURN 37 P0 TEST3BEFORE team=landlord need=SINGLE 10x1 [28] level=7 lastValidPlayer=2 passCount=0 elapsedMs=512.7
+  handBefore count=4 Jx3 jokerx1 [32,33,34,52]
+  historyForBot=[[],[28]]
+  action=SINGLE jokerx1 [52] level=13 legal=True reason=
+  rawOutput={"response":[52]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=3 totalVisits=98272
+[PIMC]  [0] type=1 lvl=13 sz=1 cards=52, heur=19.17 avgSample=24 visits=32758 sw=0.419923 final=29.2482 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-28 avgSample=8.20368 visits=32757 sw=0.419923 final=-24.5551
+[PIMC]  [2] type=1 lvl=8 sz=1 cards=32, heur=5.87 avgSample=8.20368 visits=32757 sw=0.419923 final=9.31492
+  remain=P0:3, P1:2, P2:1
+
+TURN 38 P1 REF team=farmers need=SINGLE jokerx1 [52] level=13 lastValidPlayer=0 passCount=0 elapsedMs=1032.3
+  handBefore count=2 6x1 Qx1 [13,39]
+  historyForBot=[[28],[52]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:3, P1:2, P2:1
+
+TURN 39 P2 TEST3 team=farmers need=SINGLE jokerx1 [52] level=13 lastValidPlayer=0 passCount=1 elapsedMs=512.4
+  handBefore count=1 2x1 [49]
+  historyForBot=[[52],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=59202
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-8.8 avgSample=-16.167 visits=59202 sw=0.419957 final=-15.5895 <BEST>
+  remain=P0:3, P1:2, P2:1
+
+TURN 40 P0 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=8.8
+  handBefore count=3 Jx3 [32,33,34]
+  historyForBot=[[],[]]
+  action=TRIPLET Jx3 [32,33,34] level=8 legal=True reason=
+  rawOutput={"response":[32,33,34]}
+  remain=P0:0, P1:2, P2:1
+WINNER P0 TEST3BEFORE team=landlord
+SUMMARY winner=P0 winnerBot=TEST3BEFORE winnerTeam=landlord landlord=P0 landlordBot=TEST3BEFORE finalBid=1 multiplier=1 spring=False antiSpring=False forcedByCrash=False test3beforeWon=True refWon=False test3Won=False
+
+================ GAME 5 seed=20261634 ================
+bots: P0=REF, P1=TEST3, P2=TEST3BEFORE
+initial P0 REF hand=3x1 4x1 5x2 7x1 8x2 9x2 10x2 Jx1 Qx2 Ax2 2x1 [2,4,9,10,18,21,23,24,25,28,29,32,37,38,45,47,49]
+initial P1 TEST3 hand=3x2 6x3 7x1 8x1 9x2 10x2 Jx1 Qx1 Kx1 Ax2 2x1 [0,3,12,13,14,19,20,26,27,30,31,33,36,40,44,46,48]
+initial P2 TEST3BEFORE hand=3x1 4x3 5x2 6x1 7x1 Jx2 Kx3 2x2 jokerx1 JOKERx1 [1,5,6,7,8,11,15,17,34,35,41,42,43,50,51,52,53]
+public=7x1 8x1 Qx1 [16,22,39]
+BID P0 REF bid=0 ok=True elapsedMs=6.8 reason=
+BID P1 TEST3 bid=1 ok=True elapsedMs=7.4 reason=
+BID P2 TEST3BEFORE bid=3 ok=True elapsedMs=9.5 reason=
+landlord=P2 landlordBot=TEST3BEFORE finalBid=3
+playStart P0 count=17 hand=3x1 4x1 5x2 7x1 8x2 9x2 10x2 Jx1 Qx2 Ax2 2x1 [2,4,9,10,18,21,23,24,25,28,29,32,37,38,45,47,49]
+playStart P1 count=17 hand=3x2 6x3 7x1 8x1 9x2 10x2 Jx1 Qx1 Kx1 Ax2 2x1 [0,3,12,13,14,19,20,26,27,30,31,33,36,40,44,46,48]
+playStart P2 count=20 hand=3x1 4x3 5x2 6x1 7x2 8x1 Jx2 Qx1 Kx3 2x2 jokerx1 JOKERx1 [1,5,6,7,8,11,15,16,17,22,34,35,39,41,42,43,50,51,52,53]
+
+TURN 1 P2 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=516.7
+  handBefore count=20 3x1 4x3 5x2 6x1 7x2 8x1 Jx2 Qx1 Kx3 2x2 jokerx1 JOKERx1 [1,5,6,7,8,11,15,16,17,22,34,35,39,41,42,43,50,51,52,53]
+  historyForBot=[[],[]]
+  action=STRAIGHT 3x1 4x1 5x1 6x1 7x1 8x1 [1,5,8,15,16,22] level=5 legal=True reason=
+  rawOutput={"response":[1,5,8,15,16,22]}
+  stderr=[PIMC] freeTurn=1 dangerous=0 topCount=6 totalVisits=2826
+[PIMC]  [0] type=3 lvl=5 sz=6 cards=1,5,8,15,16,22, heur=7.08 avgSample=-3.51592 visits=471 sw=0.118491 final=6.6634 <BEST>
+[PIMC]  [1] type=7 lvl=10 sz=5 cards=41,42,43,5,6, heur=5.95 avgSample=-4.38822 visits=471 sw=0.118491 final=5.43004
+[PIMC]  [2] type=1 lvl=0 sz=1 cards=1, heur=0.65 avgSample=2.19108 visits=471 sw=0.118491 final=0.909623
+[PIMC]  [3] type=17 lvl=14 sz=2 cards=53,52, heur=-28.21 avgSample=-16.1529 visits=471 sw=0.0355472 final=-28.7842
+[PIMC]  [4] type=2 lvl=1 sz=2 cards=5,6, heur=6.2 avgSample=2.49682 visits=471 sw=0.118491 final=6.49585
+[PIMC]  [5] type=6 lvl=10 sz=4 cards=41,42,43,8, heur=5.76 avgSample=-2.70064 visits=471 sw=0.118491 final=5.44
+  remain=P0:17, P1:17, P2:14
+
+TURN 2 P0 REF team=farmers need=STRAIGHT 3x1 4x1 5x1 6x1 7x1 8x1 [1,5,8,15,16,22] level=5 lastValidPlayer=2 passCount=0 elapsedMs=14.5
+  handBefore count=17 3x1 4x1 5x2 7x1 8x2 9x2 10x2 Jx1 Qx2 Ax2 2x1 [2,4,9,10,18,21,23,24,25,28,29,32,37,38,45,47,49]
+  historyForBot=[[],[1,5,8,15,16,22]]
+  action=STRAIGHT 7x1 8x1 9x1 10x1 Jx1 Qx1 [18,23,25,29,32,38] level=9 legal=True reason=
+  rawOutput={"debug":0,"response":[18,23,25,29,32,38]}
+  remain=P0:11, P1:17, P2:14
+
+TURN 3 P1 TEST3 team=farmers need=STRAIGHT 7x1 8x1 9x1 10x1 Jx1 Qx1 [18,23,25,29,32,38] level=9 lastValidPlayer=0 passCount=0 elapsedMs=512.1
+  handBefore count=17 3x2 6x3 7x1 8x1 9x2 10x2 Jx1 Qx1 Kx1 Ax2 2x1 [0,3,12,13,14,19,20,26,27,30,31,33,36,40,44,46,48]
+  historyForBot=[[1,5,8,15,16,22],[18,23,25,29,32,38]]
+  action=STRAIGHT 9x1 10x1 Jx1 Qx1 Kx1 Ax1 [26,30,33,36,40,44] level=11 legal=True reason=
+  rawOutput={"response":[26,30,33,36,40,44]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=3 totalVisits=4574
+[PIMC]  [0] type=3 lvl=11 sz=6 cards=26,30,33,36,40,44, heur=2.6 avgSample=15.7062 visits=1525 sw=0.239059 final=6.35472 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-0.5 avgSample=14.6662 visits=1525 sw=0.239059 final=3.00609
+[PIMC]  [2] type=3 lvl=10 sz=6 cards=20,26,30,33,36,40, heur=-2.4 avgSample=8.84514 visits=1524 sw=0.239059 final=-0.28549
+  remain=P0:11, P1:11, P2:14
+
+TURN 4 P2 TEST3BEFORE team=landlord need=STRAIGHT 9x1 10x1 Jx1 Qx1 Kx1 Ax1 [26,30,33,36,40,44] level=11 lastValidPlayer=1 passCount=0 elapsedMs=509.3
+  handBefore count=14 4x2 5x1 7x1 Jx2 Qx1 Kx3 2x2 jokerx1 JOKERx1 [6,7,11,17,34,35,39,41,42,43,50,51,52,53]
+  historyForBot=[[18,23,25,29,32,38],[26,30,33,36,40,44]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=2 totalVisits=6348
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1.6 avgSample=8.73133 visits=3174 sw=0.259509 final=0.665863 <BEST>
+[PIMC]  [1] type=17 lvl=14 sz=2 cards=53,52, heur=-16.03 avgSample=-12.431 visits=3174 sw=0.0778528 final=-16.9978
+  remain=P0:11, P1:11, P2:14
+
+TURN 5 P0 REF team=farmers need=STRAIGHT 9x1 10x1 Jx1 Qx1 Kx1 Ax1 [26,30,33,36,40,44] level=11 lastValidPlayer=1 passCount=1 elapsedMs=992.5
+  handBefore count=11 3x1 4x1 5x2 8x1 9x1 10x1 Qx1 Ax2 2x1 [2,4,9,10,21,24,28,37,45,47,49]
+  historyForBot=[[26,30,33,36,40,44],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:11, P1:11, P2:14
+
+TURN 6 P1 TEST3 team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=522.5
+  handBefore count=11 3x2 6x3 7x1 8x1 9x1 10x1 Ax1 2x1 [0,3,12,13,14,19,20,27,31,46,48]
+  historyForBot=[[],[]]
+  action=STRAIGHT 6x1 7x1 8x1 9x1 10x1 [12,19,20,27,31] level=7 legal=True reason=
+  rawOutput={"response":[12,19,20,27,31]}
+  stderr=[PIMC] freeTurn=1 dangerous=0 topCount=6 totalVisits=5899
+[PIMC]  [0] type=3 lvl=7 sz=5 cards=12,19,20,27,31, heur=6.65 avgSample=15.0124 visits=983 sw=0.119272 final=8.44056 <BEST>
+[PIMC]  [1] type=2 lvl=0 sz=2 cards=0,3, heur=6.2 avgSample=14.1595 visits=983 sw=0.119272 final=7.88883
+[PIMC]  [2] type=1 lvl=0 sz=1 cards=0, heur=0.65 avgSample=9.96004 visits=983 sw=0.119272 final=1.83795
+[PIMC]  [3] type=7 lvl=3 sz=5 cards=12,13,14,0,3, heur=-3.42 avgSample=6.20081 visits=983 sw=0.119272 final=-2.68042
+[PIMC]  [4] type=6 lvl=3 sz=4 cards=12,13,14,19, heur=-3.61 avgSample=4.77527 visits=983 sw=0.119272 final=-3.04044
+[PIMC]  [5] type=5 lvl=3 sz=3 cards=12,13,14, heur=-12.79 avgSample=4.95753 visits=984 sw=0.119273 final=-12.1987
+  remain=P0:11, P1:6, P2:14
+
+TURN 7 P2 TEST3BEFORE team=landlord need=STRAIGHT 6x1 7x1 8x1 9x1 10x1 [12,19,20,27,31] level=7 lastValidPlayer=1 passCount=0 elapsedMs=510.6
+  handBefore count=14 4x2 5x1 7x1 Jx2 Qx1 Kx3 2x2 jokerx1 JOKERx1 [6,7,11,17,34,35,39,41,42,43,50,51,52,53]
+  historyForBot=[[],[12,19,20,27,31]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=2 totalVisits=7091
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1.6 avgSample=13.7636 visits=3545 sw=0.279527 final=2.2473 <BEST>
+[PIMC]  [1] type=17 lvl=14 sz=2 cards=53,52, heur=-16.03 avgSample=-7.77807 visits=3546 sw=0.0838581 final=-16.6823
+  remain=P0:11, P1:6, P2:14
+
+TURN 8 P0 REF team=farmers need=STRAIGHT 6x1 7x1 8x1 9x1 10x1 [12,19,20,27,31] level=7 lastValidPlayer=1 passCount=1 elapsedMs=993.7
+  handBefore count=11 3x1 4x1 5x2 8x1 9x1 10x1 Qx1 Ax2 2x1 [2,4,9,10,21,24,28,37,45,47,49]
+  historyForBot=[[12,19,20,27,31],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:11, P1:6, P2:14
+
+TURN 9 P1 TEST3 team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=516.3
+  handBefore count=6 3x2 6x2 Ax1 2x1 [0,3,13,14,46,48]
+  historyForBot=[[],[]]
+  action=PAIR 3x2 [0,3] level=0 legal=True reason=
+  rawOutput={"response":[0,3]}
+  stderr=[PIMC] freeTurn=1 dangerous=0 topCount=6 totalVisits=6163
+[PIMC]  [0] type=2 lvl=0 sz=2 cards=0,3, heur=6.2 avgSample=15.8834 visits=1027 sw=0.119303 final=8.09494 <BEST>
+[PIMC]  [1] type=2 lvl=3 sz=2 cards=13,14, heur=6.2 avgSample=15.1756 visits=1028 sw=0.119304 final=8.0105
+[PIMC]  [2] type=1 lvl=0 sz=1 cards=0, heur=0.65 avgSample=10.5894 visits=1027 sw=0.119303 final=1.91334
+[PIMC]  [3] type=1 lvl=12 sz=1 cards=48, heur=-0.275 avgSample=13.1345 visits=1027 sw=0.119303 final=1.29199
+[PIMC]  [4] type=1 lvl=11 sz=1 cards=46, heur=3.25 avgSample=15.4108 visits=1027 sw=0.119303 final=5.08856
+[PIMC]  [5] type=1 lvl=3 sz=1 cards=13, heur=0.65 avgSample=11.809 visits=1027 sw=0.119303 final=2.05885
+  remain=P0:11, P1:4, P2:14
+
+TURN 10 P2 TEST3BEFORE team=landlord need=PAIR 3x2 [0,3] level=0 lastValidPlayer=1 passCount=0 elapsedMs=509.5
+  handBefore count=14 4x2 5x1 7x1 Jx2 Qx1 Kx3 2x2 jokerx1 JOKERx1 [6,7,11,17,34,35,39,41,42,43,50,51,52,53]
+  historyForBot=[[],[0,3]]
+  action=PAIR 4x2 [6,7] level=1 legal=True reason=
+  rawOutput={"response":[6,7]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=6 totalVisits=8546
+[PIMC]  [0] type=2 lvl=1 sz=2 cards=6,7, heur=5.98 avgSample=15.1011 visits=1424 sw=0.278825 final=10.1906 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1.6 avgSample=-21.6404 visits=1424 sw=0.278825 final=-7.6339
+[PIMC]  [2] type=2 lvl=8 sz=2 cards=34,35, heur=5.14 avgSample=15.3095 visits=1425 sw=0.278826 final=9.40868
+[PIMC]  [3] type=2 lvl=10 sz=2 cards=41,42, heur=-5.1 avgSample=-2.36502 visits=1425 sw=0.278826 final=-5.75943
+[PIMC]  [4] type=17 lvl=14 sz=2 cards=53,52, heur=-16.03 avgSample=-6.60674 visits=1424 sw=0.0836476 final=-16.5826
+[PIMC]  [5] type=2 lvl=12 sz=2 cards=50,51, heur=0.63 avgSample=12.236 visits=1424 sw=0.278825 final=4.04169
+  remain=P0:11, P1:4, P2:12
+
+TURN 11 P0 REF team=farmers need=PAIR 4x2 [6,7] level=1 lastValidPlayer=2 passCount=0 elapsedMs=999.1
+  handBefore count=11 3x1 4x1 5x2 8x1 9x1 10x1 Qx1 Ax2 2x1 [2,4,9,10,21,24,28,37,45,47,49]
+  historyForBot=[[0,3],[6,7]]
+  action=PAIR 5x2 [9,10] level=2 legal=True reason=
+  rawOutput={"debug":116,"response":[9,10]}
+  remain=P0:9, P1:4, P2:12
+
+TURN 12 P1 TEST3 team=farmers need=PAIR 5x2 [9,10] level=2 lastValidPlayer=0 passCount=0 elapsedMs=511.3
+  handBefore count=4 6x2 Ax1 2x1 [13,14,46,48]
+  historyForBot=[[6,7],[9,10]]
+  action=PAIR 6x2 [13,14] level=3 legal=True reason=
+  rawOutput={"response":[13,14]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=2 totalVisits=8760
+[PIMC]  [0] type=2 lvl=3 sz=2 cards=13,14, heur=8 avgSample=19.3358 visits=4380 sw=0.259644 final=13.0204 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-2 avgSample=13.7788 visits=4380 sw=0.259644 final=1.57759
+  remain=P0:9, P1:2, P2:12
+
+TURN 13 P2 TEST3BEFORE team=landlord need=PAIR 6x2 [13,14] level=3 lastValidPlayer=1 passCount=0 elapsedMs=508.0
+  handBefore count=12 5x1 7x1 Jx2 Qx1 Kx3 2x2 jokerx1 JOKERx1 [11,17,34,35,39,41,42,43,50,51,52,53]
+  historyForBot=[[9,10],[13,14]]
+  action=ROCKET jokerx1 JOKERx1 [53,52] level=14 legal=True reason=
+  rawOutput={"response":[53,52]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=5 totalVisits=14042
+[PIMC]  [0] type=17 lvl=14 sz=2 cards=53,52, heur=16.03 avgSample=-24 visits=2808 sw=0.314328 final=8.48612 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-26.6 avgSample=-24 visits=2808 sw=0.419104 final=-36.6585
+[PIMC]  [2] type=2 lvl=8 sz=2 cards=34,35, heur=13.5 avgSample=-22.1197 visits=2808 sw=0.419104 final=4.22955
+[PIMC]  [3] type=2 lvl=10 sz=2 cards=41,42, heur=3.26 avgSample=-19.1299 visits=2809 sw=0.419105 final=-4.75745
+[PIMC]  [4] type=2 lvl=12 sz=2 cards=50,51, heur=12.15 avgSample=-23.9955 visits=2809 sw=0.419105 final=2.09336
+  remain=P0:9, P1:2, P2:10
+
+TURN 14 P0 REF team=farmers need=ROCKET jokerx1 JOKERx1 [53,52] level=14 lastValidPlayer=2 passCount=0 elapsedMs=1014.0
+  handBefore count=9 3x1 4x1 8x1 9x1 10x1 Qx1 Ax2 2x1 [2,4,21,24,28,37,45,47,49]
+  historyForBot=[[13,14],[53,52]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:9, P1:2, P2:10
+
+TURN 15 P1 TEST3 team=farmers need=ROCKET jokerx1 JOKERx1 [53,52] level=14 lastValidPlayer=2 passCount=1 elapsedMs=510.2
+  handBefore count=2 Ax1 2x1 [46,48]
+  historyForBot=[[53,52],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=11688
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-2.2 avgSample=21.0219 visits=11688 sw=0.259867 final=3.26289 <BEST>
+  remain=P0:9, P1:2, P2:10
+
+TURN 16 P2 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=513.6
+  handBefore count=10 5x1 7x1 Jx2 Qx1 Kx3 2x2 [11,17,34,35,39,41,42,43,50,51]
+  historyForBot=[[],[]]
+  action=TRIPLET1 5x1 Kx3 [41,42,43,11] level=10 legal=True reason=
+  rawOutput={"response":[41,42,43,11]}
+  stderr=[PIMC] freeTurn=1 dangerous=1 topCount=6 totalVisits=17725
+[PIMC]  [0] type=7 lvl=10 sz=5 cards=41,42,43,34,35, heur=8.95 avgSample=-24 visits=2954 sw=0.279432 final=2.24362
+[PIMC]  [1] type=6 lvl=10 sz=4 cards=41,42,43,11, heur=8.76 avgSample=-15.258 visits=2954 sw=0.279432 final=4.49643 <BEST>
+[PIMC]  [2] type=1 lvl=2 sz=1 cards=11, heur=8.65 avgSample=-15.2576 visits=2955 sw=0.279433 final=4.38652
+[PIMC]  [3] type=5 lvl=10 sz=3 cards=41,42,43, heur=-3.35 avgSample=-24 visits=2954 sw=0.279432 final=-10.0564
+[PIMC]  [4] type=2 lvl=8 sz=2 cards=34,35, heur=7.55 avgSample=-24 visits=2954 sw=0.279432 final=0.843622
+[PIMC]  [5] type=1 lvl=4 sz=1 cards=17, heur=8.65 avgSample=-15.258 visits=2954 sw=0.279432 final=4.38643
+  remain=P0:9, P1:2, P2:6
+
+TURN 17 P0 REF team=farmers need=TRIPLET1 5x1 Kx3 [41,42,43,11] level=10 lastValidPlayer=2 passCount=0 elapsedMs=1009.3
+  handBefore count=9 3x1 4x1 8x1 9x1 10x1 Qx1 Ax2 2x1 [2,4,21,24,28,37,45,47,49]
+  historyForBot=[[],[41,42,43,11]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:9, P1:2, P2:6
+
+TURN 18 P1 TEST3 team=farmers need=TRIPLET1 5x1 Kx3 [41,42,43,11] level=10 lastValidPlayer=2 passCount=1 elapsedMs=509.9
+  handBefore count=2 Ax1 2x1 [46,48]
+  historyForBot=[[41,42,43,11],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=16215
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-4.4 avgSample=22.6468 visits=16215 sw=0.419845 final=5.10815 <BEST>
+  remain=P0:9, P1:2, P2:6
+
+TURN 19 P2 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=508.6
+  handBefore count=6 7x1 Jx2 Qx1 2x2 [17,34,35,39,50,51]
+  historyForBot=[[],[]]
+  action=SINGLE 7x1 [17] level=4 legal=True reason=
+  rawOutput={"response":[17]}
+  stderr=[PIMC] freeTurn=1 dangerous=1 topCount=6 totalVisits=19256
+[PIMC]  [0] type=1 lvl=4 sz=1 cards=17, heur=8.65 avgSample=-16.1218 visits=3210 sw=0.279478 final=4.14432 <BEST>
+[PIMC]  [1] type=2 lvl=8 sz=2 cards=34,35, heur=7.55 avgSample=-12.2949 visits=3209 sw=0.279477 final=4.11385
+[PIMC]  [2] type=1 lvl=8 sz=1 cards=34, heur=-0.55 avgSample=-16.1187 visits=3209 sw=0.279477 final=-5.0548
+[PIMC]  [3] type=2 lvl=12 sz=2 cards=50,51, heur=-7.62 avgSample=-16.1187 visits=3209 sw=0.279477 final=-12.1248
+[PIMC]  [4] type=1 lvl=9 sz=1 cards=39, heur=7.05 avgSample=-13.3152 visits=3209 sw=0.279477 final=3.32871
+[PIMC]  [5] type=1 lvl=12 sz=1 cards=50, heur=-7.195 avgSample=-16.1209 visits=3210 sw=0.279478 final=-11.7004
+  remain=P0:9, P1:2, P2:5
+
+TURN 20 P0 REF team=farmers need=SINGLE 7x1 [17] level=4 lastValidPlayer=2 passCount=0 elapsedMs=1020.1
+  handBefore count=9 3x1 4x1 8x1 9x1 10x1 Qx1 Ax2 2x1 [2,4,21,24,28,37,45,47,49]
+  historyForBot=[[],[17]]
+  action=SINGLE 8x1 [21] level=5 legal=True reason=
+  rawOutput={"debug":1,"response":[21]}
+  remain=P0:8, P1:2, P2:5
+
+TURN 21 P1 TEST3 team=farmers need=SINGLE 8x1 [21] level=5 lastValidPlayer=0 passCount=0 elapsedMs=512.0
+  handBefore count=2 Ax1 2x1 [46,48]
+  historyForBot=[[17],[21]]
+  action=SINGLE Ax1 [46] level=11 legal=True reason=
+  rawOutput={"response":[46]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=3 totalVisits=36542
+[PIMC]  [0] type=1 lvl=11 sz=1 cards=46, heur=15.25 avgSample=22.7336 visits=12181 sw=0.379813 final=23.8845 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-2 avgSample=22.5405 visits=12181 sw=0.419793 final=7.46233
+[PIMC]  [2] type=1 lvl=12 sz=1 cards=48, heur=14.75 avgSample=24 visits=12180 sw=0.379813 final=23.8655
+  remain=P0:8, P1:1, P2:5
+
+TURN 22 P2 TEST3BEFORE team=landlord need=SINGLE Ax1 [46] level=11 lastValidPlayer=1 passCount=0 elapsedMs=509.5
+  handBefore count=5 Jx2 Qx1 2x2 [34,35,39,50,51]
+  historyForBot=[[21],[46]]
+  action=SINGLE 2x1 [50] level=12 legal=True reason=
+  rawOutput={"response":[50]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=2 totalVisits=49814
+[PIMC]  [0] type=1 lvl=12 sz=1 cards=50, heur=10.375 avgSample=-18.5943 visits=24907 sw=0.419899 final=2.56728 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-28 avgSample=-24 visits=24907 sw=0.419899 final=-38.0776
+  remain=P0:8, P1:1, P2:4
+
+TURN 23 P0 REF team=farmers need=SINGLE 2x1 [50] level=12 lastValidPlayer=2 passCount=0 elapsedMs=1021.5
+  handBefore count=8 3x1 4x1 9x1 10x1 Qx1 Ax2 2x1 [2,4,24,28,37,45,47,49]
+  historyForBot=[[46],[50]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:8, P1:1, P2:4
+
+TURN 24 P1 TEST3 team=farmers need=SINGLE 2x1 [50] level=12 lastValidPlayer=2 passCount=1 elapsedMs=517.2
+  handBefore count=1 2x1 [48]
+  historyForBot=[[50],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=23999
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-7.4 avgSample=21.7019 visits=23999 sw=0.419895 final=1.71252 <BEST>
+  remain=P0:8, P1:1, P2:4
+
+TURN 25 P2 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=513.2
+  handBefore count=4 Jx2 Qx1 2x1 [34,35,39,51]
+  historyForBot=[[],[]]
+  action=SINGLE Qx1 [39] level=9 legal=True reason=
+  rawOutput={"response":[39]}
+  stderr=[PIMC] freeTurn=1 dangerous=1 topCount=4 totalVisits=53836
+[PIMC]  [0] type=2 lvl=8 sz=2 cards=34,35, heur=7.55 avgSample=-18.7431 visits=13459 sw=0.279875 final=2.30426
+[PIMC]  [1] type=1 lvl=9 sz=1 cards=39, heur=7.05 avgSample=13.1447 visits=13459 sw=0.279875 final=10.7289 <BEST>
+[PIMC]  [2] type=1 lvl=8 sz=1 cards=34, heur=-0.55 avgSample=-18.7431 visits=13459 sw=0.279875 final=-5.79574
+[PIMC]  [3] type=1 lvl=12 sz=1 cards=51, heur=-3.675 avgSample=-18.7431 visits=13459 sw=0.279875 final=-8.92074
+  remain=P0:8, P1:1, P2:3
+
+TURN 26 P0 REF team=farmers need=SINGLE Qx1 [39] level=9 lastValidPlayer=2 passCount=0 elapsedMs=1010.3
+  handBefore count=8 3x1 4x1 9x1 10x1 Qx1 Ax2 2x1 [2,4,24,28,37,45,47,49]
+  historyForBot=[[],[39]]
+  action=SINGLE 2x1 [49] level=12 legal=True reason=
+  rawOutput={"debug":0,"response":[49]}
+  remain=P0:7, P1:1, P2:3
+
+TURN 27 P1 TEST3 team=farmers need=SINGLE 2x1 [49] level=12 lastValidPlayer=0 passCount=0 elapsedMs=515.3
+  handBefore count=1 2x1 [48]
+  historyForBot=[[39],[49]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=45877
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-2 avgSample=21.562 visits=45877 sw=0.419945 final=7.05486 <BEST>
+  remain=P0:7, P1:1, P2:3
+
+TURN 28 P2 TEST3BEFORE team=landlord need=SINGLE 2x1 [49] level=12 lastValidPlayer=0 passCount=1 elapsedMs=516.6
+  handBefore count=3 Jx2 2x1 [34,35,51]
+  historyForBot=[[49],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=44255
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=-18.0487 visits=44255 sw=0.419943 final=-10.5794 <BEST>
+  remain=P0:7, P1:1, P2:3
+
+TURN 29 P0 REF team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=1048.9
+  handBefore count=7 3x1 4x1 9x1 10x1 Qx1 Ax2 [2,4,24,28,37,45,47]
+  historyForBot=[[],[]]
+  action=SINGLE 3x1 [2] level=0 legal=True reason=
+  rawOutput={"debug":0,"response":[2]}
+  remain=P0:6, P1:1, P2:3
+
+TURN 30 P1 TEST3 team=farmers need=SINGLE 3x1 [2] level=0 lastValidPlayer=0 passCount=0 elapsedMs=11.4
+  handBefore count=1 2x1 [48]
+  historyForBot=[[],[2]]
+  action=SINGLE 2x1 [48] level=12 legal=True reason=
+  rawOutput={"response":[48]}
+  remain=P0:6, P1:0, P2:3
+WINNER P1 TEST3 team=farmers
+SUMMARY winner=P1 winnerBot=TEST3 winnerTeam=farmers landlord=P2 landlordBot=TEST3BEFORE finalBid=3 multiplier=2 spring=False antiSpring=False forcedByCrash=False refWon=True test3Won=True test3beforeWon=False
+
+================ GAME 6 seed=20261635 ================
+bots: P0=REF, P1=TEST3BEFORE, P2=TEST3
+initial P0 REF hand=3x1 4x1 5x2 6x1 7x1 8x2 9x2 Jx3 Qx1 Ax2 2x1 [0,5,8,11,13,17,20,21,24,27,32,33,34,38,45,47,50]
+initial P1 TEST3BEFORE hand=3x1 4x1 5x1 6x3 10x2 Jx1 Qx2 Kx2 2x2 jokerx1 JOKERx1 [1,4,10,12,14,15,28,31,35,36,39,41,42,48,49,52,53]
+initial P2 TEST3 hand=3x2 4x2 7x3 8x1 9x2 10x1 Qx1 Kx2 Ax2 2x1 [2,3,6,7,16,18,19,23,25,26,29,37,40,43,44,46,51]
+public=5x1 8x1 10x1 [9,22,30]
+BID P0 REF bid=0 ok=True elapsedMs=10.8 reason=
+BID P1 TEST3BEFORE bid=3 ok=True elapsedMs=7.0 reason=
+landlord=P1 landlordBot=TEST3BEFORE finalBid=3
+playStart P0 count=17 hand=3x1 4x1 5x2 6x1 7x1 8x2 9x2 Jx3 Qx1 Ax2 2x1 [0,5,8,11,13,17,20,21,24,27,32,33,34,38,45,47,50]
+playStart P1 count=20 hand=3x1 4x1 5x2 6x3 8x1 10x3 Jx1 Qx2 Kx2 2x2 jokerx1 JOKERx1 [1,4,9,10,12,14,15,22,28,30,31,35,36,39,41,42,48,49,52,53]
+playStart P2 count=17 hand=3x2 4x2 7x3 8x1 9x2 10x1 Qx1 Kx2 Ax2 2x1 [2,3,6,7,16,18,19,23,25,26,29,37,40,43,44,46,51]
+
+TURN 1 P1 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=514.5
+  handBefore count=20 3x1 4x1 5x2 6x3 8x1 10x3 Jx1 Qx2 Kx2 2x2 jokerx1 JOKERx1 [1,4,9,10,12,14,15,22,28,30,31,35,36,39,41,42,48,49,52,53]
+  historyForBot=[[],[]]
+  action=SINGLE 3x1 [1] level=0 legal=True reason=
+  rawOutput={"response":[1]}
+  stderr=[PIMC] freeTurn=1 dangerous=0 topCount=6 totalVisits=2763
+[PIMC]  [0] type=7 lvl=3 sz=5 cards=12,14,15,9,10, heur=6.58 avgSample=-11.0576 visits=461 sw=0.118458 final=5.27014
+[PIMC]  [1] type=7 lvl=7 sz=5 cards=28,30,31,9,10, heur=6.22 avgSample=-12.7304 visits=460 sw=0.118455 final=4.71202
+[PIMC]  [2] type=1 lvl=0 sz=1 cards=1, heur=5.65 avgSample=4.17391 visits=460 sw=0.118455 final=6.14442 <BEST>
+[PIMC]  [3] type=17 lvl=14 sz=2 cards=53,52, heur=-28.21 avgSample=-20.1391 visits=460 sw=0.0355365 final=-28.9257
+[PIMC]  [4] type=6 lvl=3 sz=4 cards=12,14,15,1, heur=6.39 avgSample=-7.86117 visits=461 sw=0.118458 final=5.45878
+[PIMC]  [5] type=2 lvl=2 sz=2 cards=9,10, heur=6.2 avgSample=-8.79826 visits=461 sw=0.118458 final=5.15777
+  remain=P0:17, P1:19, P2:17
+
+TURN 2 P2 TEST3 team=farmers need=SINGLE 3x1 [1] level=0 lastValidPlayer=1 passCount=0 elapsedMs=524.2
+  handBefore count=17 3x2 4x2 7x3 8x1 9x2 10x1 Qx1 Kx2 Ax2 2x1 [2,3,6,7,16,18,19,23,25,26,29,37,40,43,44,46,51]
+  historyForBot=[[],[1]]
+  action=SINGLE 8x1 [23] level=5 legal=True reason=
+  rawOutput={"response":[23]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=6 totalVisits=2261
+[PIMC]  [0] type=1 lvl=5 sz=1 cards=23, heur=1.95 avgSample=15.321 visits=377 sw=0.23624 final=5.56943 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=11.183 visits=377 sw=0.23624 final=1.64188
+[PIMC]  [2] type=1 lvl=7 sz=1 cards=29, heur=0.35 avgSample=15.5768 visits=377 sw=0.23624 final=4.02986
+[PIMC]  [3] type=1 lvl=1 sz=1 cards=6, heur=0.15 avgSample=6.89362 visits=376 sw=0.23623 final=1.77848
+[PIMC]  [4] type=1 lvl=12 sz=1 cards=51, heur=-12.525 avgSample=9.23077 visits=377 sw=0.23624 final=-10.3443
+[PIMC]  [5] type=1 lvl=9 sz=1 cards=37, heur=-2.75 avgSample=13.9629 visits=377 sw=0.23624 final=0.54859
+  remain=P0:17, P1:19, P2:16
+
+TURN 3 P0 REF team=farmers need=SINGLE 8x1 [23] level=5 lastValidPlayer=2 passCount=0 elapsedMs=8.9
+  handBefore count=17 3x1 4x1 5x2 6x1 7x1 8x2 9x2 Jx3 Qx1 Ax2 2x1 [0,5,8,11,13,17,20,21,24,27,32,33,34,38,45,47,50]
+  historyForBot=[[1],[23]]
+  action=SINGLE Qx1 [38] level=9 legal=True reason=
+  rawOutput={"debug":0,"response":[38]}
+  remain=P0:16, P1:19, P2:16
+
+TURN 4 P1 TEST3BEFORE team=landlord need=SINGLE Qx1 [38] level=9 lastValidPlayer=0 passCount=0 elapsedMs=514.6
+  handBefore count=19 4x1 5x2 6x3 8x1 10x3 Jx1 Qx2 Kx2 2x2 jokerx1 JOKERx1 [4,9,10,12,14,15,22,28,30,31,35,36,39,41,42,48,49,52,53]
+  historyForBot=[[23],[38]]
+  action=SINGLE Kx1 [41] level=10 legal=True reason=
+  rawOutput={"response":[41]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=6 totalVisits=2841
+[PIMC]  [0] type=1 lvl=10 sz=1 cards=41, heur=0.83 avgSample=1.62025 visits=474 sw=0.237 final=1.214 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1.6 avgSample=3.5769 visits=474 sw=0.237 final=-0.752275
+[PIMC]  [2] type=17 lvl=14 sz=2 cards=53,52, heur=-16.03 avgSample=-11.7209 visits=473 sw=0.0710981 final=-16.8633
+[PIMC]  [3] type=1 lvl=12 sz=1 cards=48, heur=-1.565 avgSample=3.70402 visits=473 sw=0.236994 final=-0.687171
+[PIMC]  [4] type=1 lvl=14 sz=1 cards=53, heur=-4.88 avgSample=-10.5032 visits=473 sw=0.236994 final=-7.36919
+[PIMC]  [5] type=1 lvl=13 sz=1 cards=52, heur=-4.18 avgSample=-3.64557 visits=474 sw=0.237 final=-5.044
+  remain=P0:16, P1:18, P2:16
+
+TURN 5 P2 TEST3 team=farmers need=SINGLE Kx1 [41] level=10 lastValidPlayer=1 passCount=0 elapsedMs=511.6
+  handBefore count=16 3x2 4x2 7x3 9x2 10x1 Qx1 Kx2 Ax2 2x1 [2,3,6,7,16,18,19,25,26,29,37,40,43,44,46,51]
+  historyForBot=[[38],[41]]
+  action=SINGLE Ax1 [44] level=11 legal=True reason=
+  rawOutput={"response":[44]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=3 totalVisits=2520
+[PIMC]  [0] type=1 lvl=11 sz=1 cards=44, heur=0.15 avgSample=14.0571 visits=840 sw=0.238298 final=3.49979 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=14.7048 visits=840 sw=0.238298 final=2.50411
+[PIMC]  [2] type=1 lvl=12 sz=1 cards=51, heur=-1.525 avgSample=12.9429 visits=840 sw=0.238298 final=1.55926
+  remain=P0:16, P1:18, P2:15
+
+TURN 6 P0 REF team=farmers need=SINGLE Ax1 [44] level=11 lastValidPlayer=2 passCount=0 elapsedMs=981.1
+  handBefore count=16 3x1 4x1 5x2 6x1 7x1 8x2 9x2 Jx3 Ax2 2x1 [0,5,8,11,13,17,20,21,24,27,32,33,34,45,47,50]
+  historyForBot=[[41],[44]]
+  action=SINGLE 2x1 [50] level=12 legal=True reason=
+  rawOutput={"debug":189,"response":[50]}
+  remain=P0:15, P1:18, P2:15
+
+TURN 7 P1 TEST3BEFORE team=landlord need=SINGLE 2x1 [50] level=12 lastValidPlayer=0 passCount=0 elapsedMs=514.5
+  handBefore count=18 4x1 5x2 6x3 8x1 10x3 Jx1 Qx2 Kx1 2x2 jokerx1 JOKERx1 [4,9,10,12,14,15,22,28,30,31,35,36,39,42,48,49,52,53]
+  historyForBot=[[44],[50]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=4 totalVisits=3297
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1.6 avgSample=0.571636 visits=825 sw=0.238267 final=-1.4638 <BEST>
+[PIMC]  [1] type=17 lvl=14 sz=2 cards=53,52, heur=-16.03 avgSample=-15.2621 visits=824 sw=0.0714795 final=-17.1209
+[PIMC]  [2] type=1 lvl=13 sz=1 cards=52, heur=-3.82 avgSample=-0.524272 visits=824 sw=0.238265 final=-3.94492
+[PIMC]  [3] type=1 lvl=14 sz=1 cards=53, heur=-4.52 avgSample=-13.8058 visits=824 sw=0.238265 final=-7.80945
+  remain=P0:15, P1:18, P2:15
+
+TURN 8 P2 TEST3 team=farmers need=SINGLE 2x1 [50] level=12 lastValidPlayer=0 passCount=1 elapsedMs=523.5
+  handBefore count=15 3x2 4x2 7x3 9x2 10x1 Qx1 Kx2 Ax1 2x1 [2,3,6,7,16,18,19,25,26,29,37,40,43,46,51]
+  historyForBot=[[50],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=2240
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=6 avgSample=13.3606 visits=2240 sw=0.239359 final=9.19799 <BEST>
+  remain=P0:15, P1:18, P2:15
+
+TURN 9 P0 REF team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=988.3
+  handBefore count=15 3x1 4x1 5x2 6x1 7x1 8x2 9x2 Jx3 Ax2 [0,5,8,11,13,17,20,21,24,27,32,33,34,45,47]
+  historyForBot=[[],[]]
+  action=TRIPLET1 5x1 Jx3 [32,33,34,8] level=8 legal=True reason=
+  rawOutput={"debug":42,"response":[32,33,34,8]}
+  remain=P0:11, P1:18, P2:15
+
+TURN 10 P1 TEST3BEFORE team=landlord need=TRIPLET1 5x1 Jx3 [32,33,34,8] level=8 lastValidPlayer=0 passCount=0 elapsedMs=516.4
+  handBefore count=18 4x1 5x2 6x3 8x1 10x3 Jx1 Qx2 Kx1 2x2 jokerx1 JOKERx1 [4,9,10,12,14,15,22,28,30,31,35,36,39,42,48,49,52,53]
+  historyForBot=[[],[32,33,34,8]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=2 totalVisits=3774
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1.6 avgSample=3.4547 visits=1887 sw=0.239239 final=-0.7735 <BEST>
+[PIMC]  [1] type=17 lvl=14 sz=2 cards=53,52, heur=-16.03 avgSample=-11.205 visits=1887 sw=0.0717718 final=-16.8342
+  remain=P0:11, P1:18, P2:15
+
+TURN 11 P2 TEST3 team=farmers need=TRIPLET1 5x1 Jx3 [32,33,34,8] level=8 lastValidPlayer=0 passCount=1 elapsedMs=521.0
+  handBefore count=15 3x2 4x2 7x3 9x2 10x1 Qx1 Kx2 Ax1 2x1 [2,3,6,7,16,18,19,25,26,29,37,40,43,46,51]
+  historyForBot=[[32,33,34,8],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=2381
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=3 avgSample=15.1161 visits=2381 sw=0.239397 final=6.61875 <BEST>
+  remain=P0:11, P1:18, P2:15
+
+TURN 12 P0 REF team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=1005.9
+  handBefore count=11 3x1 4x1 5x1 6x1 7x1 8x2 9x2 Ax2 [0,5,11,13,17,20,21,24,27,45,47]
+  historyForBot=[[],[]]
+  action=STRAIGHT 3x1 4x1 5x1 6x1 7x1 [0,5,11,13,17] level=4 legal=True reason=
+  rawOutput={"debug":57,"response":[0,5,11,13,17]}
+  remain=P0:6, P1:18, P2:15
+
+TURN 13 P1 TEST3BEFORE team=landlord need=STRAIGHT 3x1 4x1 5x1 6x1 7x1 [0,5,11,13,17] level=4 lastValidPlayer=0 passCount=0 elapsedMs=509.4
+  handBefore count=18 4x1 5x2 6x3 8x1 10x3 Jx1 Qx2 Kx1 2x2 jokerx1 JOKERx1 [4,9,10,12,14,15,22,28,30,31,35,36,39,42,48,49,52,53]
+  historyForBot=[[],[0,5,11,13,17]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=2 totalVisits=4182
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1.6 avgSample=-0.577401 visits=2091 sw=0.259256 final=-1.74969 <BEST>
+[PIMC]  [1] type=17 lvl=14 sz=2 cards=53,52, heur=-16.03 avgSample=-8.2494 visits=2091 sw=0.0777768 final=-16.6716
+  remain=P0:6, P1:18, P2:15
+
+TURN 14 P2 TEST3 team=farmers need=STRAIGHT 3x1 4x1 5x1 6x1 7x1 [0,5,11,13,17] level=4 lastValidPlayer=0 passCount=1 elapsedMs=513.2
+  handBefore count=15 3x2 4x2 7x3 9x2 10x1 Qx1 Kx2 Ax1 2x1 [2,3,6,7,16,18,19,25,26,29,37,40,43,46,51]
+  historyForBot=[[0,5,11,13,17],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=3784
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=3 avgSample=16.214 visits=3784 sw=0.259588 final=7.20897 <BEST>
+  remain=P0:6, P1:18, P2:15
+
+TURN 15 P0 REF team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=992.8
+  handBefore count=6 8x2 9x2 Ax2 [20,21,24,27,45,47]
+  historyForBot=[[],[]]
+  action=PAIR 8x2 [20,21] level=5 legal=True reason=
+  rawOutput={"debug":37,"response":[20,21]}
+  remain=P0:4, P1:18, P2:15
+
+TURN 16 P1 TEST3BEFORE team=landlord need=PAIR 8x2 [20,21] level=5 lastValidPlayer=0 passCount=0 elapsedMs=511.4
+  handBefore count=18 4x1 5x2 6x3 8x1 10x3 Jx1 Qx2 Kx1 2x2 jokerx1 JOKERx1 [4,9,10,12,14,15,22,28,30,31,35,36,39,42,48,49,52,53]
+  historyForBot=[[],[20,21]]
+  action=PAIR Qx2 [36,39] level=9 legal=True reason=
+  rawOutput={"response":[36,39]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=5 totalVisits=4754
+[PIMC]  [0] type=2 lvl=9 sz=2 cards=36,39, heur=5.62 avgSample=-9.69404 visits=951 sw=0.25837 final=3.11535 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1.6 avgSample=-19.9999 visits=951 sw=0.25837 final=-6.76737
+[PIMC]  [2] type=2 lvl=12 sz=2 cards=48,49, heur=1.23 avgSample=-7.99677 visits=951 sw=0.25837 final=-0.836125
+[PIMC]  [3] type=2 lvl=7 sz=2 cards=28,30, heur=-4.14 avgSample=-22.4742 visits=951 sw=0.25837 final=-9.94667
+[PIMC]  [4] type=17 lvl=14 sz=2 cards=53,52, heur=-16.03 avgSample=-15.1198 visits=950 sw=0.0775105 final=-17.2019
+  remain=P0:4, P1:16, P2:15
+
+TURN 17 P2 TEST3 team=farmers need=PAIR Qx2 [36,39] level=9 lastValidPlayer=1 passCount=0 elapsedMs=511.0
+  handBefore count=15 3x2 4x2 7x3 9x2 10x1 Qx1 Kx2 Ax1 2x1 [2,3,6,7,16,18,19,25,26,29,37,40,43,46,51]
+  historyForBot=[[20,21],[36,39]]
+  action=PAIR Kx2 [40,43] level=10 legal=True reason=
+  rawOutput={"response":[40,43]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=2 totalVisits=4888
+[PIMC]  [0] type=2 lvl=10 sz=2 cards=40,43, heur=5.3 avgSample=19.647 visits=2444 sw=0.259363 final=10.3957 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=20.8119 visits=2444 sw=0.259363 final=4.39784
+  remain=P0:4, P1:16, P2:13
+
+TURN 18 P0 REF team=farmers need=PAIR Kx2 [40,43] level=10 lastValidPlayer=2 passCount=0 elapsedMs=982.6
+  handBefore count=4 9x2 Ax2 [24,27,45,47]
+  historyForBot=[[36,39],[40,43]]
+  action=PAIR Ax2 [45,47] level=11 legal=True reason=
+  rawOutput={"debug":397,"response":[45,47]}
+  remain=P0:2, P1:16, P2:13
+
+TURN 19 P1 TEST3BEFORE team=landlord need=PAIR Ax2 [45,47] level=11 lastValidPlayer=0 passCount=0 elapsedMs=509.2
+  handBefore count=16 4x1 5x2 6x3 8x1 10x3 Jx1 Kx1 2x2 jokerx1 JOKERx1 [4,9,10,12,14,15,22,28,30,31,35,42,48,49,52,53]
+  historyForBot=[[40,43],[45,47]]
+  action=PAIR 2x2 [48,49] level=12 legal=True reason=
+  rawOutput={"response":[48,49]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=3 totalVisits=6366
+[PIMC]  [0] type=17 lvl=14 sz=2 cards=53,52, heur=16.03 avgSample=-22.6578 visits=2122 sw=0.284196 final=9.59072
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-26.6 avgSample=-24 visits=2122 sw=0.418816 final=-36.6516
+[PIMC]  [2] type=2 lvl=12 sz=2 cards=48,49, heur=13.11 avgSample=-8.61082 visits=2122 sw=0.378929 final=9.84712 <BEST>
+  remain=P0:2, P1:14, P2:13
+
+TURN 20 P2 TEST3 team=farmers need=PAIR 2x2 [48,49] level=12 lastValidPlayer=1 passCount=0 elapsedMs=508.3
+  handBefore count=13 3x2 4x2 7x3 9x2 10x1 Qx1 Ax1 2x1 [2,3,6,7,16,18,19,25,26,29,37,46,51]
+  historyForBot=[[45,47],[48,49]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=1 totalVisits=5655
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=20.1987 visits=5655 sw=0.279703 final=4.64965 <BEST>
+  remain=P0:2, P1:14, P2:13
+
+TURN 21 P0 REF team=farmers need=PAIR 2x2 [48,49] level=12 lastValidPlayer=1 passCount=1 elapsedMs=981.4
+  handBefore count=2 9x2 [24,27]
+  historyForBot=[[48,49],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:2, P1:14, P2:13
+
+TURN 22 P1 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=511.0
+  handBefore count=14 4x1 5x2 6x3 8x1 10x3 Jx1 Kx1 jokerx1 JOKERx1 [4,9,10,12,14,15,22,28,30,31,35,42,52,53]
+  historyForBot=[[],[]]
+  action=TRIPLET2 5x2 6x3 [12,14,15,9,10] level=3 legal=True reason=
+  rawOutput={"response":[12,14,15,9,10]}
+  stderr=[PIMC] freeTurn=1 dangerous=1 topCount=6 totalVisits=8670
+[PIMC]  [0] type=7 lvl=3 sz=5 cards=12,14,15,9,10, heur=6.58 avgSample=2.63568 visits=1445 sw=0.239008 final=7.20995 <BEST>
+[PIMC]  [1] type=7 lvl=7 sz=5 cards=28,30,31,9,10, heur=6.22 avgSample=-7.32617 visits=1445 sw=0.239008 final=4.46899
+[PIMC]  [2] type=1 lvl=1 sz=1 cards=4, heur=5.65 avgSample=-14.5486 visits=1445 sw=0.239008 final=2.17278
+[PIMC]  [3] type=17 lvl=14 sz=2 cards=53,52, heur=-45.03 avgSample=-14.5411 visits=1445 sw=0.179256 final=-47.6366
+[PIMC]  [4] type=6 lvl=3 sz=4 cards=12,14,15,4, heur=6.39 avgSample=-7.32617 visits=1445 sw=0.239008 final=4.63899
+[PIMC]  [5] type=2 lvl=2 sz=2 cards=9,10, heur=6.2 avgSample=-8.47014 visits=1445 sw=0.239008 final=4.17557
+  remain=P0:2, P1:9, P2:13
+
+TURN 23 P2 TEST3 team=farmers need=TRIPLET2 5x2 6x3 [12,14,15,9,10] level=3 lastValidPlayer=1 passCount=0 elapsedMs=509.8
+  handBefore count=13 3x2 4x2 7x3 9x2 10x1 Qx1 Ax1 2x1 [2,3,6,7,16,18,19,25,26,29,37,46,51]
+  historyForBot=[[],[12,14,15,9,10]]
+  action=TRIPLET2 3x2 7x3 [16,18,19,2,3] level=4 legal=True reason=
+  rawOutput={"response":[16,18,19,2,3]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=3 totalVisits=15286
+[PIMC]  [0] type=7 lvl=4 sz=5 cards=16,18,19,2,3, heur=6.55 avgSample=13.55 visits=5095 sw=0.319624 final=10.8809 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=13.0007 visits=5096 sw=0.319624 final=3.15534
+[PIMC]  [2] type=7 lvl=4 sz=5 cards=16,18,19,6,7, heur=6.55 avgSample=13.55 visits=5095 sw=0.319624 final=10.8809
+  remain=P0:2, P1:9, P2:8
+
+TURN 24 P0 REF team=farmers need=TRIPLET2 3x2 7x3 [16,18,19,2,3] level=4 lastValidPlayer=2 passCount=0 elapsedMs=1007.2
+  handBefore count=2 9x2 [24,27]
+  historyForBot=[[12,14,15,9,10],[16,18,19,2,3]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:2, P1:9, P2:8
+
+TURN 25 P1 TEST3BEFORE team=landlord need=TRIPLET2 3x2 7x3 [16,18,19,2,3] level=4 lastValidPlayer=2 passCount=1 elapsedMs=514.8
+  handBefore count=9 4x1 8x1 10x3 Jx1 Kx1 jokerx1 JOKERx1 [4,22,28,30,31,35,42,52,53]
+  historyForBot=[[16,18,19,2,3],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=2 totalVisits=17847
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=-7.22114 visits=8923 sw=0.419718 final=-6.03084 <BEST>
+[PIMC]  [1] type=17 lvl=14 sz=2 cards=53,52, heur=-5.05 avgSample=-7.22249 visits=8924 sw=0.314788 final=-7.32355
+  remain=P0:2, P1:9, P2:8
+
+TURN 26 P2 TEST3 team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=509.8
+  handBefore count=8 4x2 9x2 10x1 Qx1 Ax1 2x1 [6,7,25,26,29,37,46,51]
+  historyForBot=[[],[]]
+  action=SINGLE 10x1 [29] level=7 legal=True reason=
+  rawOutput={"response":[29]}
+  stderr=[PIMC] freeTurn=1 dangerous=0 topCount=6 totalVisits=17562
+[PIMC]  [0] type=2 lvl=1 sz=2 cards=6,7, heur=6.2 avgSample=12.1229 visits=2927 sw=0.199591 final=8.61962
+[PIMC]  [1] type=2 lvl=6 sz=2 cards=25,26, heur=5.6 avgSample=13.4264 visits=2927 sw=0.199591 final=8.27979
+[PIMC]  [2] type=1 lvl=1 sz=1 cards=6, heur=0.65 avgSample=9.94047 visits=2927 sw=0.199591 final=2.63403
+[PIMC]  [3] type=1 lvl=12 sz=1 cards=51, heur=-0.275 avgSample=12.8099 visits=2927 sw=0.199591 final=2.28173
+[PIMC]  [4] type=1 lvl=7 sz=1 cards=29, heur=5.25 avgSample=18.6217 visits=2927 sw=0.199591 final=8.96671 <BEST>
+[PIMC]  [5] type=1 lvl=9 sz=1 cards=37, heur=4.05 avgSample=18.3472 visits=2927 sw=0.199591 final=7.71194
+  remain=P0:2, P1:9, P2:7
+
+TURN 27 P0 REF team=farmers need=SINGLE 10x1 [29] level=7 lastValidPlayer=2 passCount=0 elapsedMs=1005.7
+  handBefore count=2 9x2 [24,27]
+  historyForBot=[[],[29]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:2, P1:9, P2:7
+
+TURN 28 P1 TEST3BEFORE team=landlord need=SINGLE 10x1 [29] level=7 lastValidPlayer=2 passCount=1 elapsedMs=511.4
+  handBefore count=9 4x1 8x1 10x3 Jx1 Kx1 jokerx1 JOKERx1 [4,22,28,30,31,35,42,52,53]
+  historyForBot=[[29],[]]
+  action=SINGLE Jx1 [35] level=8 legal=True reason=
+  rawOutput={"response":[35]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=6 totalVisits=16538
+[PIMC]  [0] type=1 lvl=8 sz=1 cards=35, heur=10.87 avgSample=-24 visits=2756 sw=0.419088 final=0.811897 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=-24 visits=2756 sw=0.419088 final=-13.0581
+[PIMC]  [2] type=1 lvl=10 sz=1 cards=42, heur=10.71 avgSample=-24 visits=2757 sw=0.419088 final=0.651889
+[PIMC]  [3] type=1 lvl=13 sz=1 cards=52, heur=-1.28 avgSample=-23.9932 visits=2757 sw=0.419088 final=-11.3353
+[PIMC]  [4] type=17 lvl=14 sz=2 cards=53,52, heur=-5.05 avgSample=-24 visits=2756 sw=0.314316 final=-12.5936
+[PIMC]  [5] type=1 lvl=14 sz=1 cards=53, heur=-1.76 avgSample=-24 visits=2756 sw=0.419088 final=-11.8181
+  remain=P0:2, P1:8, P2:7
+
+TURN 29 P2 TEST3 team=farmers need=SINGLE Jx1 [35] level=8 lastValidPlayer=1 passCount=0 elapsedMs=513.3
+  handBefore count=7 4x2 9x2 Qx1 Ax1 2x1 [6,7,25,26,37,46,51]
+  historyForBot=[[],[35]]
+  action=SINGLE Qx1 [37] level=9 legal=True reason=
+  rawOutput={"response":[37]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=4 totalVisits=21848
+[PIMC]  [0] type=1 lvl=9 sz=1 cards=37, heur=3.65 avgSample=20.8874 visits=5462 sw=0.319649 final=10.3266 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=9.17741 visits=5462 sw=0.319649 final=1.93355
+[PIMC]  [2] type=1 lvl=11 sz=1 cards=46, heur=0.55 avgSample=9.34055 visits=5462 sw=0.319649 final=3.5357
+[PIMC]  [3] type=1 lvl=12 sz=1 cards=51, heur=-6.125 avgSample=9.34055 visits=5462 sw=0.319649 final=-3.1393
+  remain=P0:2, P1:8, P2:6
+
+TURN 30 P0 REF team=farmers need=SINGLE Qx1 [37] level=9 lastValidPlayer=2 passCount=0 elapsedMs=1014.4
+  handBefore count=2 9x2 [24,27]
+  historyForBot=[[35],[37]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:2, P1:8, P2:6
+
+TURN 31 P1 TEST3BEFORE team=landlord need=SINGLE Qx1 [37] level=9 lastValidPlayer=2 passCount=1 elapsedMs=513.0
+  handBefore count=8 4x1 8x1 10x3 Kx1 jokerx1 JOKERx1 [4,22,28,30,31,42,52,53]
+  historyForBot=[[37],[]]
+  action=SINGLE Kx1 [42] level=10 legal=True reason=
+  rawOutput={"response":[42]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=5 totalVisits=21138
+[PIMC]  [0] type=1 lvl=10 sz=1 cards=42, heur=10.87 avgSample=19.8561 visits=4227 sw=0.419405 final=19.1978 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=-24 visits=4227 sw=0.419405 final=-13.0657
+[PIMC]  [2] type=17 lvl=14 sz=2 cards=53,52, heur=-5.05 avgSample=-24 visits=4228 sw=0.344511 final=-13.3183
+[PIMC]  [3] type=1 lvl=13 sz=1 cards=52, heur=-1.12 avgSample=-24 visits=4228 sw=0.419405 final=-11.1857
+[PIMC]  [4] type=1 lvl=14 sz=1 cards=53, heur=-1.6 avgSample=-23.9988 visits=4228 sw=0.419405 final=-11.6652
+  remain=P0:2, P1:7, P2:6
+
+TURN 32 P2 TEST3 team=farmers need=SINGLE Kx1 [42] level=10 lastValidPlayer=1 passCount=0 elapsedMs=514.0
+  handBefore count=6 4x2 9x2 Ax1 2x1 [6,7,25,26,46,51]
+  historyForBot=[[],[42]]
+  action=SINGLE Ax1 [46] level=11 legal=True reason=
+  rawOutput={"response":[46]}
+  stderr=[PIMC] freeTurn=0 dangerous=0 topCount=3 totalVisits=24942
+[PIMC]  [0] type=1 lvl=11 sz=1 cards=46, heur=5.15 avgSample=5.94808 visits=8314 sw=0.319769 final=7.05201 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-1 avgSample=5.94808 visits=8314 sw=0.319769 final=0.902014
+[PIMC]  [2] type=1 lvl=12 sz=1 cards=51, heur=-1.525 avgSample=5.94693 visits=8314 sw=0.319769 final=0.376646
+  remain=P0:2, P1:7, P2:5
+
+TURN 33 P0 REF team=farmers need=SINGLE Ax1 [46] level=11 lastValidPlayer=2 passCount=0 elapsedMs=1016.2
+  handBefore count=2 9x2 [24,27]
+  historyForBot=[[42],[46]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:2, P1:7, P2:5
+
+TURN 34 P1 TEST3BEFORE team=landlord need=SINGLE Ax1 [46] level=11 lastValidPlayer=2 passCount=1 elapsedMs=508.4
+  handBefore count=7 4x1 8x1 10x3 jokerx1 JOKERx1 [4,22,28,30,31,52,53]
+  historyForBot=[[46],[]]
+  action=SINGLE jokerx1 [52] level=13 legal=True reason=
+  rawOutput={"response":[52]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=4 totalVisits=41513
+[PIMC]  [0] type=1 lvl=13 sz=1 cards=52, heur=-0.96 avgSample=22.2797 visits=10378 sw=0.419757 final=8.39208 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=22.2797 visits=10378 sw=0.419757 final=6.35208
+[PIMC]  [2] type=17 lvl=14 sz=2 cards=53,52, heur=-5.05 avgSample=22.28 visits=10379 sw=0.344801 final=2.63215
+[PIMC]  [3] type=1 lvl=14 sz=1 cards=53, heur=-1.44 avgSample=22.2797 visits=10378 sw=0.419757 final=7.91208
+  remain=P0:2, P1:6, P2:5
+
+TURN 35 P2 TEST3 team=farmers need=SINGLE jokerx1 [52] level=13 lastValidPlayer=1 passCount=0 elapsedMs=508.8
+  handBefore count=5 4x2 9x2 2x1 [6,7,25,26,51]
+  historyForBot=[[],[52]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=32218
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-3.6 avgSample=0.592221 visits=32218 sw=0.419922 final=-3.35131 <BEST>
+  remain=P0:2, P1:6, P2:5
+
+TURN 36 P0 REF team=farmers need=SINGLE jokerx1 [52] level=13 lastValidPlayer=1 passCount=1 elapsedMs=1024.3
+  handBefore count=2 9x2 [24,27]
+  historyForBot=[[52],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:2, P1:6, P2:5
+
+TURN 37 P1 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=509.5
+  handBefore count=6 4x1 8x1 10x3 JOKERx1 [4,22,28,30,31,53]
+  historyForBot=[[],[]]
+  action=SINGLE 4x1 [4] level=1 legal=True reason=
+  rawOutput={"response":[4]}
+  stderr=[PIMC] freeTurn=1 dangerous=1 topCount=6 totalVisits=46835
+[PIMC]  [0] type=6 lvl=7 sz=4 cards=28,30,31,4, heur=9.03 avgSample=22.6511 visits=7806 sw=0.319754 final=16.2728
+[PIMC]  [1] type=1 lvl=1 sz=1 cards=4, heur=8.65 avgSample=24 visits=7806 sw=0.319754 final=16.3241 <BEST>
+[PIMC]  [2] type=1 lvl=5 sz=1 cards=22, heur=8.25 avgSample=24 visits=7806 sw=0.319754 final=15.9241
+[PIMC]  [3] type=5 lvl=7 sz=3 cards=28,30,31, heur=-3.11 avgSample=-23.9996 visits=7806 sw=0.319754 final=-10.784
+[PIMC]  [4] type=2 lvl=7 sz=2 cards=28,30, heur=-4.4 avgSample=-24 visits=7805 sw=0.319754 final=-12.0741
+[PIMC]  [5] type=1 lvl=7 sz=1 cards=28, heur=-4.75 avgSample=-24 visits=7806 sw=0.319754 final=-12.4241
+  remain=P0:2, P1:5, P2:5
+
+TURN 38 P2 TEST3 team=farmers need=SINGLE 4x1 [4] level=1 lastValidPlayer=1 passCount=0 elapsedMs=510.0
+  handBefore count=5 4x2 9x2 2x1 [6,7,25,26,51]
+  historyForBot=[[],[4]]
+  action=SINGLE 9x1 [25] level=6 legal=True reason=
+  rawOutput={"response":[25]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=3 totalVisits=36935
+[PIMC]  [0] type=1 lvl=12 sz=1 cards=51, heur=5.995 avgSample=10.9437 visits=12312 sw=0.419795 final=10.5891
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-4.6 avgSample=18.7773 visits=12311 sw=0.419795 final=3.28261
+[PIMC]  [2] type=1 lvl=6 sz=1 cards=25, heur=3.35 avgSample=17.4014 visits=12312 sw=0.419795 final=10.655 <BEST>
+  remain=P0:2, P1:5, P2:4
+
+TURN 39 P0 REF team=farmers need=SINGLE 9x1 [25] level=6 lastValidPlayer=2 passCount=0 elapsedMs=1020.8
+  handBefore count=2 9x2 [24,27]
+  historyForBot=[[4],[25]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:2, P1:5, P2:4
+
+TURN 40 P1 TEST3BEFORE team=landlord need=SINGLE 9x1 [25] level=6 lastValidPlayer=2 passCount=1 elapsedMs=510.1
+  handBefore count=5 8x1 10x3 JOKERx1 [22,28,30,31,53]
+  historyForBot=[[25],[]]
+  action=SINGLE JOKERx1 [53] level=14 legal=True reason=
+  rawOutput={"response":[53]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=3 totalVisits=56109
+[PIMC]  [0] type=1 lvl=14 sz=1 cards=53, heur=18.69 avgSample=24 visits=18703 sw=0.419865 final=28.7668 <BEST>
+[PIMC]  [1] type=0 lvl=0 sz=0 cards= heur=-3 avgSample=24 visits=18703 sw=0.419865 final=7.07677
+[PIMC]  [2] type=1 lvl=7 sz=1 cards=28, heur=-2.13 avgSample=24 visits=18703 sw=0.419865 final=7.94677
+  remain=P0:2, P1:4, P2:4
+
+TURN 41 P2 TEST3 team=farmers need=SINGLE JOKERx1 [53] level=14 lastValidPlayer=1 passCount=0 elapsedMs=515.1
+  handBefore count=4 4x2 9x1 2x1 [6,7,26,51]
+  historyForBot=[[],[53]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  stderr=[PIMC] freeTurn=0 dangerous=1 topCount=1 totalVisits=36743
+[PIMC]  [0] type=0 lvl=0 sz=0 cards= heur=-6.3 avgSample=10.3558 visits=36743 sw=0.419931 final=-1.95126 <BEST>
+  remain=P0:2, P1:4, P2:4
+
+TURN 42 P0 REF team=farmers need=SINGLE JOKERx1 [53] level=14 lastValidPlayer=1 passCount=1 elapsedMs=1022.7
+  handBefore count=2 9x2 [24,27]
+  historyForBot=[[53],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:2, P1:4, P2:4
+
+TURN 43 P1 TEST3BEFORE team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=16.1
+  handBefore count=4 8x1 10x3 [22,28,30,31]
+  historyForBot=[[],[]]
+  action=TRIPLET1 8x1 10x3 [28,30,31,22] level=7 legal=True reason=
+  rawOutput={"response":[28,30,31,22]}
+  remain=P0:2, P1:0, P2:4
+WINNER P1 TEST3BEFORE team=landlord
+SUMMARY winner=P1 winnerBot=TEST3BEFORE winnerTeam=landlord landlord=P1 landlordBot=TEST3BEFORE finalBid=3 multiplier=1 spring=False antiSpring=False forcedByCrash=False refWon=False test3beforeWon=True test3Won=False

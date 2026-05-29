@@ -1,0 +1,37 @@
+2026-05-15 三方对战记录：TEST3 6.0 vs TEST3BEFORE vs REF round6
+
+执行命令
+python run_three_bot_match.py --bots TEST3,TEST3BEFORE,REF --games 60 --seed 20261826 --timeout 30 --no-build --log reference_match_log_test3_v6_vs_test3before_vs_ref_20260515_round6.txt
+
+执行说明
+1. 使用当前 Test3.cpp 6.0 的已编译版本继续跑样本。
+2. 对手为 Test3Before.cpp 与 Reference.cpp。
+3. 种子范围为 20261826 到 20261885。
+4. 每步超时为 30 秒。
+5. illegalOrStopped 为 0。
+
+本批60局结果
+- TEST3：33/60，55.0%
+- TEST3BEFORE：19/60，31.7%
+- REF：31/60，51.7%
+
+角色侧结果
+- TEST3 地主：14/18，77.8%
+- TEST3 农民：19/42，45.2%
+- TEST3BEFORE 地主：11/26，42.3%
+- TEST3BEFORE 农民：8/34，23.5%
+- REF 地主：12/16，75.0%
+- REF 农民：19/44，43.2%
+
+TEST3 6.0 累计360局结果
+- TEST3：185/360，51.4%
+- TEST3BEFORE：154/360，42.8%
+- REF：171/360，47.5%
+
+结论
+- 第六批 60 局里，TEST3 6.0 再次拿到第一。
+- 累计 360 局后，6.0 继续稳居总第一，领先 TEST3BEFORE 31 胜，领先 REF 14 胜。
+- 6.0 的长期领先已经非常稳，不再像短样本里的暂时波动。
+
+日志文件
+- reference_match_log_test3_v6_vs_test3before_vs_ref_20260515_round6.txt

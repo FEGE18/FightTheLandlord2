@@ -1,0 +1,36 @@
+2026-05-15 三方对战记录 round4
+
+执行命令
+python run_three_bot_match.py --games 30 --seed 20260920 --timeout 30 --no-build --log reference_match_log_test_vs_test3_vs_ref_20260515_round4.txt
+
+执行说明
+1. 使用原始三方对战规则，不启用托管。
+2. 参与 bot 为 test.cpp、Test3.cpp、Reference.cpp。
+3. 种子范围为 20260920 到 20260949。
+4. 每步超时为 30 秒。
+
+本批30局结果
+- TEST：15/30，50.0%
+- TEST3：11/30，36.7%
+- REF：14/30，46.7%
+- illegalOrStopped：0
+
+角色侧结果
+- TEST 地主：5/5，100.0%
+- TEST 农民：10/25，40.0%
+- TEST3 地主：11/21，52.4%
+- TEST3 农民：0/9，0.0%
+- REF 地主：4/4，100.0%
+- REF 农民：10/26，38.5%
+
+正常规则累计90局结果
+- TEST：37/90，41.1%
+- TEST3：45/90，50.0%
+- REF：47/90，52.2%
+
+结论
+- 本批30局中，TEST 暂时领先。
+- 但累计90局正常规则样本里，REF 仍然第一，TEST3 第二，TEST 第三。
+
+日志文件
+- reference_match_log_test_vs_test3_vs_ref_20260515_round4.txt

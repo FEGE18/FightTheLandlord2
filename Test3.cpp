@@ -111,7 +111,7 @@ constexpr Level level_JOKER = 14;
 /**
 * 将Card变成Level
 */
-// [示例程序提供，可直接复用] 把具体牌号转换成不区分花色的等级，供牌型识别和大小比较使用。
+//  把具体牌号转换成不区分花色的等级，供牌型识别和大小比较使用。
 constexpr Level card2level(Card card)
 {
 	return card / 4 + card / 53;
@@ -131,7 +131,7 @@ struct CardCombo
 		// 这个点数一共有几张
 		short count;
 
-		// [示例程序提供，可直接复用] 定义牌种排序规则：先按张数降序，再按等级降序。
+		// 定义牌种排序规则：先按张数降序，再按等级降序。
 		//===张数多的排前面，如果张数一样，大点数排前面===
 		bool operator<(const CardPack &b) const
 		{
@@ -148,7 +148,7 @@ struct CardCombo
 	/**
 						  * 检查个数最多的CardPack递减了几个
 						  */
-	// [示例程序提供，可直接复用] 统计主牌部分连续了多少组，用于判断顺子、飞机、航天飞机等连续牌型。
+	// 统计主牌部分连续了多少组，用于判断顺子、飞机、航天飞机等连续牌型。
 	int findMaxSeq() const
 	{
 		for (unsigned c = 1; c < packs.size(); c++)
@@ -161,7 +161,7 @@ struct CardCombo
 	/**
 	* 这个牌型最后算总分的时候的权重
 	*/
-	// [示例程序提供，可直接复用] 返回当前牌型的基础权重，主要用于后续扩展评估或调试。
+	//返回当前牌型的基础权重，主要用于后续扩展评估或调试。
 	int getWeight() const
 	{
 		if (comboType == CardComboType::SSHUTTLE ||
@@ -172,7 +172,7 @@ struct CardCombo
 	}
 
 	// 创建一个空牌组
-	// [示例程序提供，可直接复用] 构造一个 PASS 牌组，表示不出牌。
+	// 构造一个 PASS 牌组，表示不出牌。
 	CardCombo() : comboType(CardComboType::PASS) {}
 
 	/**
@@ -181,7 +181,7 @@ struct CardCombo
 	* 假设输入没有重复数字（即重复的Card）
 	*/
 	template <typename CARD_ITERATOR>
-	// [示例程序提供，可直接复用] 根据一组具体牌自动识别牌型、主牌等级和内部牌种结构。
+	// 根据一组具体牌自动识别牌型、主牌等级和内部牌种结构。
 	//构造函数，输入一组牌，自动识别牌型
 	CardCombo(CARD_ITERATOR begin, CARD_ITERATOR end)
 	{
@@ -369,7 +369,7 @@ struct CardCombo
 	/**
 	* 判断指定牌组能否大过当前牌组（这个函数不考虑过牌的情况！）
 	*/
-	// [示例程序提供，可直接复用] 判断另一手牌 b 是否能合法压过当前牌组。
+	// 判断另一手牌 b 是否能合法压过当前牌组。
 	bool canBeBeatenBy(const CardCombo &b) const
 	{
 		if (comboType == CardComboType::INVALID || b.comboType == CardComboType::INVALID)
@@ -395,8 +395,7 @@ struct CardCombo
 	* 如果不存在则返回一个PASS的牌组
 	*/
 	template <typename CARD_ITERATOR>
-	// [示例程序提供，可作为过渡方案] 从手牌里贪心找第一手能出的牌；后续主策略会逐步被 enumAllValidPlays 替代。
-	// todo
+	// 从手牌里贪心找第一手能出的牌；后续主策略会逐步被enumAllValidPlays替代
 	CardCombo findFirstValid(CARD_ITERATOR begin, CARD_ITERATOR end) const
 	{
 		if (comboType == CardComboType::PASS) // 如果不需要大过谁，只需要随便出
@@ -521,11 +520,8 @@ struct CardCombo
 			return CardCombo(rocket, rocket + 2);
 		}
 
-		// ……
 		return CardCombo();
 	}
-
-	// [示例程序提供，可直接复用] 本地调试时打印当前牌组的牌型和大小信息。
 	void debugPrint()
 	{
 #ifndef _BOTZONE_ONLINE
@@ -533,10 +529,6 @@ struct CardCombo
 #endif
 	}
 };
-
-// ==================================================
-// 单文件骨架：状态结构
-// ==================================================
 
 // 表示手牌可以拆分成的牌型组合：每一个groups[]都是一种牌型，所有groups[]加和就是当前的手牌集合）
 // handCount表示同一手牌的不同出法的个数
@@ -618,19 +610,19 @@ struct GameState
 	//每个玩家当前确定还持有的明牌
 	vector<Card> konwCardOfPlayer[PLAYER_COUNT];
 
-	// [我们实现] 判断我是否为地主，供策略层快速区分角色使用。
+	//判断我是否为地主，供策略层快速区分角色使用。
 	bool isLandlord() const
 	{
 		return myPosition == landlordPosition;
 	}
 
-	// [我们实现] 判断指定位置的玩家是否是我的队友，目前主要用于农民配合逻辑。
+	// 判断指定位置的玩家是否是我的队友，目前主要用于农民配合逻辑。
 	bool isTeammate(int pos) const
 	{
 		return !isLandlord() && pos != myPosition && pos != landlordPosition;
 	}
 
-	// [我们实现] 返回我的队友位置；如果我是地主则返回 -1。
+	//  返回我的队友位置；如果我是地主则返回 -1。
 	int getTeammatePos() const
 	{
 		if (isLandlord())
@@ -641,7 +633,7 @@ struct GameState
 		return -1;
 	}
 
-	// [我们实现] 统计当前未知区域还剩多少张牌，后续可用于记牌和概率推断。
+	// 统计当前未知区域还剩多少张牌，后续可用于记牌和概率推断。
 	int getUnknownCardCount() const
 	{
 		int total = 0;
@@ -686,12 +678,7 @@ struct RState
 };
 
 
-// ==================================================
-// 单文件骨架：基础工具
-// ==================================================
-
-// [我们实现] 按等级优先、牌号次之对手牌排序，统一后续枚举、输出和调试行为
-// todo_done
+//  按等级优先、牌号次之对手牌排序，统一后续枚举、输出和调试行为
 void sortCards(vector<Card> &cards)
 {
 	sort(cards.begin(), cards.end(), [](Card left, Card right) 
@@ -704,8 +691,7 @@ void sortCards(vector<Card> &cards)
 	});
 }
 
-// [我们实现] 从一手牌里删掉已经打出的具体牌，返回删除后的新手牌副本。
-// todo_done
+//  从一手牌里删掉已经打出的具体牌，返回删除后的新手牌副本。
 vector<Card> removeCardsFromHand(vector<Card> hand, const vector<Card> &played)
 {
 	for (Card card : played)
@@ -718,8 +704,7 @@ vector<Card> removeCardsFromHand(vector<Card> hand, const vector<Card> &played)
 	return hand;
 }
 
-// [我们实现] 按等级把手牌分组，方便做对子、三条、炸弹等统计和枚举。
-// todo_done
+//  按等级把手牌分组，方便做对子、三条、炸弹等统计和枚举。
 vector<vector<Card> > groupCardsByLevel(const vector<Card> &hand)
 {
 	vector<vector<Card> > grouped(MAX_LEVEL);
@@ -734,11 +719,6 @@ void initRandomSeed()
     // 两者异或后作为种子，避免每次进程启动都使用默认固定种子。
 	std::srand(static_cast<unsigned>(std::time(nullptr)) ^ static_cast<unsigned>(clock()));
 }
-
-
-// ==================================================
-// 单文件骨架：IO / 状态恢复
-// ==================================================
 
 void RebuildCard(GameState &state);
 void recordPlayEvent(GameState &state, int player, vector<Card> &playedCard);
@@ -810,7 +790,7 @@ void RebuildCard(GameState &state)
 	}
 }
  
-// [基于示例程序逻辑改造，建议优先保留] 读取 Botzone 输入并重建当前局面，返回本轮决策所需的完整状态。
+//  读取 Botzone 输入并重建当前局面，返回本轮决策所需的完整状态。
 GameState readGameState()
 {
 	GameState state;
@@ -969,7 +949,7 @@ GameState readGameState()
 	return state;
 }
 
-// [基于示例程序逻辑改造，建议优先保留] 按平台要求输出叫分决策 JSON。
+//按平台要求输出叫分决策 JSON。
 void outputBid(int value)
 {
 	Json::Value result;
@@ -978,7 +958,7 @@ void outputBid(int value)
 	std::cout << writer.write(result) << std::endl;
 }
 
-// [基于示例程序逻辑改造，建议优先保留] 按平台要求输出出牌决策 JSON，空数组表示 PASS。
+// 按平台要求输出出牌决策 JSON，空数组表示 PASS。
 void outputPlay(const vector<Card> &cards)
 {
 	Json::Value result, response(Json::arrayValue);
@@ -989,12 +969,8 @@ void outputPlay(const vector<Card> &cards)
 	std::cout << writer.write(result) << std::endl;
 }
 
-// ==================================================
-// 单文件骨架：枚举层
-// ==================================================
-#pragma region enum
-// [我们要自己实现的核心函数] 枚举当前局面下所有合法出牌，供策略层评估和比较；如果没有合法出牌则返回一个只包含 PASS 的列表
-// todo
+//  枚举当前局面下所有合法出牌，供策略层评估和比较；如果没有合法出牌则返回一个只包含 PASS 的列表
+
 /* 
 实现逻辑：
 先扫描一遍当前手牌，记录每个level各有几张牌，可以快速筛选可能的牌型；
@@ -1048,7 +1024,7 @@ vector<CardCombo> enumAllValidPlays(vector<Card>& hand,CardCombo& lastCombo){
 		return res;
 	};
 
-	// 当主体牌型确定后，为三带一、飞机带翼等牌型补全最合适的带牌
+	// 主牌型确定后，为三带一、飞机带翼等牌型补全最合适的带牌
 	// curCombo为主牌，need为需要带几组副牌（主要用于飞机和航天飞机，航天飞机的副牌组数是主牌组数的两倍，因为只能是四带二/四带两对）
 	// type为带牌的种类（单张or对子），ex为被主牌占用的level（即副牌中不能出现的level种类）
 	// 内部使用引用变量，直接在函数内对可行牌组进行插入
@@ -1071,7 +1047,7 @@ vector<CardCombo> enumAllValidPlays(vector<Card>& hand,CardCombo& lastCombo){
             }
         };
         dfs(dfs,0,need,curCombo);
-        for(auto& aRes:res)addPlay(aRes);	// -----使用&可优化性能？-----
+        for(auto& aRes:res)addPlay(aRes);
 	};
 
 	// 定向枚举
@@ -1242,12 +1218,6 @@ struct ResponseThreatInfo{
 
 int getMinHandCount(vector<Card> &hand);
 
-/*这个接口内部可以复用 enumAllValidPlays；
-不要重新写牌型判断；
-PASS 和 INVALID 不算有效响应；
-bestResponse 建议选 minRemainHands 最小的响应，如果并列可以选 remainCards 更少的；
-requiredCombo == PASS 时可以直接返回 canBeat = false，因为自由出牌不是“压牌威胁分析”的场景*/
-
 ResponseThreatInfo analyzeResponseThreat(vector<Card>& hand,CardCombo& requiredCombo){
     ResponseThreatInfo info;
     vector<CardCombo> responses=enumAllValidPlays(hand, requiredCombo);
@@ -1285,16 +1255,9 @@ ResponseThreatInfo analyzeResponseThreat(vector<Card>& hand,CardCombo& requiredC
 }
 
 
-#pragma endregion
-// ==================================================
-// 单文件骨架：拆分层
-// ==================================================
-#pragma region decompose
 int getMinHandCount(vector<Card> &hand);
 void searchDecompose(vector<Card> curHand,HandPlan& curPlan,vector<HandPlan>& res,int maxD);
-// [我们要自己实现的核心函数] 把手牌拆成若干组合法牌型，供策略层评估“最少还要几手出完”。
-// 使用 MCTS，通过模拟来选取最优的若干组牌 <- 这句话是给策略层看的
-// todo
+// 把手牌拆成若干组合法牌型，供策略层评估最少还要几手出完
 // 返回最优的前topK组拆法，用beam search
 vector<HandPlan> decomposeHand(vector<Card> &hand, int topK = 1){
 	vector<HandPlan> allPlans;
@@ -1327,7 +1290,6 @@ vector<HandPlan> decomposeHand(vector<Card> &hand, int topK = 1){
 	}
 
 	// if(allPlans.empty()){}
-
 	return allPlans;
 }
 
@@ -1477,9 +1439,7 @@ int dfs(short counts[15],int wings){
 	return memo[state];
 }
 
-// [我们要自己实现的核心函数] 快速返回当前手牌出完最少还需要几手，供评估层频繁调用
-// todo
-
+//快速返回当前手牌出完最少还需要几手，供评估层频繁调用
 int getMinHandCount(vector<Card> &hand){
 	if(hand.empty())return 0;
 	short counts[15]={0};
@@ -1489,7 +1449,7 @@ int getMinHandCount(vector<Card> &hand){
 }
 
 // 快速判断 hand 是否存在任意一手牌可以压过 lastCombo
-// 这个函数只回答“能不能压”，不需要返回具体出哪几张牌
+// 只给出能不能压，不需要返回具体出啥
 // 用counts频率表加快查找
 bool canBeatComboFast(vector<Card>& hand,CardCombo& lastCombo){
 	if(lastCombo.comboType==CardComboType::PASS)return true;
@@ -1651,38 +1611,34 @@ bool canBeatComboFast(vector<Card>& hand,CardCombo& lastCombo){
 		default: return false;
 	}
 }
-#pragma endregion
-// ==================================================
-// 单文件骨架：评估层
-// ==================================================
 
 
-// 根据一次 PASS 事件的上下文，决定它作为“当时压不了牌”的证据有多强。
+// 根据一次 PASS 事件的上下文，决定它作为“当时压不了牌”的证据有多强
 // 返回值越小，说明这条 PASS 对样本的约束越强；
-// 返回值越接近 1，说明这条 PASS 很可能只是战术选择，不适合强约束。
+// 返回值越接近 1，说明这条 PASS 很可能只是战术选择，不适合强约束
 double getPassStrength(GameState &state, int player, CardCombo &requiredCombo, int requiredPlayer)
 {
-    // 自由出牌时不会出现真正意义上的 PASS 约束，这里直接忽略。
+    // 自由出牌时不会出现真正意义上的 PASS 约束，这里直接忽略
     if(requiredCombo.comboType == CardComboType::PASS || requiredPlayer < 0)
         return 1.0;
 
-    // 如果 PASS 的人和桌面最后有效出牌者是同一阵营，
-    // 那么这条 PASS 很可能只是“让队友继续掌牌”，约束应明显减弱。
+    // 如果 PASS 的人和桌面最后有效出牌者是同一阵营
+    // 那么这条 PASS 很可能只是“让队友继续掌牌”，约束应明显减弱
     if(arePartners(state, player, requiredPlayer))
     {
-        // 队友自己已经快跑完了，这种让牌更合理，约束进一步放松。
+        // 队友自己已经快跑完了，这种让牌更合理，约束进一步放松
         if(state.cardRemaining[requiredPlayer] <= 3)
             return 0.98;
 
         return 0.93;
     }
 
-    // 从这里往下，说明 PASS 的人面对的是对手的牌。
-    // 这类 PASS 才更像“压不了”或“压不起”，约束应更强。
+    // 从这里往下，说明 PASS 的人面对的是对手的牌
+    // 这类 PASS 才更像“压不了”或“压不起”，约束应更强
     double strength = 0.78;
 
     // 如果桌面这手本身很强、很高，或者属于复杂带牌，
-    // 那么不去压它是更可以理解的，约束不要太狠。
+    // 那么不去压它是更可以理解的，约束不要太狠
     if(requiredCombo.comboType == CardComboType::BOMB ||
        requiredCombo.comboType == CardComboType::ROCKET)
     {
@@ -1701,8 +1657,8 @@ double getPassStrength(GameState &state, int player, CardCombo &requiredCombo, i
         strength = 0.84;
     }
 
-    // 如果 PASS 的人是地主，那么他面对的是农民的牌。
-    // 农民越接近出完，地主还 PASS 就越不合理，因此约束更强。
+    // 如果 PASS 的人是地主，那么他面对的是农民的牌
+    // 农民越接近出完，地主还 PASS 就越不合理，因此约束更强
     if(player == state.landlordPosition)
     {
         int farmerMinCards = 100;
@@ -1723,8 +1679,8 @@ double getPassStrength(GameState &state, int player, CardCombo &requiredCombo, i
         return strength;
     }
 
-    // 从这里往下，PASS 的人是农民。
-    // 如果他面对的是地主的牌，那么地主越接近出完，这条 PASS 就越像“真压不了”。
+    // 从这里往下，PASS 的人是农民
+    // 如果他面对的是地主的牌，那么地主越接近出完，这条 PASS 就越像“真压不了”
     if(requiredPlayer == state.landlordPosition)
     {
         int landlordCards = state.cardRemaining[state.landlordPosition];
@@ -1739,7 +1695,6 @@ double getPassStrength(GameState &state, int player, CardCombo &requiredCombo, i
         return strength;
     }
 
-    // 理论上走不到这里；保守返回当前强度。
     return strength;
 }
 
@@ -1747,7 +1702,6 @@ double getPassStrength(GameState &state, int player, CardCombo &requiredCombo, i
 //收集当前所有未知牌
 vector<Card> collectUnknowCard(GameState &state)
 {
-	//保存所有任然未知的具体牌
 	vector<Card> unknownCard;
 
 	for (Card i = 0; i < 54;++i)
@@ -1772,31 +1726,23 @@ bool checkUnknownCard(GameState &state)
 
 	for (int i = 0; i < PLAYER_COUNT;++i)
 	{
-		//我的手牌已知，不属于未知牌
 		if(i==state.myPosition)
 		continue;
 		
-		//这个玩家剩余牌中的明牌
 		int knownCount = state.konwCardOfPlayer[i].size();
 
-		//剩下那部分才是未知牌
 		expectedUnknownCount += state.cardRemaining[i] - knownCount;
 	}
-	//如果数量一致，说明合理
 	return unknownCard.size() == expectedUnknownCount;
 }
 
 //构造一次随机补全的完整局面
 InferredDeal bulidOneRandomDeal(GameState &state)
 {
-	//创建一个样本
 	InferredDeal deal;
 
-	//我的手牌是确定的，直接复制进去
 	deal.hands[state.myPosition] = state.myCards;
 
-	//其他玩家的确定手牌也放进去
-	//地主未打出的底牌
 	for (int i = 0; i < PLAYER_COUNT;++i)
 	{
 		if(i==state.myPosition)
@@ -1813,14 +1759,11 @@ InferredDeal bulidOneRandomDeal(GameState &state)
 	// 计算理论上需要分配出去的未知牌数量。
 	int totalNeedCount = 0;
 
-	// 遍历其他两个玩家，统计他们还缺多少张未知牌。
 	for (int player = 0; player < PLAYER_COUNT; ++player)
 	{
-    	// 我的手牌已经确定，不需要从未知牌中补。
     	if (player == state.myPosition)
         	continue;
 
-    	// 这个玩家需要补的未知牌数量 = 剩余牌数 - 已知确定牌数。
     	int knownCount = deal.hands[player].size();
 
 		if(knownCount > state.cardRemaining[player])
@@ -1833,7 +1776,6 @@ InferredDeal bulidOneRandomDeal(GameState &state)
 
 	}
 
-	// 如果未知牌数量和需要补的数量不一致，说明状态恢复或未知牌重建有问题。
 	if (totalNeedCount != unknownCard.size())
 	{
     	// 返回一个空权重样本，表示这次补全不可用。
@@ -1853,8 +1795,6 @@ InferredDeal bulidOneRandomDeal(GameState &state)
 		//这个玩家要补多少张
 		int needCount = state.cardRemaining[i] - deal.hands[i].size();
 
-		// 如果 needCount 为负，说明这个玩家已知牌比剩余牌还多，状态不合法。
-    	// 如果 cnt + needCount 超过 unknownCard 数量，说明未知牌不够发，也是不合法样本。
     	if(needCount < 0 || cnt + needCount > static_cast<int>(unknownCard.size()))
     	{
         	deal.weight = 0.0;
@@ -1877,47 +1817,38 @@ InferredDeal bulidOneRandomDeal(GameState &state)
 	return deal;
 }
 
-// 检查一次随机补全样本的手牌张数是否正确。
+// 检查一次随机补全样本的手牌张数是否正确
 bool checkInferredDeal(GameState &state, InferredDeal &deal)
 {
-    // 如果样本本身已经标记为无效，直接返回 false。
     if (deal.weight <= 0.0)
         return false;
 
-    // 遍历三个玩家。
     for (int player = 0; player < PLAYER_COUNT; ++player)
     {
-        // 每个玩家样本手牌数量必须等于当前局面记录的剩余牌数。
+        // 每个玩家样本手牌数量必须等于当前局面记录的剩余牌数
         if (static_cast<int>(deal.hands[player].size()) != state.cardRemaining[player])
             return false;
     }
 
-    // 所有玩家张数都对，说明这个样本在数量层面合法。
     return true;
 }
 
-// 检查一次随机补全样本中是否存在重复牌。
+// 检查一次随机补全样本中是否存在重复牌
 bool checkInferredDealNoDuplicate(InferredDeal &deal)
 {
-    // 标记每张牌是否已经在样本手牌中出现过。
+    // 标记每张牌是否已经在样本手牌中出现过
     bool seen[54] = {};
 
-    // 遍历三个玩家。
     for (int player = 0; player < PLAYER_COUNT; ++player)
     {
-        // 遍历这个玩家样本手牌里的每张牌。
         for (Card card : deal.hands[player])
         {
-            // 如果这张牌之前已经出现过，说明重复了。
             if (seen[card])
                 return false;
 
-            // 标记这张牌已经出现。
             seen[card] = true;
         }
     }
-
-    // 没有发现重复牌，说明样本在唯一性层面合法。
     return true;
 }
 
@@ -1947,10 +1878,10 @@ double evaluateOnePassConstraint(GameState &state, InferredDeal &deal, PassConst
 
     vector<Card> &hand = deal.hands[constraint.player];
 
-    // 分析：如果当时他真的面对 requiredCombo，这手牌能怎么响应。
+    // 分析：如果当时他真的面对 requiredCombo，这手牌能怎么响应
     ResponseThreatInfo threat = analyzeResponseThreat(hand, constraint.requirCombo);
 
-    // 如果当前样本里他确实完全压不了，那么这个样本和历史 PASS 一致，不扣权重。
+    // 如果当前样本里他确实完全压不了，那么这个样本和历史 PASS 一致，不扣权重
     if(!threat.canBeat)
         return 1.0;
 
@@ -1972,8 +1903,7 @@ double evaluateOnePassConstraint(GameState &state, InferredDeal &deal, PassConst
     else if(threat.minRemainHands >= 3)
         factor = std::max(factor, 0.85);
 
-    // 如果最优响应本身是硬控牌（炸弹、火箭、四带二等），
-    // 那么历史上选择不压是更能理解的，适当放松惩罚
+    // 历史上选择不压是更能理解的，适当放松惩罚
     if(threat.canBeat && isHardControlPlay(threat.bestResponse))
         factor = std::max(factor, 0.8);
 
@@ -1991,11 +1921,10 @@ double evaluateDealByPass(GameState &state,InferredDeal &deal)
 	//遍历所有从PASS中提取出来的约束
 	for(PassConstraint &constraint : state.passConstraints)
 	{
-		// 根据当前样本中这名玩家“到底能怎么压”，
-        // 动态决定这一条 PASS 对样本权重的惩罚力度。
+        // 动态决定这一条 PASS 对样本权重的惩罚力度
         weight *= evaluateOnePassConstraint(state, deal, constraint);
 
-        // 如果权重已经很低，就可以提前结束，避免无意义计算。
+        // 如果权重已经很低，就可以提前结束，避免无意义计算
         if(weight <= 1e-4)
             return 0;
 	}
@@ -2038,8 +1967,7 @@ vector<InferredDeal> buildRandomDeals(GameState &state, int sampleCount)
 	return deals;
 }
 
-// 调试用：检查随机补全模块是否能生成合法样本。
-// 注意：这个函数不应该在 Botzone 正式输出前打印内容，否则会污染 JSON 输出。
+
 void debugRandomDeals(GameState &state)
 {
     // 先检查确定未知牌数量是否一致。
@@ -2064,8 +1992,7 @@ void debugRandomDeals(GameState &state)
                   << std::endl;
     }
 }
-// 调试用：检查 PASS 约束是否正确生成，并观察随机样本权重。
-// 注意：正式 Botzone 输出前不要调用，避免调试信息干扰。
+
 #ifndef _BOTZONE_ONLINE
 void debugPassConstraints(GameState &state)
 {
@@ -2137,7 +2064,6 @@ void debugPassConstraints(GameState &state)
 //判断指定玩家是否和我属于同一阵营
 bool isSameSidePlayer(GameState &state, int palyer)
 {
-	//-1表示当前没有出牌者
 	if(palyer<0)
 		return false;
 
@@ -2155,7 +2081,6 @@ bool arePartners(GameState &state, int playerA, int playerB)
     if(playerA < 0 || playerB < 0)
         return false;
 
-    // 地主只和自己同边；两个农民彼此同边。
     if(playerA == state.landlordPosition || playerB == state.landlordPosition)
         return playerA == playerB;
 
@@ -2165,15 +2090,12 @@ bool arePartners(GameState &state, int playerA, int playerB)
 //判断某一手候选牌是否能直接把自己的手牌出完,最高优先级规则：如果能直接赢，通常不需要再评分
 bool isWinningPlay(GameState &state,CardCombo &play)
 {
-	//PASS不能赢
 	if(play.comboType == CardComboType::PASS)
 		return false;
 
-	//非法牌不能赢
 	if(play.comboType==CardComboType::INVALID)
 		return false;
 
-	//如果这一手出牌数等于我当前手牌数，说明我能直接出完
 	return play.cards.size() == state.myCards.size();
 }
 
@@ -2201,28 +2123,22 @@ bool isDangerousSituation(GameState &state)
 }
 
 // 判断一手牌是否是硬控牌。
-// 炸弹和火箭可以压大多数牌，但会导致底分翻倍，也会消耗关键控制资源。
 bool isHardControlPlay(CardCombo &play)
 {
-    // 炸弹是硬控牌。
     if (play.comboType == CardComboType::BOMB)
         return true;
 
-	//四带二、四带两对也属于硬控牌
 	if(play.comboType == CardComboType::QUADRUPLE2 || play.comboType == CardComboType::QUADRUPLE4)
 		return true;
 	
-	//航天飞机也是
 	if (play.comboType == CardComboType::SSHUTTLE ||
         play.comboType == CardComboType::SSHUTTLE2 ||
         play.comboType == CardComboType::SSHUTTLE4)
         return true;
 
-	// 火箭是最高硬控牌。
     if (play.comboType == CardComboType::ROCKET)
         return true;
 
-    // 其他牌型不算硬控牌。
     return false;
 }
 
@@ -2236,9 +2152,7 @@ bool shouldFightControl(GameState &state)
 	if(myHandCount<=3)
 		return true;
 
-	// 如果当前有效出牌来自队友，不能简单放弃牌权。
-	// 因为比赛收益和“谁先出完”有关，我也需要适当主动争取出完机会。
-	// 只有队友已经很接近出完，而我自己还需要较多手时，才倾向让队友继续。
+	// 只有队友已经很接近出完，而我自己还需要较多手时，才倾向让队友继续
 	if(state.lastValidPlayer >= 0 && isSameSidePlayer(state, state.lastValidPlayer))
 	{
 		int teammate = state.lastValidPlayer;
@@ -2256,7 +2170,7 @@ bool shouldFightControl(GameState &state)
 	if(state.isLandlord() && myHandCount<=5)
 		return true;
 	
-	// 农民看地主剩牌。
+	// 农民看地主剩牌
 	// 地主剩 1~2 张：强危险，必须争夺牌权
 	// 地主剩 3~5 张：进入警戒，要更积极，但如果当前是队友出的牌，先不要盲目抢队友
 	if(!state.isLandlord())
@@ -2267,16 +2181,7 @@ bool shouldFightControl(GameState &state)
     	if(landlordRemain <= 2)
         	return true;
 
-		if(landlordRemain<=8 && state.finalBid <=1)
-		{
-			if(state.lastValidPlayer==state.landlordPosition)
-				return true;
-			if(state.lastValidCombo.comboType==CardComboType::PASS)
-				return true;
-		}
-
-    	// 地主剩 3~5 张时，进入中度警戒。
-    	// Reference 的思路也是接近收官时再明显提高压制强度，不能太早烧控牌。
+    	// 地主剩 3~5 张时，进入中度警戒
     	if(landlordRemain <= 5)
     	{
         	if(state.lastValidPlayer == state.landlordPosition)
@@ -2297,8 +2202,7 @@ bool shouldFightControl(GameState &state)
 		return false;
 }
 
-// [我们要自己实现的核心函数] 评估整手牌强度，主要用于叫分决策和后续参数调优。
-//如果只看我自己这手牌，不看当前桌面动作，这手牌到底强不强
+// 评估整手牌强度，主要用于叫分决策和后续参数调优
 double evaluateHandStrength(vector<Card> &hand)
 {
 //===为手牌评分：总分=大牌分+炸弹分+结构分-碎牌惩罚-手牌惩罚===
@@ -2306,7 +2210,6 @@ double evaluateHandStrength(vector<Card> &hand)
 	auto grouped = groupCardsByLevel(hand);
 
 	// 大牌分：我手里有没有抢牌权的能力
-	//为等级赋分，记录成一个数组
 	static const double highCardBonus[MAX_LEVEL] = {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 3~Q
 		0.8,						  // K
@@ -2317,23 +2220,17 @@ double evaluateHandStrength(vector<Card> &hand)
 
 	for (Level i = 0; i < MAX_LEVEL;i++)
 	{
-		//grouped[i] 返回的是手牌被拆分成不同的数组之后不同等级的牌数。grouped[10] = 2 表示K有2张
 		score += highCardBonus[i] * grouped[i].size();
 	}
-	// 炸弹分：我有没有硬压能力
-	//每个炸弹 +6
 	for (Level i = 0; i < level_joker;i++)
 	{
 		if(grouped[i].size()==4)
 			score += 6.0;
 	}
 
-	//火箭在大牌分的基础上 +4
 	if(!grouped[level_joker].empty() && !grouped[level_JOKER].empty())
 		score += 4.0;
 
-	// 结构分：这副牌整不整齐，容易不容易组织成高质量出牌
-	//三条+2.0，对子+1.0
 	for (Level i = 0; i < level_joker;i++)
 	{
 		size_t cnt = grouped[i].size();
@@ -2467,7 +2364,7 @@ double evaluateBidStrength(vector<Card> &hand)
 			bestSingleRun = singleRun;
 	}
 	if(bestSingleRun >= 5)
-		score += 0.8 + (bestSingleRun - 5) * 0.15;
+		score += 1.2 + (bestSingleRun - 5) * 0.25;
 
 	// 连对潜力：连续对子达到 3 对就有价值。
 	int pairRun = 0;
@@ -2483,7 +2380,7 @@ double evaluateBidStrength(vector<Card> &hand)
 			bestPairRun = pairRun;
 	}
 	if(bestPairRun >= 3)
-		score += 1.0 + (bestPairRun - 3) * 0.20;
+		score += 1.8 + (bestPairRun - 3) * 0.35;
 
 	// 飞机潜力：连续三条达到 2 组就很有价值。
 	int tripletRun = 0;
@@ -2515,13 +2412,12 @@ double evaluateBidStrength(vector<Card> &hand)
 		roughGroups--;
 
 	// 牌越碎，叫地主风险越高。
-	score -= roughGroups * 0.6;
+	score -= roughGroups * 0.45;
 
 	return score;
 }
 
-// [我们要自己实现的核心函数] 评估某一手候选出牌对局面的收益，供出牌策略比较多个选项。
-//看“出这一手之后”局面有没有变好
+// 评估某一手候选出牌对局面的收益，供出牌策略比较多个选项。
 //输入的是 出牌前手牌，你打算出的这一手，当前局面
 double evaluatePlayGain(vector<Card> &handBefore, CardCombo &play, GameState &state)
 {
@@ -2567,11 +2463,8 @@ double evaluatePlayGain(vector<Card> &handBefore, CardCombo &play, GameState &st
     return gain;
 }
 
-// ==================================================
-// 单文件骨架：策略层
-// ==================================================
 
-// [我们要自己实现的核心函数] 根据手牌强度和前序叫分结果决定本轮是否叫分、叫几分。
+// 根据手牌强度和前序叫分结果决定本轮是否叫分、叫几分。
 //这个函数不是自己瞎算所有东西，它应该建立在 evaluateHandStrength 之上
 int decideBid(vector<Card> &hand, vector<int> &bidHistory)
 {
@@ -2611,7 +2504,7 @@ int decideBid(vector<Card> &hand, vector<int> &bidHistory)
 	// 我这手牌最多愿意叫到几分
 	int targetBid = 0;
 
-	// 第一层：硬条件控制叫分上限。先默认最多可以叫 3，后面再逐步收紧。
+	// 第一层：硬条件控制叫分上限，先默认最多可以叫 3，后面再逐步收紧
 	int bidCap = 3;
 
 	//是否具有基础控牌能力
@@ -2625,7 +2518,7 @@ int decideBid(vector<Card> &hand, vector<int> &bidHistory)
 	if(!hasStrongControl&&bidCap>2)
 		bidCap = 2;
 
-	//计算当前手牌至少大概要分几手出完，手数越多，当地主风险越大。
+	//计算当前手牌至少大概要分几手出完，手数越多，当地主风险越大
 	int handCount = getMinHandCount(hand);
 	//判断牌型是否可以接受
 	bool handShape = handCount <= 11;
@@ -2649,19 +2542,20 @@ int decideBid(vector<Card> &hand, vector<int> &bidHistory)
 		bidCap = 2;
 
 	
-	// 低散牌数量：统计 3~9 中只有一张的牌，这些牌当地主时很难主动处理。
 
 
-	// 第二层：细粒度评分。
-	// 叫分阶段必须非常快，不能调用 decomposeHand 这类搜索型评估。
+	// 第二层：细粒度评分
+	// 叫分阶段必须非常快，不能调用 decomposeHand 这类搜索型评估
 	double bidScore = evaluateBidStrength(hand);
 
-		// 历史叫分越高，我继续抬价的风险越大。
+	// evaluateBidStrength 已经把火箭、炸弹、2、王、高牌结构都算进去了
+	// 这里不再重复给细粒度加分，只根据历史叫分调整风险
 	if(maxBid == 1)
 		bidScore -= 1.6;
 	else if(maxBid == 2)
 		bidScore -= 3.8;
 
+	// 阈值略偏进攻：地主整体胜率更高，所以中等好牌仍然允许抢地主
 	if (bidScore >= 15.8)
     	targetBid = 3;
 	else if (bidScore >= 9.8)
@@ -2698,7 +2592,6 @@ struct ScoredPlay
 };
 
 void logPIMCResult(GameState &state, vector<ScoredPlay> &topPlays);
-bool applyRPlay(GameState &state, RState &rollout, int player, CardCombo &play);
 
 //自由出牌时，评估这手牌作为主动出牌的价值
 //这个函数只处理“主动出什么更顺”，不处理压对手，让队友和危险局面
@@ -2706,34 +2599,28 @@ double evaluateFreeTurn(CardCombo &play)
 {
 	double bonus = 0;
 
-	//PASS无意义
 	if(play.comboType==CardComboType::PASS)
 		return -10000;
 	
-	//炸弹和火箭是硬控资源，自由轮不应该主动消耗
 	if(play.comboType==CardComboType::BOMB)
 		return -8;
 	if(play.comboType==CardComboType::ROCKET)
 		return -10;
 
-	//长顺子价值很高
 	if(play.comboType == CardComboType::STRAIGHT)
 	{
-		// 顺子本身仍然是整理牌，但不能奖励过头。
+
 		int straightLength = (int)play.cards.size();
 
-		// 基础奖励略降，避免自由轮无脑起长顺。
 		bonus += 1.2;
 		bonus += straightLength * 0.08;
 
-		// comboLevel 对顺子表示最高张，越高越容易浪费 Q/K/A 这类控牌。
 		bonus -= play.comboLevel * 0.10;
 
-		// 过长的顺子通常会一次性交掉太多灵活性，额外扣分。
+		// 过长的顺子通常会一次性交掉太多灵活性，额外扣分
 		if(straightLength >= 7)
 			bonus -= 0.6 + (straightLength - 7) * 0.25;
 
-		// 高位长顺再额外保守一点，重点抑制 7~K、8~A 这类起手。
 		if(play.comboLevel >= 9)
 			bonus -= 0.8 + (play.comboLevel - 9) * 0.35;
 	}
@@ -2742,18 +2629,18 @@ double evaluateFreeTurn(CardCombo &play)
 	{
 		int pairStraightLength = (int)play.cards.size() / 2;
 
-		// 连对仍有整理价值，但不应在自由轮被过度偏爱。
+		// 连对仍有整理价值，但不应在自由轮被过度偏爱
 		bonus += 1.3;
 		bonus += play.cards.size() * 0.07;
 
-		// 高位连对会消耗对子控牌，扣分比原来更明显。
+		// 高位连对会消耗对子控牌，扣分比原来更明显
 		bonus -= play.comboLevel * 0.08;
 
-		// 过长连对会显著降低后续灵活性，额外保守一点。
+		// 过长连对会显著降低后续灵活性，额外保守一点
 		if(pairStraightLength >= 4)
 			bonus -= 0.4 + (pairStraightLength - 4) * 0.20;
 
-		// 高位长连对进一步扣分，抑制 88~JJ、99~QQ 这类过早甩掉。
+		// 高位长连对进一步扣分，抑制 88~JJ、99~QQ 这类过早甩掉
 		if(play.comboLevel >= 8)
 			bonus -= 0.5 + (play.comboLevel - 8) * 0.25;
 	}
@@ -2772,17 +2659,16 @@ double evaluateFreeTurn(CardCombo &play)
 	{
 		int wingCardCount = (int)play.cards.size() - 4;
 
-		// 四带类不是普通整理牌，自由轮主动打出要明显保守。
+		// 四带类不是普通整理牌，自由轮主动打出要明显保守
 		bonus += 0.4;
 		bonus += play.cards.size() * 0.03;
 
-		// 主四条越高，炸弹和控场价值越强。
+		// 主四条越高，炸弹和控场价值越强
 		bonus -= play.comboLevel * 0.12;
 
-		// 带牌越多，后续灵活性损失越大。
+		// 带牌越多，后续灵活性损失越大
 		bonus -= wingCardCount * 0.12;
-
-		// AAAA、2222 基本不该在普通自由轮主动当整理牌交掉。
+		// AAAA、2222 基本不该在普通自由轮主动当整理牌交掉
 		if(play.comboLevel >= 11)
 			bonus -= 2.0 + (play.comboLevel - 11) * 1.2;
 	}
@@ -2795,14 +2681,14 @@ double evaluateFreeTurn(CardCombo &play)
 		int wingCard = 0;
 		int highWing = 0;
 
-		// 三带是整理牌，但奖励要比顺子、飞机更克制。
+		// 三带是整理牌，但奖励要比顺子、飞机更克制
 		bonus += 0.9;
 		bonus += play.cards.size() * 0.04;
 
-		// 主三条越高，控牌价值越强，自由轮越不该轻易打掉。
+		// 主三条越高，控牌价值越强，自由轮越不该轻易打掉
 		bonus -= main * 0.09;
 
-		// 只统计“带牌”部分，不把主三条重复误罚进去。
+		// 只统计“带牌”部分，不把主三条重复误罚进去
 		for(Card card : play.cards)
 		{
 			Level level = card2level(card);
@@ -2811,7 +2697,7 @@ double evaluateFreeTurn(CardCombo &play)
 
 			++wingCard;
 
-			// 带出去的是高牌时，明显更亏。
+			// 带出去的是高牌时，明显更亏
 			if(level >= 11)
 			{
 				++highWing;
@@ -2830,11 +2716,9 @@ double evaluateFreeTurn(CardCombo &play)
 
 	else if (play.comboType == CardComboType::TRIPLET)
 	{
-		// 自由出牌时，裸三条通常很亏。
-		// 如果能三带一或三带二，就应该顺手带走散牌，而不是只出三张。
+		// 自由出牌时，裸三条通常很亏
 		bonus -= 3.0;
 
-		// 高位三条还有控牌价值，更不应该裸出。
 		bonus -= play.comboLevel * 0.08;
 	}
 
@@ -2873,152 +2757,150 @@ double evaluateFreeTurn(CardCombo &play)
 	return bonus;
 }
 
-// 判断一副手牌里是否还保留明显控牌。
-// 这里的控牌不是严格数学定义，而是策略层的近似：
-// 2、王、炸弹都可以在关键时刻抢回牌权。
+// 判断一副手牌里是否还保留明显控牌
+// 2、王、炸弹都可以在关键时刻抢回牌权
 bool hasControlCard(vector<Card> &hand)
 {
-	// 先按点数分组，便于判断炸弹。
+	// 先按点数分组，便于判断炸弹
 	auto grouped = groupCardsByLevel(hand);
 
-	// 只要还有 2，就认为还有单牌/对子层面的控制力。
+	// 只要还有 2，就认为还有单牌/对子层面的控制力
 	if(!grouped[12].empty())
 		return true;
 
-	// 小王是控制牌。
+	// 小王是控制牌
 	if(!grouped[level_joker].empty())
 		return true;
 
-	// 大王是控制牌。
+	// 大王是控制牌
 	if(!grouped[level_JOKER].empty())
 		return true;
 
-	// 任意炸弹也是控制牌。
+	// 任意炸弹也是控制牌
 	for(Level level = 0; level < level_joker; level++)
 	{
 		if(grouped[level].size() == 4)
 			return true;
 	}
 
-	// 否则认为没有明显控牌。
+	// 否则认为没有明显控牌
 	return false;
 }
 
-// 计算一副手牌的控牌价值。
-// 这个值不是整手牌强度，只表示关键时刻抢回牌权的能力。
-// 后续可以用“出牌前控牌价值 - 出牌后控牌价值”判断一手牌消耗了多少控牌资源。
+// 计算一副手牌的控牌价值
+// 这个值不是整手牌强度，只表示关键时刻抢回牌权的能力
+// 后续可以用“出牌前控牌价值 - 出牌后控牌价值”判断一手牌消耗了多少控牌资源
 double getControlValue(vector<Card> &hand)
 {
-	// 按点数分组，方便统计 2、王、炸弹。
+	// 按点数分组，方便统计 2、王、炸弹
 	auto grouped = groupCardsByLevel(hand);
 
-	// 从 0 开始累计控牌价值。
+	// 从 0 开始累计控牌价值
 	double value = 0.0;
 
-	// 统计 2 的数量。
+	// 统计 2 的数量
 	int twoCount = grouped[12].size();
 
-	// 单张 2 是基本控牌。
+	// 单张 2 是基本控牌
 	if(twoCount == 1)
 		value += 2.5;
 
-	// 一对 2 可以压多数对子，也可以拆成两次单牌控制。
+	// 一对 2 可以压多数对子，也可以拆成两次单牌控制
 	else if(twoCount == 2)
 		value += 5.8;
 
-	// 三张 2 控制力更强，既能拆，也能作为三条压制。
+	// 三张 2 控制力更强，既能拆，也能作为三条压制
 	else if(twoCount == 3)
 		value += 8.5;
 
-	// 四个 2 极其特殊，既是高炸弹，也能拆成多次控牌。
+	// 四个 2 极其特殊，既是高炸弹，也能拆成多次控牌
 	else if(twoCount == 4)
 		value += 13.0;
 
-	// 小王是强控牌。
+	// 小王是强控牌
 	if(!grouped[level_joker].empty())
 		value += 4.0;
 
-	// 大王比小王略强。
+	// 大王比小王略强
 	if(!grouped[level_JOKER].empty())
 		value += 4.8;
 
-	// 双王同时存在时，额外计算火箭价值。
+	// 双王同时存在时，额外计算火箭价值
 	if(!grouped[level_joker].empty() && !grouped[level_JOKER].empty())
 		value += 5.0;
 
-	// 普通炸弹也有控牌价值。
+	// 普通炸弹也有控牌价值
 	for(Level level = 0; level < level_joker; level++)
 	{
-		// 只统计四张同点数的炸弹。
+		// 只统计四张同点数的炸弹
 		if(grouped[level].size() == 4)
 		{
-			// 低位炸弹价值较低，高位炸弹价值较高。
+			// 低位炸弹价值较低，高位炸弹价值较高
 			value += 4.0 + level * 0.25;
 		}
 	}
 
-	// 返回整手牌的控牌价值。
+	// 返回整手牌的控牌价值
 	return value;
 }
 
-// 评估某一手牌造成的控牌资源损失。
-// 这个函数只看“我打出这手以后，手里还剩多少抢牌权能力”。
-// 返回值是负分：损失越大，扣分越多。
+// 评估某一手牌造成的控牌资源损失
+// 返回值是负分：损失越大，扣分越多
 double evaluateControlLoss(GameState &state, CardCombo &play)
 {
-	// PASS 不消耗手牌资源。
+	// PASS 不消耗手牌资源
 	if(play.comboType == CardComboType::PASS)
 		return 0.0;
 
-	// 如果这一手直接出完，控牌损失不重要。
+	// 如果这一手直接出完，控牌损失不重要
 	if(isWinningPlay(state, play))
 		return 0.0;
 
-	// 计算出牌后的手牌。
+	// 计算出牌后的手牌
 	vector<Card> handAfter = removeCardsFromHand(state.myCards, play.cards);
 
-	// 如果出完后只剩一手，说明我已经接近胜利，不要因为控牌损失过度保守。
+	// 如果出完后只剩一手，说明我已经接近胜利，不要因为控牌损失过度保守
 	if(!handAfter.empty() && getMinHandCount(handAfter) == 1)
 		return 0.0;
 
-	// 计算出牌前后的控牌价值差。
+	// 计算出牌前后的控牌价值差
 	double controlBefore = getControlValue(state.myCards);
 	double controlAfter = getControlValue(handAfter);
 	double controlLoss = controlBefore - controlAfter;
 
-	// 没有消耗控牌，或者控牌价值反而没下降，就不扣分。
+	// 没有消耗控牌，或者控牌价值反而没下降，就不扣分
 	if(controlLoss <= 0.0)
 		return 0.0;
 
-	// 判断当前是不是自由出牌。
+	// 判断当前是不是自由出牌
 	bool freeTurn = state.lastValidCombo.comboType == CardComboType::PASS;
 
-	// 判断当前是不是压对手。
+	// 判断当前是不是压对手
 	bool followingOpponent = !freeTurn && state.lastValidPlayer >= 0 && !isSameSidePlayer(state, state.lastValidPlayer);
 
-	// 判断当前是不是必须压住快出完的对手。
+	// 判断当前是不是必须压住快出完的对手
 	bool followingDangerousOpponent = followingOpponent && state.cardRemaining[state.lastValidPlayer] <= 2;
 
-	// 基础扣分系数。
+	// 基础扣分系数
 	double rate = 0.35;
 
-	// 自由轮主动交控牌更亏，因为不是被迫防守。
+	// 自由轮主动交控牌更亏，因为不是被迫防守
 	if(freeTurn)
 		rate = 0.45;
 
-	// 危险自由轮更要保留控牌，避免下一轮拦不住对手。
+	// 危险自由轮更要保留控牌，避免下一轮拦不住对手
 	if(freeTurn && isDangerousSituation(state))
 		rate = 0.65;
 
-	// 如果正在压危险对手，交控牌是必要成本，扣分要降低。
+	// 如果正在压危险对手，交控牌是必要成本，扣分要降低
 	if(followingDangerousOpponent)
 		rate = 0.15;
 
-	// 计算控牌损失扣分。
+	// 计算控牌损失扣分
 	double penalty = controlLoss * rate;
 
-	// 四个 2 不能当普通炸弹处理。
-	// 除非是在压危险对手，否则主动或普通局面打出 2222 都要额外扣分。
+	// 四个 2 不能当普通炸弹处理
+	// 除非是在压危险对手，否则主动或普通局面打出 2222 都要额外扣分
 	if(play.comboType == CardComboType::BOMB && play.comboLevel == 12 && !followingDangerousOpponent)
 	{
 		if(freeTurn)
@@ -3027,8 +2909,8 @@ double evaluateControlLoss(GameState &state, CardCombo &play)
 			penalty += 2.0;
 	}
 
-	// 三带一 / 三带二如果把 A 或 2 当主体打出去，
-	// 往往是在提前拆掉最重要的中后期控牌资源。
+	// 三带一 / 三带二如果把 A 或 2 当主体打出去
+	// 往往是在提前拆掉最重要的中后期控牌资源
 	if(play.comboType == CardComboType::TRIPLET1 || play.comboType == CardComboType::TRIPLET2)
 	{
 		Level mainLevel = play.comboLevel;
@@ -3051,62 +2933,62 @@ double evaluateControlLoss(GameState &state, CardCombo &play)
 				penalty += 1.5;
 		}
 
-		// 四带二 / 四带两对会一次性交掉大量资源。
-		if(play.comboType == CardComboType::QUADRUPLE2 || play.comboType == CardComboType::QUADRUPLE4)
+	}
+
+	// 四带二 / 四带两对会一次性交掉大量资源
+	// 这类牌型不是三带，所以必须单独判断，不能放在 TRIPLET1/TRIPLET2 分支里
+	if(play.comboType == CardComboType::QUADRUPLE2 || play.comboType == CardComboType::QUADRUPLE4)
+	{
+		Level mainLevel = play.comboLevel;
+		int highWingCount = 0;
+
+		// 2222 最不该轻易主动当整理牌交掉
+		if(mainLevel == 12 && !followingDangerousOpponent)
 		{
-			Level mainLevel = play.comboLevel;
-			int highWingCount = 0;
-
-			// 2222 最不该轻易主动当整理牌交掉。
-			if(mainLevel == 12 && !followingDangerousOpponent)
-			{
-				if(freeTurn)
-					penalty += 6.0;
-				else
-					penalty += 3.5;
-			}
-			// AAAA 也应明显保留。
-			else if(mainLevel == 11 && !followingDangerousOpponent)
-			{
-				if(freeTurn)
-					penalty += 3.0;
-				else
-					penalty += 1.8;
-			}
-
-			// 只看带牌部分，不重复统计主四条。
-			for(Card card : play.cards)
-			{
-				Level level = card2level(card);
-				if(level == mainLevel)
-					continue;
-
-				if(level >= 11)
-				{
-					++highWingCount;
-					penalty += 0.9;
-				}
-				else if(level >= 9)
-				{
-					penalty += 0.35;
-				}
-			}
-
-			// 四带两对如果还顺手带走高对子，再额外扣一点。
-			if(play.comboType == CardComboType::QUADRUPLE4 && highWingCount >= 2)
-				penalty += 1.0;
+			if(freeTurn)
+				penalty += 6.0;
+			else
+				penalty += 3.5;
+		}
+		// AAAA 也应明显保留
+		else if(mainLevel == 11 && !followingDangerousOpponent)
+		{
+			if(freeTurn)
+				penalty += 3.0;
+			else
+				penalty += 1.8;
 		}
 
+		// 只看带牌部分，不重复统计主四条
+		for(Card card : play.cards)
+		{
+			Level level = card2level(card);
+			if(level == mainLevel)
+				continue;
+
+			if(level >= 11)
+			{
+				++highWingCount;
+				penalty += 0.9;
+			}
+			else if(level >= 9)
+			{
+				penalty += 0.35;
+			}
+		}
+
+		// 四带两对如果还顺手带走高对子，再额外扣一点
+		if(play.comboType == CardComboType::QUADRUPLE4 && highWingCount >= 2)
+			penalty += 1.0;
 	}
 
 
-	// 返回负分，表示这手牌消耗了控牌资源。
+	// 返回负分，表示这手牌消耗了控牌资源
 	return -penalty;
 }
 
 //评估出完这手之后，只剩一手牌的质量
-// 这个函数只在 handAfter 的最小手数为 1 时有意义。
-// 返回值：好的一手加分，差的一手少加甚至扣分。
+// 这个函数只在 handAfter 的最小手数为 1 时有意义
 double evaluateOneTurnLeftQuality(GameState &state,vector<Card> &handAfter)
 {
 	//如果已经出完不套路
@@ -3135,21 +3017,6 @@ double evaluateOneTurnLeftQuality(GameState &state,vector<Card> &handAfter)
 			score -= 1;
 		else
 			score += 2;
-
-		// 地主如果已经把牌压成“只剩一张”，
-		// 那么这张末手单牌的可收尾能力要额外重视。
-		// 特别是 2 和大小王，很多时候本身就接近稳定终结。
-		if(state.isLandlord())
-		{
-			if(remainCombo.comboLevel == 12)
-				score += 2.2;
-			else if(remainCombo.comboLevel == level_joker)
-				score += 2.8;
-			else if(remainCombo.comboLevel == level_JOKER)
-				score += 3.2;
-			else if(remainCombo.comboLevel == 11)
-				score += 1.0;
-		}
 	}
 	//剩顺子、连对等，质量较好
 	else if(remainCombo.comboType==CardComboType::STRAIGHT || remainCombo.comboType==CardComboType::STRAIGHT2 || remainCombo.comboType==CardComboType::TRIPLET||
@@ -3169,49 +3036,49 @@ double evaluateOneTurnLeftQuality(GameState &state,vector<Card> &handAfter)
 	return score;
 }
 
-// 危险局面下，自由出牌额外评估。
-// 这个函数只处理一种情况：我有主动权，但对手快出完了。
-// 核心思想：自由轮不能只贪图“多出几张”，还要保留能拦住对手的控牌。
+// 危险局面下，自由出牌额外评估
+// 这个函数只处理一种情况：我有主动权，但对手快出完了
+// 核心思想：自由轮不能只贪图“多出几张”，还要保留能拦住对手的控牌
 double evaluateDangerousFreeTurn(GameState &state, CardCombo &play)
 {
-	// 如果不是自由出牌，这个函数不负责处理。
+	// 如果不是自由出牌，这个函数不负责处理
 	if(state.lastValidCombo.comboType != CardComboType::PASS)
 		return 0;
 
-	// PASS 在自由轮不会被选择，这里不额外处理。
+	// PASS 在自由轮不会被选择，这里不额外处理
 	if(play.comboType == CardComboType::PASS)
 		return 0;
 
-	// 如果这一手可以直接出完，永远应该优先出完，不扣分。
+	// 如果这一手可以直接出完，永远应该优先出完，不扣分
 	if(isWinningPlay(state, play))
 		return 0;
 
-	// 先计算出牌后的剩余手牌。
+	// 先计算出牌后的剩余手牌
 	vector<Card> handAfter = removeCardsFromHand(state.myCards, play.cards);
 
-	// 计算出牌前后的控牌价值。
+	// 计算出牌前后的控牌价值
 	double controlBefore = getControlValue(state.myCards);
 	double controlAfter = getControlValue(handAfter);
 	double controlLoss = controlBefore - controlAfter;
 
-	// 如果出牌前有控牌，出牌后几乎没有控牌，说明这一手把最后的防守资源交掉了。
+	// 如果出牌前有控牌，出牌后几乎没有控牌，说明这一手把最后的防守资源交掉了
 	bool lostLastControl = controlBefore > 0.0 && controlAfter <= 0.1;
 
-	// 如果出完后只剩一手，说明我也很接近胜利，不要过度保守。
+	// 如果出完后只剩一手，说明我也很接近胜利，不要过度保守
 	if(!handAfter.empty() && getMinHandCount(handAfter) == 1)
 		return 0;
 
-	// 从 0 开始累计危险惩罚。
+	// 从 0 开始累计危险惩罚
 	double penalty = 0;
 
-	// 农民视角：地主剩牌越少，我越不能乱交控牌。
+	// 农民视角：地主剩牌越少，我越不能乱交控牌
 	if(!state.isLandlord())
 	{
-		// 读取地主剩余牌数。
+		// 读取地主剩余牌数
 		int landlordRemain = state.cardRemaining[state.landlordPosition];
 
-		// 找到我的农民队友。
-		// 农民局里除了我和地主，剩下的那个玩家就是队友。
+		// 找到我的农民队友
+		// 农民局里除了我和地主，剩下的那个玩家就是队友
 		int teammate = -1;
 		for(int player = 0; player < PLAYER_COUNT; player++)
 		{
@@ -3219,72 +3086,70 @@ double evaluateDangerousFreeTurn(GameState &state, CardCombo &play)
 				teammate = player;
 		}
 
-		// 地主剩 5 张以内已经进入预警。
+		// 地主剩 5 张以内已经进入预警
 		if(landlordRemain <= 5)
 		{
-			// 主动打出硬控牌很危险，例如炸弹、火箭、四带二。
+			// 主动打出硬控牌很危险，
 			if(isHardControlPlay(play))
 				penalty -= 8.0;
 
-			// 主动打出 2 或王，也会削弱后续拦截能力。
+			// 主动打出 2 或王，也会削弱后续拦截能力
 			for(Card card : play.cards)
 			{
 				Level level = card2level(card);
 
-				// 2 是重要控牌，地主快跑时不能随便主动打掉。
+				// 2 是重要控牌，地主快跑时不能随便主动打掉
 				if(level == 12)
 					penalty -= 2.0;
 
-				// 小王更重要。
+				// 小王更重要
 				if(level == level_joker)
 					penalty -= 3.0;
 
-				// 大王最重要。
+				// 大王最重要
 				if(level == level_JOKER)
 					penalty -= 3.5;
 
 			}
 
-			// 如果这一手把我最后的控牌打没了，危险局面下要重罚。
-			// 典型错误就是地主还剩 2 张，我自由轮主动打掉最后一对 2。
+			// 如果这一手把我最后的控牌打没了，危险局面下要重罚
 			if(lostLastControl)
 				penalty -= 6.0;
 
-			// 如果没有完全打光控牌，但控牌价值大幅下降，也要额外扣一点。
+			// 如果没有完全打光控牌，但控牌价值大幅下降，也要额外扣一点
 			if(controlLoss > 6.0)
 				penalty -= (controlLoss - 6.0) * 0.25;
 
-			// 地主快出完时，如果我自己也不远了，就不要轻易把主动权交出去。
-			// 这里不是禁止队友接牌，而是提高我自己连续进攻的价值。
+			// 地主快出完时，如果我自己也不远了，就不要轻易把主动权交出去
 			if(state.myCards.size() <= 10 && state.cardRemaining[teammate] > state.myCards.size())
 				penalty += 2.0;
 		}
 
-		// 地主剩 2 张以内是强危险状态，惩罚再加重。
+		// 地主剩 2 张以内是强危险状态，惩罚再加重
 		if(landlordRemain <= 2)
 			penalty *= 1.6;
 	}
 
-	// 地主视角：任意农民快出完，也要避免自由轮乱交硬控。
+	// 地主视角：任意农民快出完，也要避免自由轮乱交硬控
 	else
 	{
 		for(int player = 0; player < PLAYER_COUNT; player++)
 		{
-			// 跳过自己。
+			// 跳过自己
 			if(player == state.myPosition)
 				continue;
 
-			// 地主没有队友，其他玩家都是对手。
+			// 地主没有队友，其他玩家都是对手
 			if(state.cardRemaining[player] <= 5)
 			{
 				if(isHardControlPlay(play))
 					penalty -= 6.0;
 
-				// 地主自己没有队友，如果把最后控牌打没，后面可能完全拦不住农民。
+				// 地主自己没有队友，如果把最后控牌打没，后面可能完全拦不住农民
 				if(lostLastControl)
 					penalty -= 5.0;
 
-				// 控牌价值大幅下降时，即使还没完全打光，也要有所保留。
+				// 控牌价值大幅下降时，即使还没完全打光，也要有所保留
 				if(controlLoss > 6.0)
 					penalty -= (controlLoss - 6.0) * 0.20;
 
@@ -3303,7 +3168,7 @@ double evaluateDangerousFreeTurn(GameState &state, CardCombo &play)
 		}
 	}
 
-	// 返回危险自由轮的额外修正分。
+	// 返回危险自由轮的额外修正分
 	return penalty;
 }
 
@@ -3328,6 +3193,13 @@ RState buildInitRState(GameState &state,InferredDeal &deal,CardCombo &firstPlay)
 	{
 		rollout.lastCombo = state.lastValidCombo;
 		rollout.lastplayer = state.lastValidPlayer;
+
+		// 如果我选择 PASS 后正好轮回到最后出牌者，真实对局中这一轮已经结束
+		if(rollout.lastplayer >= 0 && rollout.currentPlayer == rollout.lastplayer)
+		{
+			rollout.lastCombo = CardCombo();
+			rollout.lastplayer = -1;
+		}
 	}
 
 	rollout.step = 0;
@@ -3378,10 +3250,11 @@ double evaluateRNonTerminal(GameState &state, RState &rollout)
     //我剩得越少越好
     score += (20 - myCardsLeft) * 0.35;
     score += (10 - myHandsLeft) * 0.9;
+
     if(myHandsLeft == 1)
-        score += 5.0;
+        score += 4.0;
     if(myCardsLeft <= 2)
-        score += 3.0;
+        score += 2.0;
 
     //看敌方
     for(int i = 0; i < PLAYER_COUNT; i++)
@@ -3392,17 +3265,16 @@ double evaluateRNonTerminal(GameState &state, RState &rollout)
         int cardsLeft = rollout.hands[i].size();
         int handsLeft = getMinHandCount(rollout.hands[i]);
 
-        //对手越接近出完，对我越不利。
+        //对手越接近出完，对我越不利
         if(!isSameSidePlayer(state, i))
         {
             score -= (20 - cardsLeft) * 0.30;
             score -= (10 - handsLeft) * 0.80;
 
-            // 对手只剩一手，这是强危险信号
             if(handsLeft == 1)
-                score -= 8.0;
+                score -= 6.0;
             if(cardsLeft <= 2)
-                score -= 5.0;
+                score -= 4.0;
         }
         // 队友接近出完，对我方有利，但弱于自己出完
         else
@@ -3411,21 +3283,18 @@ double evaluateRNonTerminal(GameState &state, RState &rollout)
             score += (10 - handsLeft) * 0.55;
 
             if(handsLeft == 1)
-                score += 5.0;
+                score += 4.0;
             if(cardsLeft <= 2)
-                score += 2.0;
+                score += 1.5;
         }
     }
 
-    // 在残局里，当前是谁掌握牌权也很重要。
-    // 我方控着牌权，说明更容易继续把“还剩一手”的计划走完；
-    // 敌方控着牌权，则要提前把这种风险反映到非终局估值里。
     if(rollout.lastplayer >= 0)
     {
         if(arePartners(state, rollout.lastplayer, state.myPosition))
-            score += 1.2;
+            score += 1.0;
         else
-            score -= 1.2;
+            score -= 1.0;
     }
 
     return score;
@@ -3456,285 +3325,29 @@ CardCombo selectRPlay(GameState &state, RState &rollout, int player)
     bool followingOpponent = !freeTurn && rollout.lastplayer >= 0 && !followingTeammate;
     int nextPlayer = (player + 1) % PLAYER_COUNT;
     int beforeHands = getMinHandCount(hand);
+    bool isLandlordPlayer = (player == state.landlordPosition);
 
-    int allMinCards = static_cast<int>(hand.size());
-    int allMinHands = beforeHands;
     int enemyMinCards = 100;
     int enemyMinHands = 100;
     for(int other = 0; other < PLAYER_COUNT; ++other)
     {
+        if(other == player)
+            continue;
+        if(arePartners(state, player, other))
+            continue;
+
         int cardsLeft = static_cast<int>(rollout.hands[other].size());
         int handsLeft = getMinHandCount(rollout.hands[other]);
-        if(cardsLeft < allMinCards)
-            allMinCards = cardsLeft;
-        if(handsLeft < allMinHands)
-            allMinHands = handsLeft;
-
-        if(other != player && !arePartners(state, player, other))
-        {
-            if(cardsLeft < enemyMinCards)
-                enemyMinCards = cardsLeft;
-            if(handsLeft < enemyMinHands)
-                enemyMinHands = handsLeft;
-        }
+        if(cardsLeft < enemyMinCards)
+            enemyMinCards = cardsLeft;
+        if(handsLeft < enemyMinHands)
+            enemyMinHands = handsLeft;
     }
 
     bool enemyDanger = enemyMinCards <= 3 || enemyMinHands <= 1;
     bool enemyVeryDanger = enemyMinCards <= 2 || enemyMinHands <= 1;
 
-    // 进入残局后，单步启发式经常会犯“先出小牌，下一手再收”的错误，
-    // 但真实对局里，对手可能立刻抢回牌权直接结束。
-    // 这里保留原有 rollout 框架，只在残局节点额外做一小段精确搜索。
-    bool useEndgameSearch = static_cast<int>(hand.size()) <= 5 ||
-                            beforeHands <= 2 ||
-                            allMinCards <= 3 ||
-                            allMinHands <= 1;
-    if(useEndgameSearch)
-    {
-        struct SearchCandidate
-        {
-            CardCombo play;
-            RState next;
-            double preScore = 0;
-            bool ended = false;
-        };
-
-        auto scoreTailState = [&](RState &node) -> double
-        {
-            double score = evaluateRNonTerminal(state, node);
-
-            int myLeft = static_cast<int>(node.hands[state.myPosition].size());
-            if(myLeft <= 2)
-                score += (3 - myLeft) * 2.0;
-
-            for(int other = 0; other < PLAYER_COUNT; ++other)
-            {
-                if(other == state.myPosition)
-                    continue;
-
-                int left = static_cast<int>(node.hands[other].size());
-                if(arePartners(state, other, state.myPosition))
-                {
-                    if(left <= 2)
-                        score += (3 - left) * 1.5;
-                }
-                else
-                {
-                    if(left <= 2)
-                        score -= (3 - left) * 2.2;
-                }
-            }
-
-            return score;
-        };
-
-        auto buildSearchCandidates = [&](RState &node, int actor) -> vector<SearchCandidate>
-        {
-            vector<CardCombo> plays = enumAllValidPlays(node.hands[actor], node.lastCombo);
-            vector<SearchCandidate> result;
-            bool actorSameSide = arePartners(state, actor, state.myPosition);
-            bool nodeFreeTurn = node.lastCombo.comboType == CardComboType::PASS;
-            int actorBeforeHands = getMinHandCount(node.hands[actor]);
-            int actorNext = (actor + 1) % PLAYER_COUNT;
-
-            for(CardCombo &play : plays)
-            {
-                if(nodeFreeTurn && play.comboType == CardComboType::PASS)
-                    continue;
-                if(play.comboType == CardComboType::INVALID)
-                    continue;
-
-                SearchCandidate candidate;
-                candidate.play = play;
-                candidate.next = node;
-                candidate.ended = applyRPlay(state, candidate.next, actor, candidate.play);
-
-                if(candidate.ended)
-                {
-                    int winner = getRWinner(candidate.next);
-                    candidate.preScore = evaluateRTerminal(state, candidate.next, winner);
-                }
-                else
-                {
-                    candidate.preScore = scoreTailState(candidate.next);
-
-                    if(play.comboType == CardComboType::PASS)
-                    {
-                        if(actorSameSide)
-                            candidate.preScore -= 1.5;
-                        else
-                            candidate.preScore += 1.0;
-
-                        if(node.lastplayer >= 0)
-                        {
-                            if(arePartners(state, node.lastplayer, actor))
-                            {
-                                if(actorSameSide)
-                                    candidate.preScore += 1.5;
-                                else
-                                    candidate.preScore -= 1.5;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        vector<Card> handAfter = candidate.next.hands[actor];
-                        int afterHands = handAfter.empty() ? 0 : getMinHandCount(handAfter);
-
-                        if(actorSameSide)
-                            candidate.preScore += (actorBeforeHands - afterHands) * 2.5;
-                        else
-                            candidate.preScore -= (actorBeforeHands - afterHands) * 2.5;
-
-                        if(afterHands == 1)
-                        {
-                            if(actorSameSide)
-                                candidate.preScore += 4.0;
-                            else
-                                candidate.preScore -= 4.0;
-
-                            if(actor == state.myPosition)
-                                candidate.preScore += evaluateOneTurnLeftQuality(state, handAfter);
-                        }
-
-                        if(isHardControlPlay(play))
-                        {
-                            if(actorSameSide)
-                                candidate.preScore -= 1.5;
-                            else
-                                candidate.preScore += 1.5;
-                        }
-
-                        if(!arePartners(state, actor, actorNext))
-                        {
-                            bool nextCanBeat = canBeatComboFast(candidate.next.hands[actorNext], play);
-                            if(!nextCanBeat)
-                            {
-                                if(actorSameSide)
-                                    candidate.preScore += 3.5;
-                                else
-                                    candidate.preScore -= 3.5;
-                            }
-                            else if(afterHands <= 1)
-                            {
-                                if(actorSameSide)
-                                    candidate.preScore -= 3.5;
-                                else
-                                    candidate.preScore += 3.5;
-                            }
-                        }
-                    }
-                }
-
-                result.push_back(candidate);
-            }
-
-            std::sort(result.begin(), result.end(), [&](SearchCandidate &a, SearchCandidate &b)
-            {
-                if(a.preScore != b.preScore)
-                    return actorSameSide ? a.preScore > b.preScore : a.preScore < b.preScore;
-                if(a.play.comboType != b.play.comboType)
-                    return a.play.comboType != CardComboType::PASS;
-                if(a.play.cards.size() != b.play.cards.size())
-                    return actorSameSide ? a.play.cards.size() > b.play.cards.size() : a.play.cards.size() < b.play.cards.size();
-                if(a.play.comboLevel != b.play.comboLevel)
-                    return actorSameSide ? a.play.comboLevel > b.play.comboLevel : a.play.comboLevel < b.play.comboLevel;
-                return a.play.cards < b.play.cards;
-            });
-
-            int limit = 6;
-            if(static_cast<int>(node.hands[actor].size()) >= 7)
-                limit = 4;
-            else if(static_cast<int>(node.hands[actor].size()) >= 5)
-                limit = 5;
-            if(static_cast<int>(result.size()) > limit)
-                result.resize(limit);
-
-            return result;
-        };
-
-        int searchDepth = 3;
-        if(static_cast<int>(hand.size()) <= 4 || allMinCards <= 2 || allMinHands <= 1)
-            searchDepth = 4;
-        if(allMinCards <= 1)
-            searchDepth = 5;
-
-        auto searchTail = [&](auto &&self, RState &node, int depth) -> double
-        {
-            int winner = getRWinner(node);
-            if(winner >= 0)
-                return evaluateRTerminal(state, node, winner);
-
-            int actor = node.currentPlayer;
-            int actorHands = getMinHandCount(node.hands[actor]);
-            int nodeMinCards = static_cast<int>(node.hands[actor].size());
-            int nodeMinHands = actorHands;
-            for(int i = 0; i < PLAYER_COUNT; ++i)
-            {
-                int cardsLeft = static_cast<int>(node.hands[i].size());
-                int handsLeft = getMinHandCount(node.hands[i]);
-                if(cardsLeft < nodeMinCards)
-                    nodeMinCards = cardsLeft;
-                if(handsLeft < nodeMinHands)
-                    nodeMinHands = handsLeft;
-            }
-
-            if(depth <= 0 ||
-               (static_cast<int>(node.hands[actor].size()) > 5 &&
-                actorHands > 2 &&
-                nodeMinCards > 2 &&
-                nodeMinHands > 1))
-            {
-                return scoreTailState(node);
-            }
-
-            vector<SearchCandidate> candidates = buildSearchCandidates(node, actor);
-            if(candidates.empty())
-                return scoreTailState(node);
-
-            bool actorSameSide = arePartners(state, actor, state.myPosition);
-            double best = actorSameSide ? -1e18 : 1e18;
-
-            for(SearchCandidate &candidate : candidates)
-            {
-                double childScore = candidate.ended ? candidate.preScore : self(self, candidate.next, depth - 1);
-                if(actorSameSide)
-                {
-                    if(childScore > best)
-                        best = childScore;
-                }
-                else
-                {
-                    if(childScore < best)
-                        best = childScore;
-                }
-            }
-
-            return best;
-        };
-
-        vector<SearchCandidate> rootCandidates = buildSearchCandidates(rollout, player);
-        CardCombo bestPlay;
-        double bestSearchScore = -1e18;
-        double bestPreScore = -1e18;
-
-        for(SearchCandidate &candidate : rootCandidates)
-        {
-            double searchScore = candidate.ended ? candidate.preScore : searchTail(searchTail, candidate.next, searchDepth - 1);
-            if(searchScore > bestSearchScore ||
-               (searchScore == bestSearchScore && candidate.preScore > bestPreScore))
-            {
-                bestSearchScore = searchScore;
-                bestPreScore = candidate.preScore;
-                bestPlay = candidate.play;
-            }
-        }
-
-        if(bestSearchScore > -1e17)
-            return bestPlay;
-    }
-
-    // 农民跟农民时，默认继续让队友处理；只有在对手危险、或对手明显能接住队友这手牌时才考虑接管。
+    // 农民跟农民时，默认继续让队友处理；只有在对手危险、或对手明显能接住队友这手牌时才考虑接管
     ResponseThreatInfo teammateThreat;
     bool teammateThreatReady = false;
     if(followingTeammate && !arePartners(state, player, nextPlayer))
@@ -3762,9 +3375,9 @@ CardCombo selectRPlay(GameState &state, RState &rollout, int player)
 
         double score = 0;
 
-        // PASS 只在跟牌局面出现。
-        // 跟对手时，普通局面适合保留资源；残局危险时，PASS 要明显扣分。
-        // 跟队友时，PASS 默认是好事，除非对手已经能接住并接近跑完。
+        // PASS 只在跟牌局面出现
+        // 跟对手时，普通局面适合保留资源；残局危险时，PASS 要明显扣分
+        // 跟队友时，PASS 默认是好事，除非对手已经能接住并接近跑完
         if(play.comboType == CardComboType::PASS)
         {
             if(followingTeammate)
@@ -3796,14 +3409,14 @@ CardCombo selectRPlay(GameState &state, RState &rollout, int player)
             vector<Card> handAfter = removeCardsFromHand(hand, play.cards);
             int afterHands = handAfter.empty() ? 0 : getMinHandCount(handAfter);
 
-            // rollout 里最核心的目标仍然是尽快减少手数、接近出完。
+            // rollout 里最核心的目标仍然是尽快减少手数、接近出完
             score += (beforeHands - afterHands) * 8.0;
             score += play.cards.size() * 0.5;
 
             if(afterHands == 1)
                 score += 10.0;
 
-            // 自由出牌优先整理结构，轻度保护高牌。
+            // 自由出牌优先整理结构，轻度保护高牌
             if(freeTurn)
             {
                 if(play.comboType == CardComboType::STRAIGHT)
@@ -3820,11 +3433,11 @@ CardCombo selectRPlay(GameState &state, RState &rollout, int player)
                 else if(play.comboType == CardComboType::SINGLE)
                     score -= 0.5;
 
-                score -= play.comboLevel * 0.12;
+                score -= play.comboLevel * (isLandlordPlayer ? 0.05 : 0.12);
             }
             else if(followingTeammate)
             {
-                // 接管队友牌权本身有成本，只有危险时才应该这么做。
+                // 接管队友牌权本身有成本，只有危险时才应该这么做
                 score -= 5.0;
                 score -= play.comboLevel * (enemyDanger ? 0.28 : 0.55);
 
@@ -3838,40 +3451,54 @@ CardCombo selectRPlay(GameState &state, RState &rollout, int player)
             }
             else
             {
-                // 跟对手时，普通局面优先小压；残局危险时提高压牌意愿。
-                score -= play.comboLevel * (enemyDanger ? 0.15 : 0.35);
+                // 跟对手时，普通局面优先小压；残局危险时提高压牌意愿
+                double lvlRate = enemyDanger ? 0.15 : 0.35;
+                if(isLandlordPlayer)
+                    lvlRate *= 0.5;
+                score -= play.comboLevel * lvlRate;
                 if(enemyDanger)
                     score += 6.0;
                 if(enemyVeryDanger)
                     score += 6.0;
             }
 
-            // 2、王、炸弹这类硬控资源仍然要保护，只有危险局面才放松惩罚。
+            // 2、王、炸弹这类硬控资源仍然要保护，只有危险局面才放松惩罚
             if(isHardControlPlay(play))
             {
+                double hardPenalty;
                 if(followingOpponent && enemyDanger)
-                    score -= 2.0;
+                    hardPenalty = 2.0;
                 else if(followingTeammate && teammateThreatReady && teammateThreat.canWinNow)
-                    score -= 4.0;
+                    hardPenalty = 4.0;
                 else if(freeTurn)
-                    score -= 10.0;
+                    hardPenalty = 10.0;
                 else if(followingTeammate)
-                    score -= 12.0;
+                    hardPenalty = 12.0;
                 else
-                    score -= 8.0;
+                    hardPenalty = 8.0;
+                // 地主不需要保留控牌资源来"拦截"，惩罚降低
+                if(isLandlordPlayer)
+                    hardPenalty *= 0.5;
+                score -= hardPenalty;
             }
 
             if(play.comboLevel >= 12)
             {
+                double lvlPenalty;
                 if(freeTurn)
-                    score -= 1.5;
+                    lvlPenalty = 1.5;
                 else if(followingTeammate)
-                    score -= 2.5;
+                    lvlPenalty = 2.5;
                 else if(!enemyDanger)
-                    score -= 2.0;
+                    lvlPenalty = 2.0;
+                else
+                    lvlPenalty = 0.0;
+                if(isLandlordPlayer)
+                    lvlPenalty *= 0.4;
+                score -= lvlPenalty;
             }
 
-            // 如果下一位是对手，这手牌能否保住牌权很关键。
+            // 如果下一位是对手，这手牌能否保住牌权很关键
             if(!arePartners(state, player, nextPlayer))
             {
                 bool nextCanBeat = canBeatComboFast(rollout.hands[nextPlayer], play);
@@ -3926,16 +3553,16 @@ bool applyRPlay(GameState &state, RState &rollout, int player, CardCombo &play)
     return getRWinner(rollout) >= 0;
 }
 
-// 在一个随机补全样本中，模拟我打出 firstPlay 之后的后续对局。
-// 这是轻量 PIMC 的核心：它不是标准 MCTS，而是随机补全后的启发式 rollout。
+// 在一个随机补全样本中，模拟我打出 firstPlay 之后的后续对局
+// 这是轻量 PIMC 的核心：它不是标准 MCTS，而是随机补全后的启发式 rollout
 RResult simulateDealAfterPlay(GameState &state, InferredDeal &deal, CardCombo &firstPlay, clock_t deadline)
 {
     RResult result;
 
-    // 构造“我已经打出 firstPlay 之后”的模拟局面。
+    // 构造“我已经打出 firstPlay 之后”的模拟局面
     RState rollout = buildInitRState(state, deal, firstPlay);
 
-    // 如果 firstPlay 已经让我出完，直接终局。
+    // 如果 firstPlay 已经让我出完，直接终局
     int winner = getRWinner(rollout);
     if(winner >= 0)
     {
@@ -3958,16 +3585,16 @@ RResult simulateDealAfterPlay(GameState &state, InferredDeal &deal, CardCombo &f
 			result.score = evaluateRNonTerminal(state, rollout);
 			return result;
 		}
-        // 当前行动玩家。
+        // 当前行动玩家
         int player = rollout.currentPlayer;
 
-        // 选择这个玩家在模拟中的出牌。
+        // 选择这个玩家在模拟中的出牌
         CardCombo play = selectRPlay(state, rollout, player);
 
-        // 执行这手牌。
+        // 执行这手牌
         bool ended = applyRPlay(state, rollout, player, play);
 
-        // 如果有人出完，返回终局分。
+        // 如果有人出完，返回终局分
         if(ended)
         {
             winner = getRWinner(rollout);
@@ -3978,7 +3605,7 @@ RResult simulateDealAfterPlay(GameState &state, InferredDeal &deal, CardCombo &f
         }
     }
 
-    // 没有模拟到终局，用局面估值收尾。
+    // 没有模拟到终局，用局面估值收尾
     result.finished = false;
     result.winner = -1;
     result.score = evaluateRNonTerminal(state, rollout);
@@ -4004,58 +3631,17 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
 	// 判断当前是否是在压危险对手
 	bool followingDangerousOpponent = followingOpponent && state.cardRemaining[state.lastValidPlayer] <= 2;
 
-	// 判断当前是不是农民在跟地主的牌。
+	// 判断当前是不是农民在跟地主的牌
 	bool followingLandlord = followingOpponent && !state.isLandlord() && state.lastValidPlayer == state.landlordPosition;
 
-	// 判断我是不是地主下家。
-	// 地主下家是地主后手的第一个农民。
+	// 判断我是不是地主下家
+	// 地主下家是地主后手的第一个农民
 	bool myIsLandlordNext = !state.isLandlord() && state.myPosition == (state.landlordPosition + 1) % PLAYER_COUNT;
 
-	// 判断我是不是地主上家。
-	// 地主上家是地主出牌前的最后一个农民，拦地主责任更重。
+	// 判断我是不是地主上家
 	bool myIsLandlordPrev = !state.isLandlord() && state.myPosition == (state.landlordPosition + 2) % PLAYER_COUNT;
 
-	// 判断当前是否是“地主下家队友刚刚拦了地主，而我作为地主上家要决定是否接管牌权”。
-	// 这是农民协作里最容易误判的一类：队友虽然先拦住了地主，但未必真的能继续控住。
-	bool teammateStoppedLandlordFromFront = followingTeammate && !state.isLandlord() &&
-											myIsLandlordPrev &&
-											state.lastValidPlayer == (state.landlordPosition + 1) % PLAYER_COUNT;
-
-	// 地主是否已经进入必须严防的收官区。
-	// 弱地主局可以把警戒线略微提前一点。
-	bool landlordMustSealNow = !state.isLandlord() &&
-							   (state.cardRemaining[state.landlordPosition] <= 3 ||
-							   (state.finalBid <= 1 && state.cardRemaining[state.landlordPosition] <= 4));
-
-	// 如果队友自己还没到“下一手就能走”的程度，
-	// 那么他这次拦地主更可能只是“拖一拍”，不一定真能续住。
-	bool teammateCannotFinishSoon = followingTeammate &&
-									state.lastValidPlayer >= 0 &&
-									state.cardRemaining[state.lastValidPlayer] > 1;
-
-	// 判断队友这手牌是不是“看起来不够锁死地主”的临时拦截。
-	// 单 A、对子 A、普通三条这类都可能被地主更高牌重新抢回去。
-	bool teammateLeadLikelyTemporary = false;
-	if(followingTeammate)
-	{
-		if(state.lastValidCombo.comboType == CardComboType::SINGLE)
-			teammateLeadLikelyTemporary = state.lastValidCombo.comboLevel < level_JOKER;
-		else if(state.lastValidCombo.comboType == CardComboType::PAIR)
-			teammateLeadLikelyTemporary = state.lastValidCombo.comboLevel < 12;
-		else if(state.lastValidCombo.comboType == CardComboType::TRIPLET ||
-				state.lastValidCombo.comboType == CardComboType::TRIPLET1 ||
-				state.lastValidCombo.comboType == CardComboType::TRIPLET2)
-			teammateLeadLikelyTemporary = state.lastValidCombo.comboLevel < 11;
-	}
-
-	// 只有在“地主很危险 + 队友这手大概率只是临时拦截 + 队友还不能马上走完”时，
-	// 我才应该认真考虑从队友手里接过牌权继续封口。
-	bool shouldTakeOverFromTeammate = teammateStoppedLandlordFromFront &&
-									  landlordMustSealNow &&
-									  teammateCannotFinishSoon &&
-									  teammateLeadLikelyTemporary;
-
-	// 判断当前是不是“队友出了较大的牌，我最好别抢”。
+	// 判断当前是不是“队友出了较大的牌，我最好别抢”
 	bool teammateHighCardShouldHold = followingTeammate &&  state.lastValidCombo.comboLevel >= 9 &&
                                   (
                                       // 我是地主上家，队友是地主下家；队友先出了大牌，我不要乱压。
@@ -4063,8 +3649,7 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
 
                                       // 我是地主下家，队友是地主上家；地主已经没压队友，我也不要乱压。
                                       (myIsLandlordNext && state.lastValidPlayer == (state.landlordPosition + 2) % PLAYER_COUNT)
-                                  ) &&
-								  !shouldTakeOverFromTeammate;
+                                  );
 
 	// 记录下一个出牌的人
 	int nextPlayer = (state.myPosition + 1) % PLAYER_COUNT;
@@ -4074,32 +3659,28 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
 
 	// 判断是否适合送队友报单
 	// 只有自由出牌时才考虑，因为跟牌阶段不能随便选择牌型
-	// 队友只剩 1 张时，出单张最可能让队友直接走完
 	bool shouldFeedTeammateSingle = freeTurn && nextPlayerIsTeammate && state.cardRemaining[nextPlayer] == 1;
 
 	// 判断地主是否只剩 1 张
 	bool landlordOnlyOneLeft = !state.isLandlord() &&  state.cardRemaining[state.landlordPosition] == 1;
 
-	// 判断下一个出牌的人是不是地主。
+	// 判断下一个出牌的人是不是地主
 	bool nextPlayerIsLandlord = nextPlayer == state.landlordPosition;
-
-	// 判断自由出牌时是否不能出单张。
-	// 如果地主只剩 1 张，或者下家就是地主，出单张风险很高
-	bool shouldAvoidSingleForLandlord = freeTurn && !state.isLandlord() && landlordOnlyOneLeft && play.comboType == CardComboType::SINGLE;
 
 	// 判断地主是否只剩 2 张
 	bool landlordOnlyTwoLeft = !state.isLandlord() && state.cardRemaining[state.landlordPosition] == 2;
 
-	// 判断自由出牌时是否不能随便出对子。
+	// 判断自由出牌时是否不能出单张
+	bool shouldAvoidSingleForLandlord = freeTurn && !state.isLandlord() && landlordOnlyOneLeft && !shouldFeedTeammateSingle && play.comboType == CardComboType::SINGLE;
+
+	// 判断自由出牌时是否不能随便出对子
 	bool shouldAvoidPairForLandlord = freeTurn && !state.isLandlord() && landlordOnlyTwoLeft && play.comboType == CardComboType::PAIR;
 
-	// 判断当前是否是农民自由出牌，但地主已经进入 3~5 张警戒区。
-	// 这种局面下，自由出牌不能只考虑整理自己的牌，还要考虑不能轻易把牌权交给地主。
-	bool freeTurnAgainstWarningLandlord = freeTurn && !state.isLandlord() && ((state.cardRemaining[state.landlordPosition] <= 5 && state.cardRemaining[state.landlordPosition] > 2) 
-																			|| (state.finalBid <= 1 && state.cardRemaining[state.landlordPosition] <= 8));
+	// 判断当前是否是农民自由出牌，但地主已经进入 3~5 张警戒区
+	bool freeTurnAgainstWarningLandlord = freeTurn && !state.isLandlord() && state.cardRemaining[state.landlordPosition] <= 5 && state.cardRemaining[state.landlordPosition] > 2;
 
-	// 地主剩 5 张以内时，就进入警戒状态。
-	// 注意这不是最高危险，最高危险仍然是 <= 2。
+
+	// 地主剩 5 张以内时，就进入警戒状态
 	bool followingWarningLandlord = followingLandlord && state.cardRemaining[state.landlordPosition] <= 5;
 
 	// 判断当前是否应该主动争夺牌权
@@ -4108,61 +3689,20 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
 	//复用已有的基础收益评分,只看出牌后，我的手牌有没有变好
 	double score = evaluatePlayGain(state.myCards, play, state);
 
-	// 额外计算控牌资源损失。
-	// 这一步用来避免把 2、王、炸弹，尤其是 2222，轻易当普通牌型消耗掉。
+	// 额外计算控牌资源损失
+	// 这一步用来避免把 2、王、炸弹，尤其是 2222，轻易当普通牌型消耗掉
 	score += evaluateControlLoss(state, play);
-
-	// 很多后续评分都会用到“出完这手以后我的手牌会变成什么样”。
-	// 提前算出来，后面就不必重复 remove / 统计最少手数。
-	vector<Card> handAfter;
-	int beforeHands = -1;
-	int afterHands = -1;
-	if(play.comboType != CardComboType::PASS)
-	{
-		handAfter = removeCardsFromHand(state.myCards, play.cards);
-		beforeHands = getMinHandCount(state.myCards);
-		afterHands = handAfter.empty() ? 0 : getMinHandCount(handAfter);
-	}
-
-	// 地主自由出牌且只剩两张单牌时，先出更难被压住的那张通常更重要。
-	// 典型反例就是 [8,2] 先出 8，表面上“留下 2 很强”，实际上会把最后一拍直接送掉。
-	if(state.isLandlord() &&
-	   freeTurn &&
-	   play.comboType == CardComboType::SINGLE &&
-	   state.myCards.size() == 2 &&
-	   handAfter.size() == 1)
-	{
-		CardCombo remainCombo(handAfter.begin(), handAfter.end());
-		if(remainCombo.comboType == CardComboType::SINGLE)
-		{
-			// 当前先打出的单牌越大，越容易直接控住这一轮并在下一轮收尾。
-			score += (play.comboLevel - remainCombo.comboLevel) * 1.8;
-
-			// 对 2 和大小王额外加一点权重，强化“先用硬单牌锁住场面”。
-			if(play.comboLevel == 12)
-				score += 4.0;
-			else if(play.comboLevel == level_joker)
-				score += 5.0;
-			else if(play.comboLevel == level_JOKER)
-				score += 6.0;
-		}
-	}
 
 	//压队友的情况
 	if(followingTeammate && play.comboType != CardComboType::PASS)
 	{
 			score -= 0.3;
 
-			// 地主已经很危险，而队友这手更像“临时拦一下”时，
-			// 地主上家应该更愿意把牌权接过来，避免再次把最后一手判断权交回地主。
-			if(shouldTakeOverFromTeammate)
-				score += 6.2;
-
 			 // 如果队友已经出了一手较大的牌，并且这手牌有机会卡住地主，
     		// 我们再压队友就等于把队友的防守效果拆掉，要额外扣分
     		if(teammateHighCardShouldHold)
         		score -= 3;
-			
+
 			//不应该用炸弹
 			if(isHardControlPlay(play))
 			{
@@ -4187,10 +3727,6 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
 			//危险局面下
 			if(dangerous)
 				teammateHighCardRate = 0.5;
-			// 如果这次接管本来就是为了继续封地主，
-			// 那么用高牌压队友的代价要再明显降低。
-			if(shouldTakeOverFromTeammate)
-				teammateHighCardRate = 0.2;
 			for(Card card:play.cards)
 			{
 				Level level = card2level(card);
@@ -4205,49 +3741,30 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
 			// 如果我是地主下家，而队友是地主上家
     		if(myIsLandlordNext && state.lastValidPlayer == (state.landlordPosition + 2) % PLAYER_COUNT)
     		{
-				int landlordRemain = state.cardRemaining[state.landlordPosition];
+        		int llRemainHere = state.cardRemaining[state.landlordPosition];
+        		double beatTeamPenalty = (llRemainHere <= 2) ? 2.5 : 5.0;
+        		score -= beatTeamPenalty;
 
-        		// 地主只剩 1~2 张时，不能再机械相信“队友这拍一定能继续封死地主”，
-				// 接管牌权的代价要明显下降。
-				if(landlordRemain <= 2)
-				{
-					score -= 1.2;
-					if(state.lastValidCombo.comboLevel >= 9)
-						score -= 0.8;
-				}
-				else if(landlordRemain <= 4)
-				{
-					score -= 2.8;
-					if(state.lastValidCombo.comboLevel >= 9)
-						score -= 1.5;
-				}
-				else
-				{
-        			// 直接压队友会破坏队友对地主的拦截。
-        			score -= 5.0;
-
-        			// 如果队友出的牌本来就比较大，说明它更可能卡住地主，
-        			if(state.lastValidCombo.comboLevel >= 9)
-            			score -= 3.0;
-				}
+        		if(state.lastValidCombo.comboLevel >= 9)
+            		score -= 3.0;
     		}
 
 	}
 
-	// 如果当前要压的是危险对手出的牌，PASS 风险极高。
+	// 如果当前要压的是危险对手出的牌，PASS 风险极高
 		if (followingDangerousOpponent)
 		{
-    		// 不压危险对手，可能直接让对方继续走完，重罚。
+    		// 不压危险对手，可能直接让对方继续走完，重罚
     		if (play.comboType == CardComboType::PASS)
     		{
         		score -= 25.0;
     		}
     		else
     		{
-        		// 愿意出牌压制危险对手，给明显奖励。
+        		// 愿意出牌压制危险对手，给明显奖励
         		score += 8.0;
 
-        		// 危险对手快跑时，炸弹和火箭可以接受。
+        		// 危险对手快跑时，炸弹和火箭可以接受
         		if (isHardControlPlay(play))
             		score += 6.0;
     		}
@@ -4259,42 +3776,15 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
 			//如果压队友，配合给奖励
 			if(followingTeammate)
 			{
-				// 地主已经进入收官区，而队友这手又不像稳定封死地主时，
-				// 一味 PASS 往往会把最后的主动权判断交回去。
-				if(shouldTakeOverFromTeammate)
-				{
-					score -= 7.0;
-
-					if(state.lastValidCombo.comboType == CardComboType::SINGLE && state.lastValidCombo.comboLevel <= 11)
-						score -= 3.0;
-					else if(state.lastValidCombo.comboType == CardComboType::PAIR && state.lastValidCombo.comboLevel <= 12)
-						score -= 2.0;
-				}
 		
-    			else if(myIsLandlordNext && state.lastValidPlayer == (state.landlordPosition + 2) % PLAYER_COUNT)
+    			// 如果我是地主下家，而队友是地主上家，
+    			if(myIsLandlordNext && state.lastValidPlayer == (state.landlordPosition + 2) % PLAYER_COUNT)
    			 	{
-					int landlordRemain = state.cardRemaining[state.landlordPosition];
-
-					// 地主只剩 1~2 张时，地主下家不能一味把判断权继续交给地主上家的队友。
-					if(landlordRemain <= 2)
-					{
-						score -= 4.0;
-						if(state.lastValidCombo.comboLevel >= 9)
-							score -= 2.0;
-					}
-					else if(landlordRemain <= 4)
-					{
-						score += 0.8;
-						if(state.lastValidCombo.comboLevel >= 9)
-							score += 1.0;
-					}
-					else
-					{
-        				score += 3.0;
-        				// 队友牌本身越大，越可能卡住地主，PASS 更合理。
-        				if(state.lastValidCombo.comboLevel >= 9)
-            				score += 3.0;
-					}
+   			 		int llRemainPass = state.cardRemaining[state.landlordPosition];
+   			 		double passTeamBonus = (llRemainPass <= 2) ? 0.5 : (llRemainPass <= 4) ? 1.8 : 3.0;
+        			score += passTeamBonus;
+        			if(state.lastValidCombo.comboLevel >= 9)
+            			score += 3.0;
     			}
     			else if(state.cardRemaining[state.lastValidPlayer] <= 2)
     			{
@@ -4331,11 +3821,8 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
 						pass += myIsLandlordPrev ? 5.2 : 4.1;
 					else if(llRemain == 3)
 						pass += myIsLandlordPrev ? 6.6 : 5.2;
-					
-					if(state.finalBid <=1 && llRemain<=8)
-						pass += myIsLandlordPrev ? 1.4 : 0.9;
 				}
-				// 需要争牌权时，PASS 仍然要扣，但幅度更平滑。
+				// 需要争牌权时，PASS 仍然要扣，但幅度更平滑
 				if(fightForControl)
 				{
 					if(followingLandlord)
@@ -4360,16 +3847,16 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
 		{
 			if(followingDangerousOpponent)
     		{
-        		// 压危险对手时，硬控牌可以接受。
+        		// 压危险对手时，硬控牌可以接受
         		score += 2.0;
     		}
     		else if(!followingTeammate)
     		{
-        		// 不是压队友、也不是压危险对手时，正常扣资源成本。
+        		// 不是压队友、也不是压危险对手时，正常扣资源成本
         		score -= 6.0;
 
-				// 如果当前要压的是炸弹，说明我也必须交更高级硬控。
-        		// 普通局面下这类资源非常贵，除非危险，否则更倾向 PASS 保留。
+				// 如果当前要压的是炸弹，说明我也必须交更高级硬控
+        		// 普通局面下这类资源非常贵，除非危险，否则更倾向 PASS 保留
         		if(state.lastValidCombo.comboType == CardComboType::BOMB)
             		score -= 4.0;
     		}
@@ -4381,14 +3868,8 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
 			//强牌权时，惩罚低
 			double rate = fightForControl ? 0.4 : 1.0;
 
-			// 地主如果这一手打完后只剩最后一手，
-			// 尤其是剩下一张高单/控牌时，不应该再被“保护 2、王”的通用规则强压。
-			// 否则会出现残局本来该直接收尾，却因为舍不得出 2/王而错失胜机。
-			if(state.isLandlord() && afterHands == 1)
-				rate *= 0.15;
-
-			// 农民压地主但地主还没进入收官危险时，不要轻易用 2 或王抢普通牌权。
-			// 复盘里典型错误是地主还剩很多张，我有 QQ 却直接打 22 压地主的 JJ。
+			// 农民压地主但地主还没进入收官危险时，不要轻易用 2 或王抢普通牌权
+			// 复盘里典型错误是地主还剩很多张，我有 QQ 却直接打 22 压地主的 JJ
 			if(!state.isLandlord() && state.lastValidPlayer == state.landlordPosition &&
 			   state.cardRemaining[state.landlordPosition] > 5)
 			{
@@ -4430,13 +3911,6 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
 			if(followingLandlord)
 			{
 				int landlordRemain = state.cardRemaining[state.landlordPosition];
-
-				if(state.finalBid<=1 && landlordRemain <= 8)
-				{
-					score += 1.6;
-					if(myIsLandlordPrev)
-						score += 0.8;
-				}
 
 				// 地主进入收官区后，成功拦住本身更有价值
 				if(landlordRemain <= 6 && !followingDangerousOpponent)
@@ -4486,97 +3960,7 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
 							score -= fightForControl ? 1.8 : 3.0;
 						else if(play.comboLevel >= 9)
 							score -= fightForControl ? 0.8 : 1.5;
-
-						if(state.finalBid<=1 && landlordRemain <= 8 && overLevel >= 2)
-							score -= 0.8 * (overLevel - 1);
 					}
-				}
-
-				// 农民压住地主之后，不能只看“这一手是否成功”，
-				// 还要看“压完之后我是不是还有继续主打的能力”。
-				// 这里不用重搜索，只做轻量估计：
-				// 1. 剩余最少手数是否下降；
-				// 2. 剩余手牌里是否还保留结构牌或中高牌；
-				// 3. 如果只是用高牌硬顶一下，但压后依然很散，就要扣分。
-				if(afterHands > 0)
-				{
-					double continueControlScore = 0.0;
-
-					// 压住地主的同时，如果我的最少手数也下降了，
-					// 说明这手更像是在“接管节奏”，而不是单纯拖一拍。
-					if(beforeHands > afterHands)
-						continueControlScore += 1.2 * (beforeHands - afterHands);
-
-					auto groupedAfter = groupCardsByLevel(handAfter);
-					bool hasFollowStructure = false;
-					int followPower = 0;
-
-					for(int level = 0; level < MAX_LEVEL; ++level)
-					{
-						int count = groupedAfter[level].size();
-
-						// 剩余牌里还有三条/炸弹，通常说明我后面还能继续组织一手像样的牌。
-						if(count >= 3)
-						{
-							hasFollowStructure = true;
-							if(level >= 8)
-								followPower += 2;
-						}
-						// 中高对子虽然不算完整结构，但也意味着后手不至于立刻散掉。
-						else if(count >= 2)
-						{
-							if(level >= 9)
-								followPower += 1;
-						}
-						// 中高单张也算一种轻量续控资源，
-						// 至少下一拍不容易马上被迫用小散牌送回牌权。
-						else if(count == 1 && level >= 10)
-						{
-							followPower += 1;
-						}
-					}
-
-					// 如果剩余牌还能自然连成一手 5 张顺子，
-					// 说明我下一个自由轮还有较好的主动整理空间。
-					for(int start = 0; start <= MAX_STRAIGHT_LEVEL - 4 && !hasFollowStructure; ++start)
-					{
-						bool straightReady = true;
-						for(int level = start; level < start + 5; ++level)
-						{
-							if(groupedAfter[level].empty())
-							{
-								straightReady = false;
-								break;
-							}
-						}
-						if(straightReady)
-							hasFollowStructure = true;
-					}
-
-					if(hasFollowStructure)
-						continueControlScore += 1.4;
-					if(followPower >= 2)
-						continueControlScore += 1.0;
-					else if(followPower == 1)
-						continueControlScore += 0.4;
-
-					// 如果我只是用中高牌把地主这手顶掉，
-					// 但压完后最少手数没降、后手也缺少结构，
-					// 这更像“延缓一拍”，不是“真正接管”，要扣分。
-					bool usedHighBeat = simpleFollow && play.comboLevel >= 9;
-					if(usedHighBeat && beforeHands == afterHands && !hasFollowStructure && followPower == 0)
-						continueControlScore -= 2.4;
-					else if(usedHighBeat && beforeHands <= afterHands + 1 && !hasFollowStructure)
-						continueControlScore -= 1.0;
-
-					// 地主已经进入中后段时，这类续控价值更大；
-					// 弱地主局可以稍微提前重视，但力度不要太大。
-					if(landlordRemain <= 6)
-						continueControlScore *= 1.15;
-					else if(state.finalBid <= 1 && landlordRemain <= 8)
-						continueControlScore *= 1.10;
-
-					score += continueControlScore;
 				}
 
 			}
@@ -4605,7 +3989,7 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
         		}
         		else
         		{
-            		// 不出单张会错过送队友的机会，轻微扣分。
+            		// 不出单张会错过送队友的机会，轻微扣分
             		score -= 4.0;
         		}
     		}
@@ -4613,12 +3997,30 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
 			// 如果地主只剩 1 张，我自由出牌时不能随便出单张
     		if(shouldAvoidSingleForLandlord)
     		{
-        		score -= 10.0;
+				// 地主报单时，低单张最危险；但 2/王这类高单张反而可能锁住这一轮
+				// 所以这里不能一刀切扣所有单张，否则残局会出现先出小牌被地主接走的问题
+				if(play.comboLevel >= 12)
+					score += 8.0;
+				else if(play.comboLevel >= 11)
+					score += 2.0;
+				else if(play.comboLevel >= 9)
+					score -= 4.0;
+				else
+        			score -= 10.0;
 
         		// 下家就是地主
-        		if(nextPlayerIsLandlord)
+        		if(nextPlayerIsLandlord && play.comboLevel < 12)
             		score -= 4.0;
     		}
+
+			// 地主只剩 1 张时，非单张通常更安全，地主单牌不能直接接
+			// 这会鼓励农民在有对子、顺子、三带等选择时先封住地主
+			if(landlordOnlyOneLeft && play.comboType != CardComboType::SINGLE)
+			{
+				score += 5.0 + play.cards.size() * 0.15;
+				if(nextPlayerIsLandlord)
+					score += 2.0;
+			}
 
 			// 如果地主只剩 2 张，我自由出牌时不要轻易出对子
     		if(shouldAvoidPairForLandlord)
@@ -4635,33 +4037,20 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
     		}
 
 			// 如果我是农民自由出牌，并且地主只剩 3~5 张，
-    		// 这时要优先打地主不容易接的牌，避免小牌把牌权交出去。
+    		// 这时要优先打地主不容易接的牌，避免小牌把牌权交出去
     		if(freeTurnAgainstWarningLandlord)
     		{
         		int landlordRemain = state.cardRemaining[state.landlordPosition];
-				double warn = 0;
-
-				if(landlordRemain <=5)
-					warn = 6 - landlordRemain;
-				else if(state.finalBid <= 1 && landlordRemain <= 8)
-					warn = 0.6 * (9 - landlordRemain);
-				// 出牌等级越高，地主越不容易接住，略微加分
-        		score += play.comboLevel * 0.08 * warn;
+        		double warningRate = 6.0 - landlordRemain;
+        		// 出牌等级越高，地主越不容易接住，略微加分
+        		score += play.comboLevel * 0.08 * warningRate;
         		// 小单张最容易把牌权送出去
         		if(play.comboType == CardComboType::SINGLE && play.comboLevel < 10)
-            		{
-						score -= 2.0 * warn;
-						if(state.finalBid <= 1 && play.comboLevel< 8)
-							score -= 0.8 * warn;
-					}
+            		score -= 2.0 * warningRate;
 
         		// 小对子
         		if(play.comboType == CardComboType::PAIR && play.comboLevel < 10)
-            		{
-						score -= 1.5 * warn;
-						if(state.finalBid<=1 && play.comboLevel < 8)
-							score -= 0.8 * warn;
-					}
+            		score -= 1.5 * warningRate;
 
         		// 如果下家就是地主，地主马上可以接牌
         		if(nextPlayerIsLandlord && play.comboLevel < 10)
@@ -4671,9 +4060,9 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
         		if(play.comboType == CardComboType::SINGLE || play.comboType == CardComboType::PAIR || play.comboType == CardComboType::TRIPLET)
         		{
             		if(play.comboLevel >= 10)
-                		score += 1.2 * warn;
+                		score += 1.2 * warningRate;
             		if(play.comboLevel >= 12)
-                		score += 1.5 * warn;
+                		score += 1.5 * warningRate;
         		}
 
         		// 顺子、连对、飞机这类一次走多张的牌，如果能明显减少我的手牌，也可以主动打出去抢节奏
@@ -4683,91 +4072,329 @@ double evaluatePlayHScore(GameState &state ,CardCombo &play)
            		play.comboType == CardComboType::PLANE1 ||
            		play.comboType == CardComboType::PLANE2)
        		 	{
-            		score += 1.0 * warn;
+            		score += 1.0 * warningRate;
 
             		// 一次出得越多越好
-            		score += play.cards.size() * 0.15 * warn;
-
-					if(state.finalBid<=1)
-						score += 0.8 * warn;
-				}
-
-				if(play.comboType == CardComboType::TRIPLET ||
-					   play.comboType == CardComboType::TRIPLET1 ||
-					   play.comboType == CardComboType::TRIPLET2)
-					{
-						if(play.comboType == CardComboType::TRIPLET)
-							score += 0.2 * warn;
-						score += 0.8 * warn;
-					}
-
-				// 地主只剩 1~2 张时，农民自由轮不能再一味整理小对子。
-				// 这时更重要的是优先打出地主不容易立刻顺掉的高单、高结构，
-				// 或者至少避免把节奏做成“我出对子，地主过，队友再给地主喂单张”。
-				if(landlordRemain <= 2)
-				{
-					if(play.comboType == CardComboType::PAIR)
-					{
-						score -= 3.5;
-						if(play.comboLevel <= 6)
-							score -= 1.5;
-					}
-					else if(play.comboType == CardComboType::SINGLE)
-					{
-						if(play.comboLevel >= 10)
-							score += 2.5;
-						else if(play.comboLevel <= 6)
-							score -= 2.0;
-					}
-					else if(play.comboType == CardComboType::STRAIGHT ||
-							play.comboType == CardComboType::STRAIGHT2 ||
-							play.comboType == CardComboType::TRIPLET1 ||
-							play.comboType == CardComboType::TRIPLET2 ||
-							play.comboType == CardComboType::PLANE1 ||
-							play.comboType == CardComboType::PLANE2)
-					{
-						score += 2.0;
-					}
-				}
+            		score += play.cards.size() * 0.15 * warningRate;
+      		  	}
 
     		}
 
 
-			// 自由出牌时，额外评估这手牌主动打出去是否能整理手牌结构。
-			// 例如长顺、连对、飞机应该加分；炸弹、火箭主动打出应该扣分。
+			// 自由出牌时，额外评估这手牌主动打出去是否能整理手牌结构
+			// 例如长顺、连对、飞机应该加分；炸弹、火箭主动打出应该扣分
 			score += evaluateFreeTurn(play);
 
 			// 如果当前是危险自由轮，例如地主或对手快出完了，
-			// 额外惩罚主动打掉 2、王、炸弹这类控牌的行为。
+			// 额外惩罚主动打掉 2、王、炸弹这类控牌的行为
 			score += evaluateDangerousFreeTurn(state, play);
 		}
 
 		// 只剩一手牌
 		if (play.comboType != CardComboType::PASS)
 		{
-			//直接出完，最高奖励
+    		vector<Card> handAfter = removeCardsFromHand(state.myCards, play.cards);
+
 			if(handAfter.empty())
 				return score + 100;
 
+			int afterHands = getMinHandCount(handAfter);
+
+			// 农民自由轮面对地主报单时，不能只看这一手出了多少张
+			// 如果地主就在下家，我打完后还剩多张低单，下一轮很容易被地主用最后一张接走
+			if(!state.isLandlord() &&
+			   freeTurn &&
+			   landlordOnlyOneLeft &&
+			   nextPlayerIsLandlord &&
+			   afterHands > 1)
+			{
+				vector<vector<Card>> afterGrouped = groupCardsByLevel(handAfter);
+				int lowSingleCount = 0;
+				int allSingleCount = 0;
+
+				for(Level level = 0; level < MAX_LEVEL; level++)
+				{
+					if(afterGrouped[level].size() == 1)
+					{
+						allSingleCount++;
+						if(level <= 10)
+							lowSingleCount++;
+					}
+				}
+
+				// 剩多个低单时，长顺、三带等“看起来很大”的出牌其实会把残局打坏
+				score -= lowSingleCount * 3.5;
+				if(lowSingleCount >= 2)
+					score -= 4.0;
+
+				// 剩余手数越多，越不可能在地主报单后安全连续收完
+				score -= (afterHands - 1) * 2.0;
+
+				// 非单张虽然当前不让地主直接接，但如果留下的都是单张，下一轮仍然危险
+				if(play.comboType != CardComboType::SINGLE && allSingleCount >= 2)
+					score -= 3.0;
+			}
+
+			// 地主残局自由轮：如果农民已经报单/近报单，低单张很容易直接送走对手
+			// 这时优先出非单张，或者出足够大的单张守住这一轮牌权
+			if(state.isLandlord() && freeTurn)
+			{
+				int minFarmerRemain = 100;
+				for(int player = 0; player < PLAYER_COUNT; player++)
+				{
+					if(player == state.myPosition)
+						continue;
+					if(state.cardRemaining[player] < minFarmerRemain)
+						minFarmerRemain = state.cardRemaining[player];
+				}
+
+				if(minFarmerRemain <= 1)
+				{
+					if(play.comboType == CardComboType::SINGLE)
+					{
+						if(play.comboLevel >= 10)
+							score += 6.0 + (play.comboLevel - 10) * 1.0;
+						else if(play.comboLevel >= 8)
+							score += 2.5;
+						else
+							score -= 6.0;
+					}
+					else
+					{
+						score += 6.0 + play.cards.size() * 0.20;
+					}
+				}
+				else if(minFarmerRemain <= 2)
+				{
+					if(play.comboType == CardComboType::SINGLE)
+					{
+						if(play.comboLevel >= 10)
+							score += 2.0;
+						else if(play.comboLevel <= 6)
+							score -= 2.0;
+					}
+					else
+					{
+						score += 2.5;
+					}
+				}
+			}
+
+			// 地主只剩2张单牌时，先出大牌锁住回合
+			if(state.isLandlord() &&
+			   freeTurn &&
+			   play.comboType == CardComboType::SINGLE &&
+			   state.myCards.size() == 2 &&
+			   handAfter.size() == 1)
+			{
+				CardCombo remainCombo(handAfter.begin(), handAfter.end());
+				if(remainCombo.comboType == CardComboType::SINGLE)
+				{
+					score += (play.comboLevel - remainCombo.comboLevel) * 1.8;
+					if(play.comboLevel == 12)
+						score += 4.0;
+					else if(play.comboLevel == level_joker)
+						score += 5.0;
+					else if(play.comboLevel == level_JOKER)
+						score += 6.0;
+				}
+			}
+
+			// 农民残局自由轮：地主已经报单或接近报单，而我只剩两张单牌时，
+			// 要优先先出较大的那张，避免先出小牌被地主直接接走。
+			if(!state.isLandlord() &&
+			   freeTurn &&
+			   play.comboType == CardComboType::SINGLE &&
+			   state.cardRemaining[state.landlordPosition] <= 2 &&
+			   state.myCards.size() == 2 &&
+			   handAfter.size() == 1)
+			{
+				CardCombo remainCombo(handAfter.begin(), handAfter.end());
+				if(remainCombo.comboType == CardComboType::SINGLE)
+				{
+					score += (play.comboLevel - remainCombo.comboLevel) * 2.0;
+					if(play.comboLevel >= 12)
+						score += 6.0;
+					else if(play.comboLevel >= 11)
+						score += 3.0;
+				}
+			}
+
 			// 如果剩余手牌只需要一手出完，给较高奖励。
-    		if(afterHands == 1)
+    		if (afterHands == 1)
         	{
-				//基础奖励
 				score += 5;
-				//质量修正
 				score += evaluateOneTurnLeftQuality(state, handAfter);
+
+				// 自由轮已经能把自己打到只剩一手时，重点不再是“省控牌”，
+				// 而是这手牌能不能稳住牌权，让我下一轮把最后一手收掉。
+				// 王炸无法被压，炸弹也很难被压，所以这里对双方都加分。
+				if(freeTurn)
+				{
+					CardCombo remainCombo(handAfter.begin(), handAfter.end());
+
+					if(play.comboType == CardComboType::ROCKET)
+						score += 20.0;
+					else if(play.comboType == CardComboType::BOMB)
+						score += dangerous ? 14.0 : 10.0;
+					else if(isHardControlPlay(play))
+						score += dangerous ? 8.0 : 5.0;
+
+					// 农民残局里地主越接近出完，越应该用强牌先锁住这一轮。
+					// 如果剩下的一手本身也安全，就继续加分；如果只剩低单张，仍要谨慎。
+					if(!state.isLandlord() && state.cardRemaining[state.landlordPosition] <= 3)
+					{
+						if(play.comboType == CardComboType::ROCKET)
+							score += 8.0;
+						else if(isHardControlPlay(play))
+							score += 5.0;
+
+						if(remainCombo.comboType != CardComboType::SINGLE || remainCombo.comboLevel >= 11)
+							score += 4.0;
+						else if(remainCombo.comboLevel <= 8)
+							score -= 4.0;
+					}
+				}
+
+				// 自由轮打完只剩一手时，牌权能不能稳定留下来非常关键。
+				// 火箭是不可压的收官路线；炸弹也通常比普通三带一更能保证下一轮出完。
+				if(state.isLandlord() && freeTurn)
+				{
+					if(play.comboType == CardComboType::ROCKET)
+						score += 22.0;
+					else if(play.comboType == CardComboType::BOMB)
+						score += 14.0;
+					else if(isHardControlPlay(play))
+						score += 8.0;
+					else
+					{
+						CardCombo remainCombo(handAfter.begin(), handAfter.end());
+						if(remainCombo.comboType == CardComboType::SINGLE && state.myCards.size() <= 6)
+							score -= 4.0;
+					}
+				}
 			}
 
 			if(fightForControl)
 			{
-				//如果这一手减少，那么很有必要
-				if(beforeHands > afterHands)
-					score += 3.0 * (beforeHands - afterHands);
+				int before = getMinHandCount(state.myCards);
+
+				if(before > afterHands)
+					score += 3.0 * (before - afterHands);
 			}
 		}
 
 
 	return score;
+}
+
+//在一个随机补全样本中，评估我打出Play之后的局面收益
+double evaluatePlayInDeal(GameState &state,InferredDeal &deal,CardCombo &play)
+{
+	//PASS无收益
+	if(play.comboType == CardComboType::PASS)
+		return 0;
+
+	//取出我的手牌
+	vector<Card> myHandBefore = deal.hands[state.myPosition];
+
+	//假设打出play，出牌后的手牌
+	vector<Card> myHandAfter = removeCardsFromHand(myHandBefore, play.cards);
+
+	//如果出完，直接出
+	if(myHandAfter.empty())
+		return 100;
+	
+	//比较手数
+	int beforeCount = getMinHandCount(myHandBefore);
+	int afterCount = getMinHandCount(myHandAfter);
+	bool oneTurnLeftAfter = afterCount == 1;
+
+	//样本收益
+	double score = 0;
+
+	//减少出手数，加分
+	score += (beforeCount - afterCount) * 5.0;
+	//出得多，接近出完
+	score += play.cards.size() * 0.3;
+
+	//出完只剩一手，给额外奖励
+	if(oneTurnLeftAfter)
+	{
+		score += 5.0;
+		score += evaluateOneTurnLeftQuality(state, myHandAfter);
+	}
+
+	//===接入随机补全
+	//估计这手牌打出去后，其他玩家是否有能力压过我
+	bool opponentCanBeat = false;
+	bool teammateCanBeat = false;
+	bool dangerousOpponentCanBeat = false;
+
+	for (int player = 0; player < PLAYER_COUNT;player++)
+	{
+		if(player==state.myPosition)
+		continue;
+
+		if(canPlayerBeatInDeal(deal,player,play))
+		{
+			if(isSameSidePlayer(state,player))
+				teammateCanBeat = true;
+			else
+				{
+					opponentCanBeat = true;
+					//如果能压过我的对手只剩很少的牌，风险很大
+					if(state.cardRemaining[player] <=3 )
+						dangerousOpponentCanBeat = true;
+				}
+		}
+	}
+
+	//如果对手能压，这手牌的控场价值下降
+	if(opponentCanBeat)
+		score -= 4;
+	if(dangerousOpponentCanBeat)
+		score -= 6;
+	//如果队友能压，风险较小
+	if(teammateCanBeat)
+		score -= 1;
+	
+	//如果没人能压，说明这手牌在该样本下很可能拿到一轮牌权
+	if(!opponentCanBeat && !teammateCanBeat)
+		score += 2;
+
+
+	return score;
+}
+
+//用一批随机补全样本，评估某一候选牌的平均局面价值
+double evaluatePlayBySamples(GameState &state,vector<InferredDeal> &deals,CardCombo &play)
+{
+	if(deals.empty())
+		return 0;
+
+	//加权总分
+	double totalScore = 0;
+	//样本总权重
+	double totalWeight = 0;
+
+	for(InferredDeal &deal:deals)
+	{
+		if(deal.weight<=0)
+		continue;
+
+		//用样本评估候选牌
+		double oneScore = evaluatePlayInDeal(state, deal, play);
+
+		//按样本可信度加权
+		totalScore += oneScore * deal.weight;
+		//累计样本加权
+		totalWeight += deal.weight;
+	}
+	if(totalWeight<=0)
+		return 0;
+
+	return totalScore / totalWeight;
 }
 
 // 返回随机补全样本分在最终评分中的权重。
@@ -4791,8 +4418,10 @@ double getSampleWeight(GameState &state, CardCombo &play)
 		hiddenCards += state.cardRemaining[i];
 	}
 
-	if(hiddenCards <= 8)
-		sampleWeight += 0.12;
+	if(hiddenCards <= 6)
+		sampleWeight += 0.18;
+	else if(hiddenCards <= 8)
+		sampleWeight += 0.14;
 	else if(hiddenCards <= 12)
 		sampleWeight += 0.08;
 	else if(hiddenCards <= 18)
@@ -5025,10 +4654,10 @@ vector<ScoredPlay> selectTopPlays(GameState &state,vector<CardCombo> &validPlays
 		return a.scored.score > b.scored.score;
 	};
 
-	// 1. 先保留启发式第一名，确保当前主策略不会被完全推翻。
+	// 先保留启发式第一名，确保当前主策略不会被完全推翻。
 	addCandidate(0);
 
-	// 2. 跟牌局面下，PASS 是一个独立策略分支，必须显式保留给 PIMC 对比。
+	// 跟牌局面下，PASS 是一个独立策略分支，必须显式保留给 PIMC 对比。
 	if(!freeTurn)
 	{
 		int passIndex = findBestIndex(heuristicBetter, true, false, false, false, false);
@@ -5047,25 +4676,24 @@ vector<ScoredPlay> selectTopPlays(GameState &state,vector<CardCombo> &validPlays
 		}
 	}
 
-	// 3. 能把手牌压到“一手收完”的候选必须单独保留。
+	//  能把手牌压到“一手收完”的候选必须单独保留。
 	addCandidate(findBestIndex(structureBetter, true, false, true, false, true));
 
-	// 4. 保留一个最强调整结构的分支。
+	// 保留一个最强调整结构的分支。
 	addCandidate(findBestIndex(structureBetter, true, false, true, false, false));
 
-	// 5. 自由轮保留一个轻量起手；跟牌轮保留一个最省资源的应手。
+	// 自由轮保留一个轻量起手；跟牌轮保留一个最省资源的应手。
 	if(freeTurn)
 		addCandidate(findBestIndex(lightOpenerBetter, true, false, true, false, false));
 	else
 		addCandidate(findBestIndex(cheapBeatBetter, true, false, true, false, false));
 
-	// 6. 保留一个强压/抢控分支，避免候选全是保守打法。
+	// 保留一个强压/抢控分支，避免候选全是保守打法。
 	addCandidate(findBestIndex(strongBeatBetter, true, false, true, false, false));
 
-	// 7. 单独保留一个硬控牌分支，让 PIMC 有机会判断是否值得提前交资源。
+	// 单独保留一个硬控牌分支，让 PIMC 有机会判断是否值得提前交资源。
 	addCandidate(findBestIndex(strongBeatBetter, true, false, true, true, false));
 
-	// 8. 先补没有出现过的牌型，扩大策略面。
 	for(int i = 0; i < static_cast<int>(candidates.size()); ++i)
 	{
 		if(topK > 0 && static_cast<int>(result.size()) >= topK)
@@ -5077,7 +4705,7 @@ vector<ScoredPlay> selectTopPlays(GameState &state,vector<CardCombo> &validPlays
 		addCandidate(i);
 	}
 
-	// 9. 再补同家族未出现过的高分候选，避免 TopK 被同一种带牌写满。
+	// 再补同家族未出现过的高分候选，避免 TopK 被同一种带牌写满。
 	for(int i = 0; i < static_cast<int>(candidates.size()); ++i)
 	{
 		if(topK > 0 && static_cast<int>(result.size()) >= topK)
@@ -5089,7 +4717,7 @@ vector<ScoredPlay> selectTopPlays(GameState &state,vector<CardCombo> &validPlays
 		addCandidate(i);
 	}
 
-	// 10. 如果还不够，再允许少量同家族备选，兼顾多样性和覆盖率。
+	// 如果还不够，再允许少量同家族备选，兼顾多样性和覆盖率。
 	for(int i = 0; i < static_cast<int>(candidates.size()); ++i)
 	{
 		if(topK > 0 && static_cast<int>(result.size()) >= topK)
@@ -5104,8 +4732,6 @@ vector<ScoredPlay> selectTopPlays(GameState &state,vector<CardCombo> &validPlays
 	return result;
 }
 
-// 调试用：输出 TopK 候选的启发式分、样本分和最终融合分。
-// 注意：这个函数只写 cerr，不应该在 Botzone 正式输出前默认调用。
 void debugTopPlays(GameState &state,vector<CardCombo> &validPlays)
 {
 	vector<ScoredPlay> topPlays = selectTopPlays(state, validPlays, 6);
@@ -5176,22 +4802,6 @@ void logPIMCResult(GameState &state, vector<ScoredPlay> &topPlays)
 		if(fs > bestFinal) { bestFinal = fs; bestIndex = i; }
 	}
 
-	struct DebugRow
-	{
-		int index = 0;
-		double finalScore = 0.0;
-	};
-	vector<DebugRow> order;
-	for(int i = 0; i < (int)topPlays.size(); ++i)
-		order.push_back({i, rows[i].finalScore});
-
-	std::sort(order.begin(), order.end(), [&](DebugRow &a, DebugRow &b)
-	{
-		if(a.finalScore != b.finalScore)
-			return a.finalScore > b.finalScore;
-		return a.index < b.index;
-	});
-
 	// 输出表头
 	std::cerr << "[PIMC] freeTurn=" << freeTurn
 	          << " dangerous=" << dangerous
@@ -5199,13 +4809,12 @@ void logPIMCResult(GameState &state, vector<ScoredPlay> &topPlays)
 	          << " totalVisits=" << totalVisits
 	          << std::endl;
 
-	// 按最终分从高到低输出，避免调试日志里“第一行不是实际 bestPlay”的错觉。
-	for(int rank = 0; rank < (int)order.size(); ++rank)
+	// 输出每个候选行
+	for(int i = 0; i < (int)topPlays.size(); i++)
 	{
-		int i = order[rank].index;
 		ScoredPlay &sc = topPlays[i];
 		Row &r = rows[i];
-		std::cerr << "[PIMC]  [" << rank << "]"
+		std::cerr << "[PIMC]  [" << i << "]"
 		          << " type=" << static_cast<int>(sc.play.comboType)
 		          << " lvl=" << sc.play.comboLevel
 		          << " sz=" << sc.play.cards.size()
@@ -5221,8 +4830,7 @@ void logPIMCResult(GameState &state, vector<ScoredPlay> &topPlays)
 	}
 }
 
-// [我们要自己实现的核心函数] 在所有合法出牌中选出当前最优的一手，是后续策略升级的主入口。
-//依赖于evaluatePlayGain
+// 在所有合法出牌中选出当前最优的一手
 CardCombo decidePlay(GameState &state, vector<CardCombo> &validPlays)
 {
 	//如果没有任何合法候选，返回PASS
@@ -5231,9 +4839,7 @@ CardCombo decidePlay(GameState &state, vector<CardCombo> &validPlays)
 
 	
 	//===评分系统
-	//初始化为PASS
 	CardCombo bestplay;
-	//当前最高分设为一个很小的数
 	double bestScore = -1e18;
 
 	//第一优先级：如果能直接出完牌，就立刻出
@@ -5246,12 +4852,12 @@ CardCombo decidePlay(GameState &state, vector<CardCombo> &validPlays)
 	//选启发式评分最高的几手
 	vector<ScoredPlay> topPlays = selectTopPlays(state, validPlays, 6);
 
-	//给整次PIMC一个时间限制
-	int timeLimit = 500;
+	// 给整次 PIMC 一个时间限制
+	int timeLimit = 550;
 
 	//记录本次搜索时间
 	clock_t searchTime = clock() + timeLimit * CLOCKS_PER_SEC / 1000;
-	// 记录这一轮从哪个候选开始，避免总是前面的候选先吃到时间预算。
+	// 记录这一轮从哪个候选开始，避免总是前面的候选先吃到时间预算
 	int round = 0;
 
 	//在时间内不断生成随机补全，并轮流给每个候选做模拟
@@ -5316,15 +4922,9 @@ CardCombo decidePlay(GameState &state, vector<CardCombo> &validPlays)
 	if(bestScore==-1e18)
 		return CardCombo();
 
-	logPIMCResult(state, topPlays);
 	return bestplay;
 }
 
-// ==================================================
-// 单文件骨架：主入口
-// ==================================================
-
-// [我们实现的程序入口] 负责串联“读状态 -> 调策略 -> 输出结果”，尽量不承载具体业务细节。
 int main()
 {
 	//初始化随机数

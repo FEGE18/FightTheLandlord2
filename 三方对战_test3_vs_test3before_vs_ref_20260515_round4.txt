@@ -1,0 +1,37 @@
+2026-05-15 三方对战记录：TEST3 vs TEST3BEFORE vs REF round4
+
+执行命令
+python run_three_bot_match.py --bots TEST3,TEST3BEFORE,REF --games 30 --seed 20261136 --timeout 30 --no-build --log reference_match_log_test3_vs_test3before_vs_ref_20260515_round4.txt
+
+执行说明
+1. 使用正常规则三方对战。
+2. 参与 bot 为 Test3.cpp、Test3Before.cpp、Reference.cpp。
+3. 种子范围为 20261136 到 20261165。
+4. 每步超时为 30 秒。
+5. illegalOrStopped 为 0。
+
+本批30局结果
+- TEST3：15/30，50.0%
+- TEST3BEFORE：16/30，53.3%
+- REF：13/30，43.3%
+
+角色侧结果
+- TEST3 地主：6/11，54.5%
+- TEST3 农民：9/19，47.4%
+- TEST3BEFORE 地主：9/16，56.2%
+- TEST3BEFORE 农民：7/14，50.0%
+- REF 地主：1/3，33.3%
+- REF 农民：12/27，44.4%
+
+累计150局结果
+- TEST3：69/150，46.0%
+- TEST3BEFORE：64/150，42.7%
+- REF：73/150，48.7%
+
+结论
+- 这一批 30 局里，TEST3BEFORE 第一，TEST3 第二，REF 第三。
+- 累计 150 局后，REF 仍然保持总第一，但领先 TEST3 的差距已经缩到 4 胜。
+- TEST3 对 TEST3BEFORE 的领先已经扩大到 5 胜。
+
+日志文件
+- reference_match_log_test3_vs_test3before_vs_ref_20260515_round4.txt

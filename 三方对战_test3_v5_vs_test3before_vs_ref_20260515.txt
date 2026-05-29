@@ -1,0 +1,37 @@
+2026-05-15 三方对战记录：TEST3 5.0 vs TEST3BEFORE vs REF
+
+执行命令
+python run_three_bot_match.py --bots TEST3,TEST3BEFORE,REF --games 60 --seed 20261346 --timeout 30 --log reference_match_log_test3_v5_vs_test3before_vs_ref_20260515.txt
+
+执行说明
+1. 使用当前 Test3.cpp 重新编译得到 TEST3 5.0。
+2. 对手为 Test3Before.cpp 与 Reference.cpp。
+3. 种子范围为 20261346 到 20261405。
+4. 每步超时为 30 秒。
+5. illegalOrStopped 为 0。
+
+60局总体结果
+- TEST3：25/60，41.7%
+- TEST3BEFORE：29/60，48.3%
+- REF：25/60，41.7%
+
+角色侧结果
+- TEST3 地主：12/18，66.7%
+- TEST3 农民：13/42，31.0%
+- TEST3BEFORE 地主：21/32，65.6%
+- TEST3BEFORE 农民：8/28，28.6%
+- REF 地主：8/10，80.0%
+- REF 农民：17/50，34.0%
+
+对比 4.0
+- TEST3 总体：43.3% -> 41.7%
+- TEST3 地主：71.4% -> 66.7%
+- TEST3 农民：28.2% -> 31.0%
+
+结论
+- 5.0 相比 4.0 没有继续提升，总体略降。
+- 这次变化更像是把一部分地主强度换成了农民修复。
+- 但当前农民位提升还不足以抵消地主位回落，所以总胜率没有更好。
+
+日志文件
+- reference_match_log_test3_v5_vs_test3before_vs_ref_20260515.txt

@@ -1,0 +1,32 @@
+2026-05-15 三方对战记录 round6（中断）
+
+执行命令
+python run_three_bot_match.py --games 30 --seed 20260980 --timeout 30 --no-build --log reference_match_log_test_vs_test3_vs_ref_20260515_round6.txt
+
+执行说明
+1. 使用原始三方对战规则，不启用托管。
+2. 参与 bot 为 test.cpp、Test3.cpp、Reference.cpp。
+3. 种子范围原计划为 20260980 到 20261009。
+4. 每步超时为 30 秒。
+
+执行结果
+1. 前 21 局完成。
+2. 第 22 局（seed=20261001）运行到 TEST 出牌时，TEST 进程退出码为 3221225477。
+3. 因为当前脚本是无托管直连模式，批次在第 22 局中断，未生成完整 summary 日志文件。
+
+前21局 partial 胜场
+- TEST：8
+- TEST3：10
+- REF：10
+
+崩溃定位
+1. 崩溃局座位为 P0:TEST3, P1:REF, P2:TEST。
+2. payload 中 landlord=1, pos=2，对应崩溃 bot 为 TEST（农民位）。
+3. 将该手输入单独喂给 match_test_tri.exe 时未稳定复现，说明更像对战流程中的间歇性崩溃，而不是单手固定必炸。
+
+备注
+1. 这批结果不能并入之前的完整 120 局 normal 汇总。
+2. 如果要继续扩大样本，需要先决定：
+   a) 维持无托管规则，接受可能再次中断；
+   b) 对 bot 崩溃按判负继续统计；
+   c) 先定位 TEST 的崩溃根因。

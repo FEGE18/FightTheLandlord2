@@ -1,0 +1,24 @@
+2026-05-14 新30组复测记录
+
+执行命令
+python run_reference_match.py --games 30 --seed 20260590 --rotate-seat --log reference_match_log_new30_retest_20260514.txt
+
+执行说明
+1. 这次按当前修改后的 test.cpp 重新构建并运行。
+2. 新 30 组种子范围为 20260590 到 20260619。
+3. 逐手过程、stdout、stderr 和 PIMC 诊断均写入 reference_match_log_new30_retest_20260514.txt。
+
+结果汇总
+- 总局数：30
+- 胜局：17
+- 负局：13
+- 非法或中止：0
+- PIMC 记录行数：1336
+
+对比昨天的新30组
+- 2026-05-13 新30组：20 胜 10 负
+- 2026-05-14 新30组：17 胜 13 负
+- 本次较昨天少赢 3 局
+
+日志文件
+- reference_match_log_new30_retest_20260514.txt

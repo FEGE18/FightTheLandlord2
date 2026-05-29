@@ -1,0 +1,23 @@
+2026-05-13 斗地主 AI 20 组测试记录
+
+执行命令：
+python run_reference_match.py --games 20 --rotate-seat --no-build --log reference_match_log_pimc_debug20_rerun.txt
+
+执行说明：
+1. 使用最新编译出的 match_our.exe。
+2. 开启 rotate-seat，20 局内轮换我方座位。
+3. 详细逐手过程写入 reference_match_log_pimc_debug20_rerun.txt。
+4. 本次日志已包含 PIMC 诊断输出，共 731 条 [PIMC] 记录。
+
+结果汇总：
+- 总局数：20
+- 胜局：8
+- 负局：12
+- 非法或中止：0
+
+日志文件：
+- reference_match_log_pimc_debug20_rerun.txt
+
+备注：
+- 日志中包含每一步的 handBefore、historyForBot、action、elapsedMs、rawOutput。
+- 日志中包含 stderr=[PIMC] 开头的决策诊断表，可继续用于分析耗时、访问次数和候选排序变化。

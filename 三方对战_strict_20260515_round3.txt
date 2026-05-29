@@ -1,0 +1,36 @@
+2026-05-15 三方对战 strict 规则记录 round3
+
+执行命令
+python run_three_bot_match.py --games 30 --seed 20260890 --timeout 1 --no-build --log reference_match_log_test_vs_test3_vs_ref_strict_20260515_round3.txt
+
+执行说明
+1. 使用原来的轮换形式，不启用同牌对照。
+2. 三个 bot 为 test.cpp、Test3.cpp、Reference.cpp。
+3. 每步主 bot 限时 1 秒。
+4. 超时或进程异常后，由 REF 托管接管该座位继续完成对局。
+5. 种子范围为 20260890 到 20260919。
+
+结果汇总
+- TEST：15/30，50.0%
+- TEST3：14/30，46.7%
+- REF：14/30，46.7%
+- illegalOrStopped：0
+
+角色侧结果
+- TEST 地主：5/8，62.5%
+- TEST 农民：10/22，45.5%
+- TEST3 地主：7/13，53.8%
+- TEST3 农民：7/17，41.2%
+- REF 地主：5/9，55.6%
+- REF 农民：9/21，42.9%
+
+托管统计
+- 托管触发次数：63
+- 发生过托管的对局数：21/30
+
+结论
+- 在这轮 strict 规则下，TEST 略高于 TEST3 和 REF。
+- 但托管覆盖了 21 局，这轮结果不能直接等同于纯 bot 本体强弱。
+
+日志文件
+- reference_match_log_test_vs_test3_vs_ref_strict_20260515_round3.txt
