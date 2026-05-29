@@ -1,0 +1,31 @@
+2026-05-15 三方对战记录：TEST3 3.0 vs TEST3BEFORE vs REF
+
+执行命令
+python run_three_bot_match.py --bots TEST3,TEST3BEFORE,REF --games 60 --seed 20261166 --timeout 30 --log reference_match_log_test3_v3_vs_test3before_vs_ref_20260515.txt
+
+执行说明
+1. 使用当前 Test3.cpp 重新编译得到 TEST3 3.0。
+2. 对手为 Test3Before.cpp 与 Reference.cpp。
+3. 种子范围为 20261166 到 20261225。
+4. 每步超时为 30 秒。
+5. illegalOrStopped 为 0。
+
+60局总体结果
+- TEST3：22/60，36.7%
+- TEST3BEFORE：33/60，55.0%
+- REF：31/60，51.7%
+
+角色侧结果
+- TEST3 地主：11/26，42.3%
+- TEST3 农民：11/34，32.4%
+- TEST3BEFORE 地主：14/21，66.7%
+- TEST3BEFORE 农民：19/39，48.7%
+- REF 地主：9/13，69.2%
+- REF 农民：22/47，46.8%
+
+结论
+- 当前 TEST3 3.0 在这 60 局里明显落后于 TEST3BEFORE 和 REF。
+- TEST3 3.0 不仅整体胜率最低，地主和农民两侧也都没有占优。
+
+日志文件
+- reference_match_log_test3_v3_vs_test3before_vs_ref_20260515.txt

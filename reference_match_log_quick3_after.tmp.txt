@@ -1,0 +1,1041 @@
+================ MATCH SUMMARY ================
+games=3 ourWins=0 losses=3 illegalOrStopped=0 seedBase=20260610
+
+
+================ GAME 1 seed=20260610 ourSeat=0 ================
+bots: P0=OUR, P1=REF, P2=REF
+initial P0 OUR hand=3x2 4x2 6x2 7x1 8x2 9x1 10x1 Jx1 Qx2 Kx1 2x2 [1,2,5,6,12,15,19,20,21,27,28,33,36,38,41,49,51]
+initial P1 REF hand=3x1 4x1 5x3 6x1 7x2 8x2 9x2 10x1 Jx1 Qx1 Ax1 jokerx1 [0,4,8,9,10,14,16,18,22,23,24,25,29,32,39,47,52]
+initial P2 REF hand=3x1 4x1 5x1 6x1 7x1 9x1 10x2 Jx2 Qx1 Kx2 Ax2 2x2 [3,7,11,13,17,26,30,31,34,35,37,40,42,45,46,48,50]
+public=Kx1 Ax1 JOKERx1 [43,44,53]
+BID P0 OUR bid=1 ok=True elapsedMs=52.7 reason=
+BID P1 REF bid=0 ok=True elapsedMs=54.7 reason=
+BID P2 REF bid=3 ok=True elapsedMs=15.4 reason=
+landlord=P2 finalBid=3
+playStart P0 count=17 hand=3x2 4x2 6x2 7x1 8x2 9x1 10x1 Jx1 Qx2 Kx1 2x2 [1,2,5,6,12,15,19,20,21,27,28,33,36,38,41,49,51]
+playStart P1 count=17 hand=3x1 4x1 5x3 6x1 7x2 8x2 9x2 10x1 Jx1 Qx1 Ax1 jokerx1 [0,4,8,9,10,14,16,18,22,23,24,25,29,32,39,47,52]
+playStart P2 count=20 hand=3x1 4x1 5x1 6x1 7x1 9x1 10x2 Jx2 Qx1 Kx3 Ax3 2x2 JOKERx1 [3,7,11,13,17,26,30,31,34,35,37,40,42,43,44,45,46,48,50,53]
+
+TURN 1 P2 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=17.1
+  handBefore count=20 3x1 4x1 5x1 6x1 7x1 9x1 10x2 Jx2 Qx1 Kx3 Ax3 2x2 JOKERx1 [3,7,11,13,17,26,30,31,34,35,37,40,42,43,44,45,46,48,50,53]
+  historyForBot=[[],[]]
+  action=PLANE1 9x1 Qx1 Kx3 Ax3 [40,42,43,44,45,46,26,37] level=11 legal=True reason=
+  rawOutput={"debug":0,"response":[40,42,43,44,45,46,26,37]}
+  remain=P0:17, P1:17, P2:12
+
+TURN 2 P0 OUR team=farmers need=PLANE1 9x1 Qx1 Kx3 Ax3 [40,42,43,44,45,46,26,37] level=11 lastValidPlayer=2 passCount=0 elapsedMs=14.6
+  handBefore count=17 3x2 4x2 6x2 7x1 8x2 9x1 10x1 Jx1 Qx2 Kx1 2x2 [1,2,5,6,12,15,19,20,21,27,28,33,36,38,41,49,51]
+  historyForBot=[[],[40,42,43,44,45,46,26,37]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=1
+    sampleCount=20
+    totalDealWeight=20.000
+    freeTurn=0
+    dangerous=0
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PASS	-2.000	0.000	20.000	0.400	-2.000
+    bestPlay=PASS
+  OUR_TOPK_END
+  remain=P0:17, P1:17, P2:12
+
+TURN 3 P1 REF team=farmers need=PLANE1 9x1 Qx1 Kx3 Ax3 [40,42,43,44,45,46,26,37] level=11 lastValidPlayer=2 passCount=1 elapsedMs=15.6
+  handBefore count=17 3x1 4x1 5x3 6x1 7x2 8x2 9x2 10x1 Jx1 Qx1 Ax1 jokerx1 [0,4,8,9,10,14,16,18,22,23,24,25,29,32,39,47,52]
+  historyForBot=[[40,42,43,44,45,46,26,37],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:17, P1:17, P2:12
+
+TURN 4 P2 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=998.5
+  handBefore count=12 3x1 4x1 5x1 6x1 7x1 10x2 Jx2 2x2 JOKERx1 [3,7,11,13,17,30,31,34,35,48,50,53]
+  historyForBot=[[],[]]
+  action=STRAIGHT 3x1 4x1 5x1 6x1 7x1 [3,7,11,13,17] level=4 legal=True reason=
+  rawOutput={"debug":3,"response":[3,7,11,13,17]}
+  remain=P0:17, P1:17, P2:7
+
+TURN 5 P0 OUR team=farmers need=STRAIGHT 3x1 4x1 5x1 6x1 7x1 [3,7,11,13,17] level=4 lastValidPlayer=2 passCount=0 elapsedMs=15.0
+  handBefore count=17 3x2 4x2 6x2 7x1 8x2 9x1 10x1 Jx1 Qx2 Kx1 2x2 [1,2,5,6,12,15,19,20,21,27,28,33,36,38,41,49,51]
+  historyForBot=[[],[3,7,11,13,17]]
+  action=STRAIGHT 9x1 10x1 Jx1 Qx1 Kx1 [27,28,33,36,41] level=10 legal=True reason=
+  rawOutput={"response":[27,28,33,36,41]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=5
+    sampleCount=20
+    totalDealWeight=20.000
+    freeTurn=0
+    dangerous=0
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	STRAIGHT {7x1 8x1 9x1 10x1 Jx1} [19,20,27,28,33]	1.750	-0.100	20.000	0.400	1.710
+    2	STRAIGHT {9x1 10x1 Jx1 Qx1 Kx1} [27,28,33,36,41]	1.750	2.000	20.000	0.400	2.550
+    3	PASS	-2.000	0.000	20.000	0.400	-2.000
+    4	STRAIGHT {6x1 7x1 8x1 9x1 10x1} [12,19,20,27,28]	-3.250	-5.550	20.000	0.400	-5.470
+    5	STRAIGHT {8x1 9x1 10x1 Jx1 Qx1} [20,27,28,33,36]	-3.250	-3.000	20.000	0.400	-4.450
+    bestPlay=STRAIGHT {9x1 10x1 Jx1 Qx1 Kx1} [27,28,33,36,41]
+  OUR_TOPK_END
+  remain=P0:12, P1:17, P2:7
+
+TURN 6 P1 REF team=farmers need=STRAIGHT 9x1 10x1 Jx1 Qx1 Kx1 [27,28,33,36,41] level=10 lastValidPlayer=0 passCount=0 elapsedMs=987.2
+  handBefore count=17 3x1 4x1 5x3 6x1 7x2 8x2 9x2 10x1 Jx1 Qx1 Ax1 jokerx1 [0,4,8,9,10,14,16,18,22,23,24,25,29,32,39,47,52]
+  historyForBot=[[3,7,11,13,17],[27,28,33,36,41]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:12, P1:17, P2:7
+
+TURN 7 P2 REF team=landlord need=STRAIGHT 9x1 10x1 Jx1 Qx1 Kx1 [27,28,33,36,41] level=10 lastValidPlayer=0 passCount=1 elapsedMs=1006.3
+  handBefore count=7 10x2 Jx2 2x2 JOKERx1 [30,31,34,35,48,50,53]
+  historyForBot=[[27,28,33,36,41],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:12, P1:17, P2:7
+
+TURN 8 P0 OUR team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=19.5
+  handBefore count=12 3x2 4x2 6x2 7x1 8x2 Qx1 2x2 [1,2,5,6,12,15,19,20,21,38,49,51]
+  historyForBot=[[],[]]
+  action=PAIR 3x2 [1,2] level=0 legal=True reason=
+  rawOutput={"response":[1,2]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=13
+    sampleCount=20
+    totalDealWeight=19.500
+    freeTurn=1
+    dangerous=0
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PAIR {3x2} [1,2]	6.100	1.626	19.500	0.100	6.263
+    2	PAIR {4x2} [5,6]	6.020	1.626	19.500	0.100	6.183
+    3	PAIR {6x2} [12,15]	5.860	2.446	19.500	0.100	6.105
+    4	PAIR {8x2} [20,21]	5.700	2.856	19.500	0.100	5.986
+    5	SINGLE {7x1} [19]	4.670	0.300	19.500	0.100	4.700
+    6	SINGLE {Qx1} [38]	4.070	0.300	19.500	0.100	4.100
+    bestPlay=PAIR {3x2} [1,2]
+  OUR_TOPK_END
+  remain=P0:10, P1:17, P2:7
+
+TURN 9 P1 REF team=farmers need=PAIR 3x2 [1,2] level=0 lastValidPlayer=0 passCount=0 elapsedMs=988.6
+  handBefore count=17 3x1 4x1 5x3 6x1 7x2 8x2 9x2 10x1 Jx1 Qx1 Ax1 jokerx1 [0,4,8,9,10,14,16,18,22,23,24,25,29,32,39,47,52]
+  historyForBot=[[],[1,2]]
+  action=PAIR 5x2 [8,9] level=2 legal=True reason=
+  rawOutput={"debug":81,"response":[8,9]}
+  remain=P0:10, P1:15, P2:7
+
+TURN 10 P2 REF team=landlord need=PAIR 5x2 [8,9] level=2 lastValidPlayer=1 passCount=0 elapsedMs=1023.8
+  handBefore count=7 10x2 Jx2 2x2 JOKERx1 [30,31,34,35,48,50,53]
+  historyForBot=[[1,2],[8,9]]
+  action=PAIR 10x2 [30,31] level=7 legal=True reason=
+  rawOutput={"debug":1,"response":[30,31]}
+  remain=P0:10, P1:15, P2:5
+
+TURN 11 P0 OUR team=farmers need=PAIR 10x2 [30,31] level=7 lastValidPlayer=2 passCount=0 elapsedMs=12.6
+  handBefore count=10 4x2 6x2 7x1 8x2 Qx1 2x2 [5,6,12,15,19,20,21,38,49,51]
+  historyForBot=[[8,9],[30,31]]
+  action=PAIR 2x2 [49,51] level=12 legal=True reason=
+  rawOutput={"response":[49,51]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=2
+    sampleCount=20
+    totalDealWeight=19.600
+    freeTurn=0
+    dangerous=0
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PAIR {2x2} [49,51]	10.510	6.498	19.600	0.400	13.109
+    2	PASS	-8.000	0.000	19.600	0.400	-8.000
+    bestPlay=PAIR {2x2} [49,51]
+  OUR_TOPK_END
+  remain=P0:8, P1:15, P2:5
+
+TURN 12 P1 REF team=farmers need=PAIR 2x2 [49,51] level=12 lastValidPlayer=0 passCount=0 elapsedMs=987.1
+  handBefore count=15 3x1 4x1 5x1 6x1 7x2 8x2 9x2 10x1 Jx1 Qx1 Ax1 jokerx1 [0,4,10,14,16,18,22,23,24,25,29,32,39,47,52]
+  historyForBot=[[30,31],[49,51]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:8, P1:15, P2:5
+
+TURN 13 P2 REF team=landlord need=PAIR 2x2 [49,51] level=12 lastValidPlayer=0 passCount=1 elapsedMs=1009.4
+  handBefore count=5 Jx2 2x2 JOKERx1 [34,35,48,50,53]
+  historyForBot=[[49,51],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:8, P1:15, P2:5
+
+TURN 14 P0 OUR team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=21.1
+  handBefore count=8 4x2 6x2 7x1 8x2 Qx1 [5,6,12,15,19,20,21,38]
+  historyForBot=[[],[]]
+  action=PAIR 8x2 [20,21] level=5 legal=True reason=
+  rawOutput={"response":[20,21]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=9
+    sampleCount=20
+    totalDealWeight=19.240
+    freeTurn=1
+    dangerous=0
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PAIR {8x2} [20,21]	9.600	3.719	19.240	0.100	9.972
+    2	PAIR {4x2} [5,6]	9.600	3.511	19.240	0.100	9.951
+    3	PAIR {6x2} [12,15]	9.600	3.511	19.240	0.100	9.951
+    4	SINGLE {7x1} [19]	7.990	0.300	19.240	0.100	8.020
+    5	SINGLE {Qx1} [38]	7.790	0.300	19.240	0.100	7.820
+    6	SINGLE {4x1} [5]	0.110	-4.700	19.240	0.100	-0.360
+    bestPlay=PAIR {8x2} [20,21]
+  OUR_TOPK_END
+  remain=P0:6, P1:15, P2:5
+
+TURN 15 P1 REF team=farmers need=PAIR 8x2 [20,21] level=5 lastValidPlayer=0 passCount=0 elapsedMs=1002.9
+  handBefore count=15 3x1 4x1 5x1 6x1 7x2 8x2 9x2 10x1 Jx1 Qx1 Ax1 jokerx1 [0,4,10,14,16,18,22,23,24,25,29,32,39,47,52]
+  historyForBot=[[],[20,21]]
+  action=PAIR 9x2 [24,25] level=6 legal=True reason=
+  rawOutput={"debug":182,"response":[24,25]}
+  remain=P0:6, P1:13, P2:5
+
+TURN 16 P2 REF team=landlord need=PAIR 9x2 [24,25] level=6 lastValidPlayer=1 passCount=0 elapsedMs=1024.2
+  handBefore count=5 Jx2 2x2 JOKERx1 [34,35,48,50,53]
+  historyForBot=[[20,21],[24,25]]
+  action=PAIR Jx2 [34,35] level=8 legal=True reason=
+  rawOutput={"debug":55,"response":[34,35]}
+  remain=P0:6, P1:13, P2:3
+
+TURN 17 P0 OUR team=farmers need=PAIR Jx2 [34,35] level=8 lastValidPlayer=2 passCount=0 elapsedMs=14.4
+  handBefore count=6 4x2 6x2 7x1 Qx1 [5,6,12,15,19,38]
+  historyForBot=[[24,25],[34,35]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=1
+    sampleCount=20
+    totalDealWeight=19.430
+    freeTurn=0
+    dangerous=0
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PASS	-10.000	0.000	19.430	0.400	-10.000
+    bestPlay=PASS
+  OUR_TOPK_END
+  remain=P0:6, P1:13, P2:3
+
+TURN 18 P1 REF team=farmers need=PAIR Jx2 [34,35] level=8 lastValidPlayer=2 passCount=1 elapsedMs=1018.7
+  handBefore count=13 3x1 4x1 5x1 6x1 7x2 8x2 10x1 Jx1 Qx1 Ax1 jokerx1 [0,4,10,14,16,18,22,23,29,32,39,47,52]
+  historyForBot=[[34,35],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:6, P1:13, P2:3
+
+TURN 19 P2 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=1043.8
+  handBefore count=3 2x2 JOKERx1 [48,50,53]
+  historyForBot=[[],[]]
+  action=SINGLE JOKERx1 [53] level=14 legal=True reason=
+  rawOutput={"debug":0,"response":[53]}
+  remain=P0:6, P1:13, P2:2
+
+TURN 20 P0 OUR team=farmers need=SINGLE JOKERx1 [53] level=14 lastValidPlayer=2 passCount=0 elapsedMs=12.5
+  handBefore count=6 4x2 6x2 7x1 Qx1 [5,6,12,15,19,38]
+  historyForBot=[[],[53]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=1
+    sampleCount=20
+    totalDealWeight=16.100
+    freeTurn=0
+    dangerous=1
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PASS	-30.000	0.000	16.100	0.400	-30.000
+    bestPlay=PASS
+  OUR_TOPK_END
+  remain=P0:6, P1:13, P2:2
+
+TURN 21 P1 REF team=farmers need=SINGLE JOKERx1 [53] level=14 lastValidPlayer=2 passCount=1 elapsedMs=1011.2
+  handBefore count=13 3x1 4x1 5x1 6x1 7x2 8x2 10x1 Jx1 Qx1 Ax1 jokerx1 [0,4,10,14,16,18,22,23,29,32,39,47,52]
+  historyForBot=[[53],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:6, P1:13, P2:2
+
+TURN 22 P2 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=1007.2
+  handBefore count=2 2x2 [48,50]
+  historyForBot=[[],[]]
+  action=PAIR 2x2 [48,50] level=12 legal=True reason=
+  rawOutput={"debug":307,"response":[48,50]}
+  remain=P0:6, P1:13, P2:0
+WINNER P2 REF team=landlord
+SUMMARY winner=P2 winnerTeam=landlord ourSeat=0 ourTeam=farmers ourWon=False landlord=P2 finalBid=3 multiplier=1 spring=False antiSpring=False
+OUR_LOSS_TURNS
+  turn=2 action=PASS level=0 cards=[] remain=[17, 17, 12]
+  turn=5 action=STRAIGHT level=10 cards=[27,28,33,36,41] remain=[12, 17, 7]
+  turn=8 action=PAIR level=0 cards=[1,2] remain=[10, 17, 7]
+  turn=11 action=PAIR level=12 cards=[49,51] remain=[8, 15, 5]
+  turn=14 action=PAIR level=5 cards=[20,21] remain=[6, 15, 5]
+  turn=17 action=PASS level=0 cards=[] remain=[6, 13, 3]
+  turn=20 action=PASS level=0 cards=[] remain=[6, 13, 2]
+
+================ GAME 2 seed=20260611 ourSeat=1 ================
+bots: P0=REF, P1=OUR, P2=REF
+initial P0 REF hand=4x1 5x1 6x2 7x1 8x3 9x2 10x1 Qx1 Kx2 Ax1 2x2 [6,11,12,15,19,20,21,23,24,26,30,38,41,42,47,48,51]
+initial P1 OUR hand=4x3 5x1 7x2 8x1 9x2 10x1 Jx2 Kx1 Ax2 2x2 [4,5,7,10,16,18,22,25,27,31,33,35,40,45,46,49,50]
+initial P2 REF hand=3x4 5x2 6x2 7x1 10x2 Jx1 Qx3 jokerx1 JOKERx1 [0,1,2,3,8,9,13,14,17,28,29,32,36,37,39,52,53]
+public=Jx1 Kx1 Ax1 [34,43,44]
+BID P0 REF bid=0 ok=True elapsedMs=15.1 reason=
+BID P1 OUR bid=2 ok=True elapsedMs=14.0 reason=
+BID P2 REF bid=3 ok=True elapsedMs=8.6 reason=
+landlord=P2 finalBid=3
+playStart P0 count=17 hand=4x1 5x1 6x2 7x1 8x3 9x2 10x1 Qx1 Kx2 Ax1 2x2 [6,11,12,15,19,20,21,23,24,26,30,38,41,42,47,48,51]
+playStart P1 count=17 hand=4x3 5x1 7x2 8x1 9x2 10x1 Jx2 Kx1 Ax2 2x2 [4,5,7,10,16,18,22,25,27,31,33,35,40,45,46,49,50]
+playStart P2 count=20 hand=3x4 5x2 6x2 7x1 10x2 Jx2 Qx3 Kx1 Ax1 jokerx1 JOKERx1 [0,1,2,3,8,9,13,14,17,28,29,32,34,36,37,39,43,44,52,53]
+
+TURN 1 P2 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=11.6
+  handBefore count=20 3x4 5x2 6x2 7x1 10x2 Jx2 Qx3 Kx1 Ax1 jokerx1 JOKERx1 [0,1,2,3,8,9,13,14,17,28,29,32,34,36,37,39,43,44,52,53]
+  historyForBot=[[],[]]
+  action=QUADRUPLE4 3x4 5x2 6x2 [0,1,2,3,8,9,13,14] level=0 legal=True reason=
+  rawOutput={"debug":0,"response":[0,1,2,3,8,9,13,14]}
+  remain=P0:17, P1:17, P2:12
+
+TURN 2 P0 REF team=farmers need=QUADRUPLE4 3x4 5x2 6x2 [0,1,2,3,8,9,13,14] level=0 lastValidPlayer=2 passCount=0 elapsedMs=11.8
+  handBefore count=17 4x1 5x1 6x2 7x1 8x3 9x2 10x1 Qx1 Kx2 Ax1 2x2 [6,11,12,15,19,20,21,23,24,26,30,38,41,42,47,48,51]
+  historyForBot=[[],[0,1,2,3,8,9,13,14]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:17, P1:17, P2:12
+
+TURN 3 P1 OUR team=farmers need=QUADRUPLE4 3x4 5x2 6x2 [0,1,2,3,8,9,13,14] level=0 lastValidPlayer=2 passCount=1 elapsedMs=18.3
+  handBefore count=17 4x3 5x1 7x2 8x1 9x2 10x1 Jx2 Kx1 Ax2 2x2 [4,5,7,10,16,18,22,25,27,31,33,35,40,45,46,49,50]
+  historyForBot=[[0,1,2,3,8,9,13,14],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=1
+    sampleCount=20
+    totalDealWeight=17.000
+    freeTurn=0
+    dangerous=0
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PASS	-2.000	0.000	17.000	0.400	-2.000
+    bestPlay=PASS
+  OUR_TOPK_END
+  remain=P0:17, P1:17, P2:12
+
+TURN 4 P2 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=1010.0
+  handBefore count=12 7x1 10x2 Jx2 Qx3 Kx1 Ax1 jokerx1 JOKERx1 [17,28,29,32,34,36,37,39,43,44,52,53]
+  historyForBot=[[],[]]
+  action=TRIPLET1 7x1 Qx3 [36,37,39,17] level=9 legal=True reason=
+  rawOutput={"debug":38,"response":[36,37,39,17]}
+  remain=P0:17, P1:17, P2:8
+
+TURN 5 P0 REF team=farmers need=TRIPLET1 7x1 Qx3 [36,37,39,17] level=9 lastValidPlayer=2 passCount=0 elapsedMs=1003.1
+  handBefore count=17 4x1 5x1 6x2 7x1 8x3 9x2 10x1 Qx1 Kx2 Ax1 2x2 [6,11,12,15,19,20,21,23,24,26,30,38,41,42,47,48,51]
+  historyForBot=[[],[36,37,39,17]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:17, P1:17, P2:8
+
+TURN 6 P1 OUR team=farmers need=TRIPLET1 7x1 Qx3 [36,37,39,17] level=9 lastValidPlayer=2 passCount=1 elapsedMs=12.3
+  handBefore count=17 4x3 5x1 7x2 8x1 9x2 10x1 Jx2 Kx1 Ax2 2x2 [4,5,7,10,16,18,22,25,27,31,33,35,40,45,46,49,50]
+  historyForBot=[[36,37,39,17],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=1
+    sampleCount=20
+    totalDealWeight=13.370
+    freeTurn=0
+    dangerous=0
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PASS	-2.000	0.000	13.370	0.400	-2.000
+    bestPlay=PASS
+  OUR_TOPK_END
+  remain=P0:17, P1:17, P2:8
+
+TURN 7 P2 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=1003.8
+  handBefore count=8 10x2 Jx2 Kx1 Ax1 jokerx1 JOKERx1 [28,29,32,34,43,44,52,53]
+  historyForBot=[[],[]]
+  action=PAIR 10x2 [28,29] level=7 legal=True reason=
+  rawOutput={"debug":77,"response":[28,29]}
+  remain=P0:17, P1:17, P2:6
+
+TURN 8 P0 REF team=farmers need=PAIR 10x2 [28,29] level=7 lastValidPlayer=2 passCount=0 elapsedMs=1007.9
+  handBefore count=17 4x1 5x1 6x2 7x1 8x3 9x2 10x1 Qx1 Kx2 Ax1 2x2 [6,11,12,15,19,20,21,23,24,26,30,38,41,42,47,48,51]
+  historyForBot=[[],[28,29]]
+  action=PAIR Kx2 [41,42] level=10 legal=True reason=
+  rawOutput={"debug":30,"response":[41,42]}
+  remain=P0:15, P1:17, P2:6
+
+TURN 9 P1 OUR team=farmers need=PAIR Kx2 [41,42] level=10 lastValidPlayer=0 passCount=0 elapsedMs=13.3
+  handBefore count=17 4x3 5x1 7x2 8x1 9x2 10x1 Jx2 Kx1 Ax2 2x2 [4,5,7,10,16,18,22,25,27,31,33,35,40,45,46,49,50]
+  historyForBot=[[28,29],[41,42]]
+  action=PAIR Ax2 [45,46] level=11 legal=True reason=
+  rawOutput={"response":[45,46]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=3
+    sampleCount=20
+    totalDealWeight=11.840
+    freeTurn=0
+    dangerous=0
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PAIR {Ax2} [45,46]	2.000	4.600	11.840	0.400	3.840
+    2	PASS	-0.500	0.000	11.840	0.400	-0.500
+    3	PAIR {2x2} [49,50]	-2.830	5.614	11.840	0.400	-0.585
+    bestPlay=PAIR {Ax2} [45,46]
+  OUR_TOPK_END
+  remain=P0:15, P1:15, P2:6
+
+TURN 10 P2 REF team=landlord need=PAIR Ax2 [45,46] level=11 lastValidPlayer=1 passCount=0 elapsedMs=999.0
+  handBefore count=6 Jx2 Kx1 Ax1 jokerx1 JOKERx1 [32,34,43,44,52,53]
+  historyForBot=[[41,42],[45,46]]
+  action=ROCKET jokerx1 JOKERx1 [52,53] level=14 legal=True reason=
+  rawOutput={"debug":130,"response":[52,53]}
+  remain=P0:15, P1:15, P2:4
+
+TURN 11 P0 REF team=farmers need=ROCKET jokerx1 JOKERx1 [52,53] level=14 lastValidPlayer=2 passCount=0 elapsedMs=1006.4
+  handBefore count=15 4x1 5x1 6x2 7x1 8x3 9x2 10x1 Qx1 Ax1 2x2 [6,11,12,15,19,20,21,23,24,26,30,38,47,48,51]
+  historyForBot=[[45,46],[52,53]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:15, P1:15, P2:4
+
+TURN 12 P1 OUR team=farmers need=ROCKET jokerx1 JOKERx1 [52,53] level=14 lastValidPlayer=2 passCount=1 elapsedMs=14.3
+  handBefore count=15 4x3 5x1 7x2 8x1 9x2 10x1 Jx2 Kx1 2x2 [4,5,7,10,16,18,22,25,27,31,33,35,40,49,50]
+  historyForBot=[[52,53],[]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=1
+    sampleCount=20
+    totalDealWeight=20.000
+    freeTurn=0
+    dangerous=0
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PASS	-9.000	0.000	20.000	0.400	-9.000
+    bestPlay=PASS
+  OUR_TOPK_END
+  remain=P0:15, P1:15, P2:4
+
+TURN 13 P2 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=1005.8
+  handBefore count=4 Jx2 Kx1 Ax1 [32,34,43,44]
+  historyForBot=[[],[]]
+  action=PAIR Jx2 [32,34] level=8 legal=True reason=
+  rawOutput={"debug":247,"response":[32,34]}
+  remain=P0:15, P1:15, P2:2
+
+TURN 14 P0 REF team=farmers need=PAIR Jx2 [32,34] level=8 lastValidPlayer=2 passCount=0 elapsedMs=1012.3
+  handBefore count=15 4x1 5x1 6x2 7x1 8x3 9x2 10x1 Qx1 Ax1 2x2 [6,11,12,15,19,20,21,23,24,26,30,38,47,48,51]
+  historyForBot=[[],[32,34]]
+  action=PAIR 2x2 [48,51] level=12 legal=True reason=
+  rawOutput={"debug":0,"response":[48,51]}
+  remain=P0:13, P1:15, P2:2
+
+TURN 15 P1 OUR team=farmers need=PAIR 2x2 [48,51] level=12 lastValidPlayer=0 passCount=0 elapsedMs=17.9
+  handBefore count=15 4x3 5x1 7x2 8x1 9x2 10x1 Jx2 Kx1 2x2 [4,5,7,10,16,18,22,25,27,31,33,35,40,49,50]
+  historyForBot=[[32,34],[48,51]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=1
+    sampleCount=20
+    totalDealWeight=20.000
+    freeTurn=0
+    dangerous=1
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PASS	-2.000	0.000	20.000	0.400	-2.000
+    bestPlay=PASS
+  OUR_TOPK_END
+  remain=P0:13, P1:15, P2:2
+
+TURN 16 P2 REF team=landlord need=PAIR 2x2 [48,51] level=12 lastValidPlayer=0 passCount=1 elapsedMs=997.6
+  handBefore count=2 Kx1 Ax1 [43,44]
+  historyForBot=[[48,51],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:13, P1:15, P2:2
+
+TURN 17 P0 REF team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=1031.7
+  handBefore count=13 4x1 5x1 6x2 7x1 8x3 9x2 10x1 Qx1 Ax1 [6,11,12,15,19,20,21,23,24,26,30,38,47]
+  historyForBot=[[],[]]
+  action=STRAIGHT 4x1 5x1 6x1 7x1 8x1 9x1 10x1 [6,11,12,19,20,24,30] level=7 legal=True reason=
+  rawOutput={"debug":1,"response":[6,11,12,19,20,24,30]}
+  remain=P0:6, P1:15, P2:2
+
+TURN 18 P1 OUR team=farmers need=STRAIGHT 4x1 5x1 6x1 7x1 8x1 9x1 10x1 [6,11,12,19,20,24,30] level=7 lastValidPlayer=0 passCount=0 elapsedMs=15.4
+  handBefore count=15 4x3 5x1 7x2 8x1 9x2 10x1 Jx2 Kx1 2x2 [4,5,7,10,16,18,22,25,27,31,33,35,40,49,50]
+  historyForBot=[[],[6,11,12,19,20,24,30]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=1
+    sampleCount=20
+    totalDealWeight=20.000
+    freeTurn=0
+    dangerous=1
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PASS	-2.000	0.000	20.000	0.400	-2.000
+    bestPlay=PASS
+  OUR_TOPK_END
+  remain=P0:6, P1:15, P2:2
+
+TURN 19 P2 REF team=landlord need=STRAIGHT 4x1 5x1 6x1 7x1 8x1 9x1 10x1 [6,11,12,19,20,24,30] level=7 lastValidPlayer=0 passCount=1 elapsedMs=994.4
+  handBefore count=2 Kx1 Ax1 [43,44]
+  historyForBot=[[6,11,12,19,20,24,30],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:6, P1:15, P2:2
+
+TURN 20 P0 REF team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=1032.5
+  handBefore count=6 6x1 8x2 9x1 Qx1 Ax1 [15,21,23,26,38,47]
+  historyForBot=[[],[]]
+  action=SINGLE Ax1 [47] level=11 legal=True reason=
+  rawOutput={"debug":0,"response":[47]}
+  remain=P0:5, P1:15, P2:2
+
+TURN 21 P1 OUR team=farmers need=SINGLE Ax1 [47] level=11 lastValidPlayer=0 passCount=0 elapsedMs=11.8
+  handBefore count=15 4x3 5x1 7x2 8x1 9x2 10x1 Jx2 Kx1 2x2 [4,5,7,10,16,18,22,25,27,31,33,35,40,49,50]
+  historyForBot=[[],[47]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=2
+    sampleCount=20
+    totalDealWeight=20.000
+    freeTurn=0
+    dangerous=1
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PASS	-2.000	0.000	20.000	0.400	-2.000
+    2	SINGLE {2x1} [49]	-4.805	2.300	20.000	0.400	-3.885
+    bestPlay=PASS
+  OUR_TOPK_END
+  remain=P0:5, P1:15, P2:2
+
+TURN 22 P2 REF team=landlord need=SINGLE Ax1 [47] level=11 lastValidPlayer=0 passCount=1 elapsedMs=1005.4
+  handBefore count=2 Kx1 Ax1 [43,44]
+  historyForBot=[[47],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:5, P1:15, P2:2
+
+TURN 23 P0 REF team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=1019.2
+  handBefore count=5 6x1 8x2 9x1 Qx1 [15,21,23,26,38]
+  historyForBot=[[],[]]
+  action=SINGLE Qx1 [38] level=9 legal=True reason=
+  rawOutput={"debug":1,"response":[38]}
+  remain=P0:4, P1:15, P2:2
+
+TURN 24 P1 OUR team=farmers need=SINGLE Qx1 [38] level=9 lastValidPlayer=0 passCount=0 elapsedMs=16.1
+  handBefore count=15 4x3 5x1 7x2 8x1 9x2 10x1 Jx2 Kx1 2x2 [4,5,7,10,16,18,22,25,27,31,33,35,40,49,50]
+  historyForBot=[[],[38]]
+  action=SINGLE Kx1 [40] level=10 legal=True reason=
+  rawOutput={"response":[40]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=3
+    sampleCount=20
+    totalDealWeight=20.000
+    freeTurn=0
+    dangerous=1
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	SINGLE {Kx1} [40]	4.850	-4.700	20.000	0.400	2.970
+    2	PASS	-2.000	0.000	20.000	0.400	-2.000
+    3	SINGLE {2x1} [49]	-4.805	2.300	20.000	0.400	-3.885
+    bestPlay=SINGLE {Kx1} [40]
+  OUR_TOPK_END
+  remain=P0:4, P1:14, P2:2
+
+TURN 25 P2 REF team=landlord need=SINGLE Kx1 [40] level=10 lastValidPlayer=1 passCount=0 elapsedMs=1017.2
+  handBefore count=2 Kx1 Ax1 [43,44]
+  historyForBot=[[38],[40]]
+  action=SINGLE Ax1 [44] level=11 legal=True reason=
+  rawOutput={"debug":1685,"response":[44]}
+  remain=P0:4, P1:14, P2:1
+
+TURN 26 P0 REF team=farmers need=SINGLE Ax1 [44] level=11 lastValidPlayer=2 passCount=0 elapsedMs=1026.6
+  handBefore count=4 6x1 8x2 9x1 [15,21,23,26]
+  historyForBot=[[40],[44]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:4, P1:14, P2:1
+
+TURN 27 P1 OUR team=farmers need=SINGLE Ax1 [44] level=11 lastValidPlayer=2 passCount=1 elapsedMs=12.5
+  handBefore count=14 4x3 5x1 7x2 8x1 9x2 10x1 Jx2 2x2 [4,5,7,10,16,18,22,25,27,31,33,35,49,50]
+  historyForBot=[[44],[]]
+  action=SINGLE 2x1 [49] level=12 legal=True reason=
+  rawOutput={"response":[49]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=2
+    sampleCount=20
+    totalDealWeight=20.000
+    freeTurn=0
+    dangerous=1
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	SINGLE {2x1} [49]	18.695	2.300	20.000	0.400	19.615
+    2	PASS	-30.000	0.000	20.000	0.400	-30.000
+    bestPlay=SINGLE {2x1} [49]
+  OUR_TOPK_END
+  remain=P0:4, P1:13, P2:1
+
+TURN 28 P2 REF team=landlord need=SINGLE 2x1 [49] level=12 lastValidPlayer=1 passCount=0 elapsedMs=1007.3
+  handBefore count=1 Kx1 [43]
+  historyForBot=[[],[49]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:4, P1:13, P2:1
+
+TURN 29 P0 REF team=farmers need=SINGLE 2x1 [49] level=12 lastValidPlayer=1 passCount=1 elapsedMs=1023.9
+  handBefore count=4 6x1 8x2 9x1 [15,21,23,26]
+  historyForBot=[[49],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:4, P1:13, P2:1
+
+TURN 30 P1 OUR team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=11.5
+  handBefore count=13 4x3 5x1 7x2 8x1 9x2 10x1 Jx2 2x1 [4,5,7,10,16,18,22,25,27,31,33,35,50]
+  historyForBot=[[],[]]
+  action=STRAIGHT 7x1 8x1 9x1 10x1 Jx1 [16,22,25,31,33] level=8 legal=True reason=
+  rawOutput={"response":[16,22,25,31,33]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=25
+    sampleCount=20
+    totalDealWeight=20.000
+    freeTurn=1
+    dangerous=1
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	STRAIGHT {7x1 8x1 9x1 10x1 Jx1} [16,22,25,31,33]	10.370	8.500	20.000	0.350	13.345
+    2	TRIPLET1 {4x3 Jx1} [4,5,7,33]	9.990	8.200	20.000	0.350	12.860
+    3	TRIPLET1 {4x3 9x1} [4,5,7,25]	9.990	8.200	20.000	0.350	12.860
+    4	TRIPLET1 {4x3 7x1} [4,5,7,16]	9.990	8.200	20.000	0.350	12.860
+    5	TRIPLET1 {4x3 5x1} [4,5,7,10]	9.990	8.200	20.000	0.350	12.860
+    6	TRIPLET2 {4x3 Jx2} [4,5,7,33,35]	2.200	3.500	20.000	0.350	3.425
+    bestPlay=STRAIGHT {7x1 8x1 9x1 10x1 Jx1} [16,22,25,31,33]
+  OUR_TOPK_END
+  remain=P0:4, P1:8, P2:1
+
+TURN 31 P2 REF team=landlord need=STRAIGHT 7x1 8x1 9x1 10x1 Jx1 [16,22,25,31,33] level=8 lastValidPlayer=1 passCount=0 elapsedMs=1030.4
+  handBefore count=1 Kx1 [43]
+  historyForBot=[[],[16,22,25,31,33]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:4, P1:8, P2:1
+
+TURN 32 P0 REF team=farmers need=STRAIGHT 7x1 8x1 9x1 10x1 Jx1 [16,22,25,31,33] level=8 lastValidPlayer=1 passCount=1 elapsedMs=1038.9
+  handBefore count=4 6x1 8x2 9x1 [15,21,23,26]
+  historyForBot=[[16,22,25,31,33],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:4, P1:8, P2:1
+
+TURN 33 P1 OUR team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=10.9
+  handBefore count=8 4x3 5x1 7x1 9x1 Jx1 2x1 [4,5,7,10,18,27,35,50]
+  historyForBot=[[],[]]
+  action=TRIPLET1 4x3 5x1 [4,5,7,10] level=1 legal=True reason=
+  rawOutput={"response":[4,5,7,10]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=14
+    sampleCount=20
+    totalDealWeight=20.000
+    freeTurn=1
+    dangerous=1
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	TRIPLET1 {4x3 5x1} [4,5,7,10]	9.990	8.200	20.000	0.350	12.860
+    2	TRIPLET1 {4x3 7x1} [4,5,7,18]	9.990	8.200	20.000	0.350	12.860
+    3	TRIPLET1 {4x3 9x1} [4,5,7,27]	9.990	8.200	20.000	0.350	12.860
+    4	TRIPLET1 {4x3 Jx1} [4,5,7,35]	9.990	8.200	20.000	0.350	12.860
+    5	TRIPLET {4x3} [4,5,7]	-2.630	2.900	20.000	0.350	-1.615
+    6	PAIR {4x2} [4,5]	-3.980	-5.400	20.000	0.350	-5.870
+    bestPlay=TRIPLET1 {4x3 5x1} [4,5,7,10]
+  OUR_TOPK_END
+  remain=P0:4, P1:4, P2:1
+
+TURN 34 P2 REF team=landlord need=TRIPLET1 4x3 5x1 [4,5,7,10] level=1 lastValidPlayer=1 passCount=0 elapsedMs=1055.1
+  handBefore count=1 Kx1 [43]
+  historyForBot=[[],[4,5,7,10]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:4, P1:4, P2:1
+
+TURN 35 P0 REF team=farmers need=TRIPLET1 4x3 5x1 [4,5,7,10] level=1 lastValidPlayer=1 passCount=1 elapsedMs=1059.0
+  handBefore count=4 6x1 8x2 9x1 [15,21,23,26]
+  historyForBot=[[4,5,7,10],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:4, P1:4, P2:1
+
+TURN 36 P1 OUR team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=15.2
+  handBefore count=4 7x1 9x1 Jx1 2x1 [18,27,35,50]
+  historyForBot=[[],[]]
+  action=SINGLE 9x1 [27] level=6 legal=True reason=
+  rawOutput={"response":[27]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=5
+    sampleCount=20
+    totalDealWeight=20.000
+    freeTurn=1
+    dangerous=1
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	SINGLE {7x1} [18]	-6.330	-5.700	20.000	0.350	-8.325
+    2	SINGLE {9x1} [27]	-6.570	-4.700	20.000	0.350	-8.215
+    3	SINGLE {Jx1} [35]	-6.810	-4.700	20.000	0.350	-8.455
+    4	SINGLE {2x1} [50]	-22.115	7.300	20.000	0.350	-19.560
+    bestPlay=SINGLE {9x1} [27]
+  OUR_TOPK_END
+  remain=P0:4, P1:3, P2:1
+
+TURN 37 P2 REF team=landlord need=SINGLE 9x1 [27] level=6 lastValidPlayer=1 passCount=0 elapsedMs=1068.1
+  handBefore count=1 Kx1 [43]
+  historyForBot=[[],[27]]
+  action=SINGLE Kx1 [43] level=10 legal=True reason=
+  rawOutput={"debug":1799,"response":[43]}
+  remain=P0:4, P1:3, P2:0
+WINNER P2 REF team=landlord
+SUMMARY winner=P2 winnerTeam=landlord ourSeat=1 ourTeam=farmers ourWon=False landlord=P2 finalBid=3 multiplier=2 spring=False antiSpring=False
+OUR_LOSS_TURNS
+  turn=3 action=PASS level=0 cards=[] remain=[17, 17, 12]
+  turn=6 action=PASS level=0 cards=[] remain=[17, 17, 8]
+  turn=9 action=PAIR level=11 cards=[45,46] remain=[15, 15, 6]
+  turn=12 action=PASS level=0 cards=[] remain=[15, 15, 4]
+  turn=15 action=PASS level=0 cards=[] remain=[13, 15, 2]
+  turn=18 action=PASS level=0 cards=[] remain=[6, 15, 2]
+  turn=21 action=PASS level=0 cards=[] remain=[5, 15, 2]
+  turn=24 action=SINGLE level=10 cards=[40] remain=[4, 14, 2]
+  turn=27 action=SINGLE level=12 cards=[49] remain=[4, 13, 1]
+  turn=30 action=STRAIGHT level=8 cards=[16,22,25,31,33] remain=[4, 8, 1]
+  turn=33 action=TRIPLET1 level=1 cards=[4,5,7,10] remain=[4, 4, 1]
+  turn=36 action=SINGLE level=6 cards=[27] remain=[4, 3, 1]
+
+================ GAME 3 seed=20260612 ourSeat=2 ================
+bots: P0=REF, P1=REF, P2=OUR
+initial P0 REF hand=3x1 4x1 5x2 6x2 7x3 9x1 10x2 Jx1 Qx2 Kx1 Ax1 [3,5,8,9,13,15,16,17,18,27,28,30,35,36,39,42,45]
+initial P1 REF hand=3x2 4x2 7x1 8x2 9x1 10x1 Jx1 Qx1 Kx1 Ax2 2x2 jokerx1 [0,1,4,6,19,21,22,24,29,34,37,41,44,47,49,50,52]
+initial P2 OUR hand=3x1 5x2 6x2 8x1 9x1 10x1 Jx2 Qx1 Kx2 Ax1 2x2 JOKERx1 [2,10,11,12,14,20,26,31,32,33,38,40,43,46,48,51,53]
+public=4x1 8x1 9x1 [7,23,25]
+BID P0 REF bid=0 ok=True elapsedMs=16.0 reason=
+BID P1 REF bid=3 ok=True elapsedMs=11.5 reason=
+landlord=P1 finalBid=3
+playStart P0 count=17 hand=3x1 4x1 5x2 6x2 7x3 9x1 10x2 Jx1 Qx2 Kx1 Ax1 [3,5,8,9,13,15,16,17,18,27,28,30,35,36,39,42,45]
+playStart P1 count=20 hand=3x2 4x3 7x1 8x3 9x2 10x1 Jx1 Qx1 Kx1 Ax2 2x2 jokerx1 [0,1,4,6,7,19,21,22,23,24,25,29,34,37,41,44,47,49,50,52]
+playStart P2 count=17 hand=3x1 5x2 6x2 8x1 9x1 10x1 Jx2 Qx1 Kx2 Ax1 2x2 JOKERx1 [2,10,11,12,14,20,26,31,32,33,38,40,43,46,48,51,53]
+
+TURN 1 P1 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=10.7
+  handBefore count=20 3x2 4x3 7x1 8x3 9x2 10x1 Jx1 Qx1 Kx1 Ax2 2x2 jokerx1 [0,1,4,6,7,19,21,22,23,24,25,29,34,37,41,44,47,49,50,52]
+  historyForBot=[[],[]]
+  action=TRIPLET2 3x2 4x3 [7,4,6,0,1] level=1 legal=True reason=
+  rawOutput={"debug":0,"response":[7,4,6,0,1]}
+  remain=P0:17, P1:15, P2:17
+
+TURN 2 P2 OUR team=farmers need=TRIPLET2 3x2 4x3 [7,4,6,0,1] level=1 lastValidPlayer=1 passCount=0 elapsedMs=11.4
+  handBefore count=17 3x1 5x2 6x2 8x1 9x1 10x1 Jx2 Qx1 Kx2 Ax1 2x2 JOKERx1 [2,10,11,12,14,20,26,31,32,33,38,40,43,46,48,51,53]
+  historyForBot=[[],[7,4,6,0,1]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=1
+    sampleCount=20
+    totalDealWeight=20.000
+    freeTurn=0
+    dangerous=0
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PASS	-2.000	0.000	20.000	0.400	-2.000
+    bestPlay=PASS
+  OUR_TOPK_END
+  remain=P0:17, P1:15, P2:17
+
+TURN 3 P0 REF team=farmers need=TRIPLET2 3x2 4x3 [7,4,6,0,1] level=1 lastValidPlayer=1 passCount=1 elapsedMs=13.9
+  handBefore count=17 3x1 4x1 5x2 6x2 7x3 9x1 10x2 Jx1 Qx2 Kx1 Ax1 [3,5,8,9,13,15,16,17,18,27,28,30,35,36,39,42,45]
+  historyForBot=[[7,4,6,0,1],[]]
+  action=TRIPLET2 5x2 7x3 [16,17,18,8,9] level=4 legal=True reason=
+  rawOutput={"debug":0,"response":[16,17,18,8,9]}
+  remain=P0:12, P1:15, P2:17
+
+TURN 4 P1 REF team=landlord need=TRIPLET2 5x2 7x3 [16,17,18,8,9] level=4 lastValidPlayer=0 passCount=0 elapsedMs=1004.4
+  handBefore count=15 7x1 8x3 9x2 10x1 Jx1 Qx1 Kx1 Ax2 2x2 jokerx1 [19,21,22,23,24,25,29,34,37,41,44,47,49,50,52]
+  historyForBot=[[],[16,17,18,8,9]]
+  action=TRIPLET2 8x3 9x2 [21,22,23,24,25] level=5 legal=True reason=
+  rawOutput={"debug":56,"response":[21,22,23,24,25]}
+  remain=P0:12, P1:10, P2:17
+
+TURN 5 P2 OUR team=farmers need=TRIPLET2 8x3 9x2 [21,22,23,24,25] level=5 lastValidPlayer=1 passCount=0 elapsedMs=30.5
+  handBefore count=17 3x1 5x2 6x2 8x1 9x1 10x1 Jx2 Qx1 Kx2 Ax1 2x2 JOKERx1 [2,10,11,12,14,20,26,31,32,33,38,40,43,46,48,51,53]
+  historyForBot=[[16,17,18,8,9],[21,22,23,24,25]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=1
+    sampleCount=20
+    totalDealWeight=20.000
+    freeTurn=0
+    dangerous=0
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PASS	-2.000	0.000	20.000	0.400	-2.000
+    bestPlay=PASS
+  OUR_TOPK_END
+  remain=P0:12, P1:10, P2:17
+
+TURN 6 P0 REF team=farmers need=TRIPLET2 8x3 9x2 [21,22,23,24,25] level=5 lastValidPlayer=1 passCount=1 elapsedMs=998.5
+  handBefore count=12 3x1 4x1 6x2 9x1 10x2 Jx1 Qx2 Kx1 Ax1 [3,5,13,15,27,28,30,35,36,39,42,45]
+  historyForBot=[[21,22,23,24,25],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:12, P1:10, P2:17
+
+TURN 7 P1 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=993.9
+  handBefore count=10 7x1 10x1 Jx1 Qx1 Kx1 Ax2 2x2 jokerx1 [19,29,34,37,41,44,47,49,50,52]
+  historyForBot=[[],[]]
+  action=SINGLE Ax1 [44] level=11 legal=True reason=
+  rawOutput={"debug":97,"response":[44]}
+  remain=P0:12, P1:9, P2:17
+
+TURN 8 P2 OUR team=farmers need=SINGLE Ax1 [44] level=11 lastValidPlayer=1 passCount=0 elapsedMs=10.5
+  handBefore count=17 3x1 5x2 6x2 8x1 9x1 10x1 Jx2 Qx1 Kx2 Ax1 2x2 JOKERx1 [2,10,11,12,14,20,26,31,32,33,38,40,43,46,48,51,53]
+  historyForBot=[[],[44]]
+  action=SINGLE JOKERx1 [53] level=14 legal=True reason=
+  rawOutput={"response":[53]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=3
+    sampleCount=20
+    totalDealWeight=18.800
+    freeTurn=0
+    dangerous=0
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PASS	-2.000	0.000	18.800	0.400	-2.000
+    2	SINGLE {JOKERx1} [53]	-3.510	7.300	18.800	0.400	-0.590
+    3	SINGLE {2x1} [48]	-4.945	-1.977	18.800	0.400	-5.736
+    bestPlay=SINGLE {JOKERx1} [53]
+  OUR_TOPK_END
+  remain=P0:12, P1:9, P2:16
+
+TURN 9 P0 REF team=farmers need=SINGLE JOKERx1 [53] level=14 lastValidPlayer=2 passCount=0 elapsedMs=995.8
+  handBefore count=12 3x1 4x1 6x2 9x1 10x2 Jx1 Qx2 Kx1 Ax1 [3,5,13,15,27,28,30,35,36,39,42,45]
+  historyForBot=[[44],[53]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:12, P1:9, P2:16
+
+TURN 10 P1 REF team=landlord need=SINGLE JOKERx1 [53] level=14 lastValidPlayer=2 passCount=1 elapsedMs=992.5
+  handBefore count=9 7x1 10x1 Jx1 Qx1 Kx1 Ax1 2x2 jokerx1 [19,29,34,37,41,47,49,50,52]
+  historyForBot=[[53],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:12, P1:9, P2:16
+
+TURN 11 P2 OUR team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=11.5
+  handBefore count=16 3x1 5x2 6x2 8x1 9x1 10x1 Jx2 Qx1 Kx2 Ax1 2x2 [2,10,11,12,14,20,26,31,32,33,38,40,43,46,48,51]
+  historyForBot=[[],[]]
+  action=STRAIGHT 8x1 9x1 10x1 Jx1 Qx1 Kx1 Ax1 [20,26,31,32,38,40,46] level=11 legal=True reason=
+  rawOutput={"response":[20,26,31,32,38,40,46]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=23
+    sampleCount=20
+    totalDealWeight=18.800
+    freeTurn=1
+    dangerous=0
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	STRAIGHT {8x1 9x1 10x1 Jx1 Qx1 Kx1 Ax1} [20,26,31,32,38,40,46]	7.730	9.100	18.800	0.100	8.640
+    2	PAIR {5x2} [10,11]	5.940	1.026	18.800	0.100	6.043
+    3	PAIR {6x2} [12,14]	5.860	1.026	18.800	0.100	5.963
+    4	SINGLE {3x1} [2]	5.150	0.300	18.800	0.100	5.180
+    5	SINGLE {Jx1} [32]	4.190	0.300	18.800	0.100	4.220
+    6	SINGLE {Kx1} [40]	3.950	0.513	18.800	0.100	4.001
+    bestPlay=STRAIGHT {8x1 9x1 10x1 Jx1 Qx1 Kx1 Ax1} [20,26,31,32,38,40,46]
+  OUR_TOPK_END
+  remain=P0:12, P1:9, P2:9
+
+TURN 12 P0 REF team=farmers need=STRAIGHT 8x1 9x1 10x1 Jx1 Qx1 Kx1 Ax1 [20,26,31,32,38,40,46] level=11 lastValidPlayer=2 passCount=0 elapsedMs=1006.2
+  handBefore count=12 3x1 4x1 6x2 9x1 10x2 Jx1 Qx2 Kx1 Ax1 [3,5,13,15,27,28,30,35,36,39,42,45]
+  historyForBot=[[],[20,26,31,32,38,40,46]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:12, P1:9, P2:9
+
+TURN 13 P1 REF team=landlord need=STRAIGHT 8x1 9x1 10x1 Jx1 Qx1 Kx1 Ax1 [20,26,31,32,38,40,46] level=11 lastValidPlayer=2 passCount=1 elapsedMs=1004.0
+  handBefore count=9 7x1 10x1 Jx1 Qx1 Kx1 Ax1 2x2 jokerx1 [19,29,34,37,41,47,49,50,52]
+  historyForBot=[[20,26,31,32,38,40,46],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:12, P1:9, P2:9
+
+TURN 14 P2 OUR team=farmers need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=12.4
+  handBefore count=9 3x1 5x2 6x2 Jx1 Kx1 2x2 [2,10,11,12,14,33,43,48,51]
+  historyForBot=[[],[]]
+  action=PAIR 5x2 [10,11] level=2 legal=True reason=
+  rawOutput={"response":[10,11]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=10
+    sampleCount=20
+    totalDealWeight=18.800
+    freeTurn=1
+    dangerous=0
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PAIR {5x2} [10,11]	5.940	1.026	18.800	0.100	6.043
+    2	PAIR {6x2} [12,14]	5.860	1.026	18.800	0.100	5.963
+    3	SINGLE {3x1} [2]	5.150	0.300	18.800	0.100	5.180
+    4	SINGLE {Jx1} [33]	4.190	0.300	18.800	0.100	4.220
+    5	SINGLE {Kx1} [43]	3.950	0.513	18.800	0.100	4.001
+    6	PAIR {2x2} [48,51]	0.530	7.600	18.800	0.100	1.290
+    bestPlay=PAIR {5x2} [10,11]
+  OUR_TOPK_END
+  remain=P0:12, P1:9, P2:7
+
+TURN 15 P0 REF team=farmers need=PAIR 5x2 [10,11] level=2 lastValidPlayer=2 passCount=0 elapsedMs=1012.7
+  handBefore count=12 3x1 4x1 6x2 9x1 10x2 Jx1 Qx2 Kx1 Ax1 [3,5,13,15,27,28,30,35,36,39,42,45]
+  historyForBot=[[],[10,11]]
+  action=PAIR Qx2 [36,39] level=9 legal=True reason=
+  rawOutput={"debug":56,"response":[36,39]}
+  remain=P0:10, P1:9, P2:7
+
+TURN 16 P1 REF team=landlord need=PAIR Qx2 [36,39] level=9 lastValidPlayer=0 passCount=0 elapsedMs=1010.5
+  handBefore count=9 7x1 10x1 Jx1 Qx1 Kx1 Ax1 2x2 jokerx1 [19,29,34,37,41,47,49,50,52]
+  historyForBot=[[10,11],[36,39]]
+  action=PAIR 2x2 [49,50] level=12 legal=True reason=
+  rawOutput={"debug":334,"response":[49,50]}
+  remain=P0:10, P1:7, P2:7
+
+TURN 17 P2 OUR team=farmers need=PAIR 2x2 [49,50] level=12 lastValidPlayer=1 passCount=0 elapsedMs=11.6
+  handBefore count=7 3x1 6x2 Jx1 Kx1 2x2 [2,12,14,33,43,48,51]
+  historyForBot=[[36,39],[49,50]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=1
+    sampleCount=20
+    totalDealWeight=19.700
+    freeTurn=0
+    dangerous=0
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PASS	-2.000	0.000	19.700	0.400	-2.000
+    bestPlay=PASS
+  OUR_TOPK_END
+  remain=P0:10, P1:7, P2:7
+
+TURN 18 P0 REF team=farmers need=PAIR 2x2 [49,50] level=12 lastValidPlayer=1 passCount=1 elapsedMs=1012.9
+  handBefore count=10 3x1 4x1 6x2 9x1 10x2 Jx1 Kx1 Ax1 [3,5,13,15,27,28,30,35,42,45]
+  historyForBot=[[49,50],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:10, P1:7, P2:7
+
+TURN 19 P1 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=1018.6
+  handBefore count=7 7x1 10x1 Jx1 Qx1 Kx1 Ax1 jokerx1 [19,29,34,37,41,47,52]
+  historyForBot=[[],[]]
+  action=STRAIGHT 10x1 Jx1 Qx1 Kx1 Ax1 [29,34,37,41,47] level=11 legal=True reason=
+  rawOutput={"debug":1744,"response":[29,34,37,41,47]}
+  remain=P0:10, P1:2, P2:7
+
+TURN 20 P2 OUR team=farmers need=STRAIGHT 10x1 Jx1 Qx1 Kx1 Ax1 [29,34,37,41,47] level=11 lastValidPlayer=1 passCount=0 elapsedMs=9.6
+  handBefore count=7 3x1 6x2 Jx1 Kx1 2x2 [2,12,14,33,43,48,51]
+  historyForBot=[[],[29,34,37,41,47]]
+  action=PASS legal=True reason=
+  rawOutput={"response":[]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=1
+    sampleCount=20
+    totalDealWeight=20.000
+    freeTurn=0
+    dangerous=1
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	PASS	-30.000	0.000	20.000	0.400	-30.000
+    bestPlay=PASS
+  OUR_TOPK_END
+  remain=P0:10, P1:2, P2:7
+
+TURN 21 P0 REF team=farmers need=STRAIGHT 10x1 Jx1 Qx1 Kx1 Ax1 [29,34,37,41,47] level=11 lastValidPlayer=1 passCount=1 elapsedMs=1015.7
+  handBefore count=10 3x1 4x1 6x2 9x1 10x2 Jx1 Kx1 Ax1 [3,5,13,15,27,28,30,35,42,45]
+  historyForBot=[[29,34,37,41,47],[]]
+  action=PASS legal=True reason=
+  rawOutput={"debug":0,"response":[]}
+  remain=P0:10, P1:2, P2:7
+
+TURN 22 P1 REF team=landlord need=PASS lastValidPlayer=-1 passCount=0 elapsedMs=1022.6
+  handBefore count=2 7x1 jokerx1 [19,52]
+  historyForBot=[[],[]]
+  action=SINGLE 7x1 [19] level=4 legal=True reason=
+  rawOutput={"debug":3320,"response":[19]}
+  remain=P0:10, P1:1, P2:7
+
+TURN 23 P2 OUR team=farmers need=SINGLE 7x1 [19] level=4 lastValidPlayer=1 passCount=0 elapsedMs=10.9
+  handBefore count=7 3x1 6x2 Jx1 Kx1 2x2 [2,12,14,33,43,48,51]
+  historyForBot=[[],[19]]
+  action=SINGLE Kx1 [43] level=10 legal=True reason=
+  rawOutput={"response":[43]}
+  OUR_TOPK_BEGIN
+    seed=20260508
+    validPlays=4
+    sampleCount=20
+    totalDealWeight=20.000
+    freeTurn=0
+    dangerous=1
+    topK
+    rank	play	heuristicScore	sampleScore	totalDealWeight	effectiveSampleWeight	finalScore
+    1	SINGLE {Jx1} [33]	19.510	2.300	20.000	0.400	20.430
+    2	SINGLE {Kx1} [43]	19.350	3.800	20.000	0.400	20.870
+    3	SINGLE {2x1} [48]	10.695	-1.150	20.000	0.400	10.235
+    4	PASS	-30.000	0.000	20.000	0.400	-30.000
+    bestPlay=SINGLE {Kx1} [43]
+  OUR_TOPK_END
+  remain=P0:10, P1:1, P2:6
+
+TURN 24 P0 REF team=farmers need=SINGLE Kx1 [43] level=10 lastValidPlayer=2 passCount=0 elapsedMs=1018.4
+  handBefore count=10 3x1 4x1 6x2 9x1 10x2 Jx1 Kx1 Ax1 [3,5,13,15,27,28,30,35,42,45]
+  historyForBot=[[19],[43]]
+  action=SINGLE Ax1 [45] level=11 legal=True reason=
+  rawOutput={"debug":0,"response":[45]}
+  remain=P0:9, P1:1, P2:6
+
+TURN 25 P1 REF team=landlord need=SINGLE Ax1 [45] level=11 lastValidPlayer=0 passCount=0 elapsedMs=1026.9
+  handBefore count=1 jokerx1 [52]
+  historyForBot=[[43],[45]]
+  action=SINGLE jokerx1 [52] level=13 legal=True reason=
+  rawOutput={"debug":198,"response":[52]}
+  remain=P0:9, P1:0, P2:6
+WINNER P1 REF team=landlord
+SUMMARY winner=P1 winnerTeam=landlord ourSeat=2 ourTeam=farmers ourWon=False landlord=P1 finalBid=3 multiplier=1 spring=False antiSpring=False
+OUR_LOSS_TURNS
+  turn=2 action=PASS level=0 cards=[] remain=[17, 15, 17]
+  turn=5 action=PASS level=0 cards=[] remain=[12, 10, 17]
+  turn=8 action=SINGLE level=14 cards=[53] remain=[12, 9, 16]
+  turn=11 action=STRAIGHT level=11 cards=[20,26,31,32,38,40,46] remain=[12, 9, 9]
+  turn=14 action=PAIR level=2 cards=[10,11] remain=[12, 9, 7]
+  turn=17 action=PASS level=0 cards=[] remain=[10, 7, 7]
+  turn=20 action=PASS level=0 cards=[] remain=[10, 2, 7]
+  turn=23 action=SINGLE level=10 cards=[43] remain=[10, 1, 6]

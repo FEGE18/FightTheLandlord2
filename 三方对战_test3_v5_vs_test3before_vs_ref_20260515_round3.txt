@@ -1,0 +1,37 @@
+2026-05-15 三方对战记录：TEST3 5.0 vs TEST3BEFORE vs REF round3
+
+执行命令
+python run_three_bot_match.py --bots TEST3,TEST3BEFORE,REF --games 60 --seed 20261466 --timeout 30 --no-build --log reference_match_log_test3_v5_vs_test3before_vs_ref_20260515_round3.txt
+
+执行说明
+1. 使用当前 Test3.cpp 5.0 的已编译版本继续跑样本。
+2. 对手为 Test3Before.cpp 与 Reference.cpp。
+3. 种子范围为 20261466 到 20261525。
+4. 每步超时为 30 秒。
+5. illegalOrStopped 为 0。
+
+本批60局结果
+- TEST3：27/60，45.0%
+- TEST3BEFORE：29/60，48.3%
+- REF：28/60，46.7%
+
+角色侧结果
+- TEST3 地主：15/27，55.6%
+- TEST3 农民：12/33，36.4%
+- TEST3BEFORE 地主：14/23，60.9%
+- TEST3BEFORE 农民：15/37，40.5%
+- REF 地主：7/10，70.0%
+- REF 农民：21/50，42.0%
+
+TEST3 5.0 累计180局结果
+- TEST3：77/180，42.8%
+- TEST3BEFORE：90/180，50.0%
+- REF：74/180，41.1%
+
+结论
+- 第三批 60 局里，TEST3 5.0 仍然低于 TEST3BEFORE，也只略高于 REF。
+- 累计 180 局后，5.0 长期稳定在 42.8%，依然明显低于 TEST3BEFORE。
+- 相比 4.0，5.0 没有证明自己更优，只是维持在一个中等偏弱的位置。
+
+日志文件
+- reference_match_log_test3_v5_vs_test3before_vs_ref_20260515_round3.txt

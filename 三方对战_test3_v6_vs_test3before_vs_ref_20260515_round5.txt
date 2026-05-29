@@ -1,0 +1,42 @@
+2026-05-15 三方对战记录：TEST3 6.0 vs TEST3BEFORE vs REF round5
+
+执行命令
+python run_three_bot_match.py --bots TEST3,TEST3BEFORE,REF --games 60 --seed 20261766 --timeout 30 --no-build --log reference_match_log_test3_v6_vs_test3before_vs_ref_20260515_round5.txt
+
+执行说明
+1. 使用当前 Test3.cpp 6.0 的已编译版本继续跑样本。
+2. 对手为 Test3Before.cpp 与 Reference.cpp。
+3. 种子范围为 20261766 到 20261825。
+4. 每步超时为 30 秒。
+
+本批60局结果
+- TEST3：29/60，48.3%
+- TEST3BEFORE：25/60，41.7%
+- REF：34/60，56.7%
+- illegalOrStopped：1
+
+角色侧结果
+- TEST3 地主：10/20，50.0%
+- TEST3 农民：19/40，47.5%
+- TEST3BEFORE 地主：11/26，42.3%
+- TEST3BEFORE 农民：14/34，41.2%
+- REF 地主：9/14，64.3%
+- REF 农民：25/46，54.3%
+
+异常说明
+- 唯一 1 个 illegal 来自 REF，不是 TEST3。
+- 对局为 GAME 23，seed=20261788。
+- REF 作为地主在 turn=1 自由出牌时提交了非法组合，reason=invalid_combo_on_free_turn。
+
+TEST3 6.0 累计300局结果
+- TEST3：152/300，50.7%
+- TEST3BEFORE：135/300，45.0%
+- REF：140/300，46.7%
+
+结论
+- 这一批 60 局里，REF 短期表现最好，但含 1 局 REF 自身非法出牌。
+- 累计 300 局后，TEST3 6.0 仍然保持总第一，领先 TEST3BEFORE 17 胜，领先 REF 12 胜。
+- 6.0 的领先在更大样本下依然成立，说明当前版本的强势已经比较稳定。
+
+日志文件
+- reference_match_log_test3_v6_vs_test3before_vs_ref_20260515_round5.txt

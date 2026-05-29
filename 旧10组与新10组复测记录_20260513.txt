@@ -1,0 +1,28 @@
+2026-05-13 旧10组与新10组复测记录
+
+说明
+1. 这次按当前修改后的 test.cpp 进行复测。
+2. 旧10组按之前那批种子中的前10局处理，种子范围为 20260510 到 20260519。
+3. 新10组按未重复的新种子顺延处理，种子范围为 20260530 到 20260539。
+
+执行命令
+1. 旧10组
+python run_reference_match.py --games 10 --seed 20260510 --rotate-seat --log reference_match_log_old10_retest_20260513.txt
+
+2. 新10组
+python run_reference_match.py --games 10 --seed 20260530 --rotate-seat --no-build --log reference_match_log_new10_retest_20260513.txt
+
+结果汇总
+1. 旧10组
+- 胜局：4
+- 负局：6
+- 非法或中止：0
+- PIMC 记录行数：377
+- 日志文件：reference_match_log_old10_retest_20260513.txt
+
+2. 新10组
+- 胜局：4
+- 负局：6
+- 非法或中止：0
+- PIMC 记录行数：385
+- 日志文件：reference_match_log_new10_retest_20260513.txt

@@ -1,0 +1,31 @@
+2026-05-15 三方对战记录
+
+执行命令
+python run_three_bot_match.py --games 30 --seed 20260830 --timeout 30 --no-build --log reference_match_log_test_vs_test3_vs_ref_20260515.txt
+
+执行说明
+1. 参与 bot 为 test.cpp、Test3.cpp、Reference.cpp。
+2. 三个 bot 在 30 局中按 6 种座位排列循环，正好每种排列重复 5 次。
+3. 种子范围为 20260830 到 20260859。
+4. 每步超时使用 30 秒。
+
+结果汇总
+- TEST：12 胜，胜率 40.0%
+- TEST3：19 胜，胜率 63.3%
+- REF：15 胜，胜率 50.0%
+- 非法或中止：0
+
+角色侧结果
+- TEST 地主：2/8，25.0%
+- TEST 农民：10/22，45.5%
+- TEST3 地主：10/17，58.8%
+- TEST3 农民：9/13，69.2%
+- REF 地主：2/5，40.0%
+- REF 农民：13/25，52.0%
+
+结论
+- TEST3 本次胜率最高。
+- TEST3 同时高于 TEST 和 REF。
+
+日志文件
+- reference_match_log_test_vs_test3_vs_ref_20260515.txt

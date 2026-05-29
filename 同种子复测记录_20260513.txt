@@ -1,0 +1,19 @@
+2026-05-13 同种子复测记录
+
+执行命令
+python run_reference_match.py --games 20 --seed 20260510 --rotate-seat --log reference_match_log_same_seed_retest_20260513.txt
+
+执行说明
+1. 这次未使用 --no-build，脚本会先按当前 test.cpp 重新构建 match_our.exe。
+2. 种子基准固定为 20260510，20 局实际使用种子为 20260510 到 20260529。
+3. 逐手过程、输出和 PIMC 诊断已写入 reference_match_log_same_seed_retest_20260513.txt。
+
+结果汇总
+- 总局数：20
+- 胜局：7
+- 负局：13
+- 非法或中止：0
+- PIMC 记录行数：810
+
+日志文件
+- reference_match_log_same_seed_retest_20260513.txt

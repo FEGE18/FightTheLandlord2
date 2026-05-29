@@ -94,37 +94,112 @@ int main()
     GameState state = parseStateFromJson(jsonText);
     vector<CardCombo> validPlays = enumAllValidPlays(state.myCards, state.lastValidCombo);
     vector<ScoredPlay> topPlays = selectTopPlays(state, validPlays, 6);
-    vector<InferredDeal> deals = buildRandomDeals(state, 20);
+    int timeLimit = 500;
+    clock_t searchTime = clock() + timeLimit * CLOCKS_PER_SEC / 1000;
+    int round = 0;
+    int sampleCount = 0;
+    double totalDealWeight = 0.0;
 
-    double totalWeight = 0.0;
-    for (const InferredDeal &deal : deals)
-        totalWeight += deal.weight;
+    while (clock() < searchTime)
+    {
+        vector<InferredDeal> deals = buildRandomDeals(state, 1);
+        if (deals.empty())
+            continue;
+
+        InferredDeal &deal = deals[0];
+        ++sampleCount;
+        totalDealWeight += deal.weight;
+
+        for (int i = 0; i < static_cast<int>(topPlays.size()); ++i)
+        {
+            if (clock() >= searchTime)
+                break;
+
+            int index = (round + i) % static_cast<int>(topPlays.size());
+            ScoredPlay &scored = topPlays[index];
+            RResult rolloutResult = simulateDealAfterPlay(state, deal, scored.play, searchTime);
+
+            scored.sampleScore += rolloutResult.score * deal.weight;
+            scored.weight += deal.weight;
+            scored.visits++;
+        }
+
+        if (!topPlays.empty())
+            round = (round + 1) % static_cast<int>(topPlays.size());
+    }
+
+    struct ProbeRow
+    {
+        int index = 0;
+        double avgSampleScore = 0.0;
+        double trust = 0.0;
+        double sampleWeight = 0.0;
+        double finalScore = 0.0;
+    };
+
+    vector<ProbeRow> rows;
+    int bestIndex = 0;
+    double bestScore = -1e18;
+
+    for (int i = 0; i < static_cast<int>(topPlays.size()); ++i)
+    {
+        ScoredPlay &scored = topPlays[i];
+
+        double avgSampleScore = 0.0;
+        if (scored.weight > 0.0)
+            avgSampleScore = scored.sampleScore / scored.weight;
+
+        double trust = 0.0;
+        if (scored.visits > 0)
+            trust = scored.visits / (scored.visits + 6.0);
+
+        double sampleWeight = getSampleWeight(state, scored.play) * trust;
+        double finalScore = scored.score + avgSampleScore * sampleWeight;
+
+        rows.push_back({i, avgSampleScore, trust, sampleWeight, finalScore});
+
+        if (finalScore > bestScore)
+        {
+            bestScore = finalScore;
+            bestIndex = i;
+        }
+    }
+
+    std::sort(rows.begin(), rows.end(), [](const ProbeRow &a, const ProbeRow &b)
+    {
+        if (a.finalScore != b.finalScore)
+            return a.finalScore > b.finalScore;
+        return a.index < b.index;
+    });
 
     cout << "seed=20260508\n";
     cout << "validPlays=" << validPlays.size() << '\n';
-    cout << "sampleCount=" << deals.size() << '\n';
-    cout << "totalDealWeight=" << fixed << setprecision(3) << totalWeight << '\n';
+    cout << "sampleCount=" << sampleCount << '\n';
+    cout << "totalDealWeight=" << fixed << setprecision(3) << totalDealWeight << '\n';
     cout << "freeTurn=" << (state.lastValidCombo.comboType == CardComboType::PASS) << '\n';
     cout << "dangerous=" << isDangerousSituation(state) << '\n';
     cout << "topK\n";
-    cout << "rank\tplay\theuristicScore\tsampleScore\ttotalDealWeight\teffectiveSampleWeight\tfinalScore\n";
+    cout << "rank\tplay\theuristicScore\tavgSampleScore\tvisits\ttrust\ttotalDealWeight\teffectiveSampleWeight\tfinalScore\n";
 
-    for (size_t index = 0; index < topPlays.size(); ++index)
+    for (size_t rank = 0; rank < rows.size(); ++rank)
     {
-        topPlays[index].sampleScore = evaluatePlayBySamples(state, deals, topPlays[index].play);
-        double sampleWeight = getSampleWeight(state, topPlays[index].play);
-        double finalScore = topPlays[index].score + topPlays[index].sampleScore * sampleWeight;
+        ProbeRow &row = rows[rank];
+        ScoredPlay &scored = topPlays[row.index];
 
-        cout << (index + 1) << '\t'
-             << comboSummary(topPlays[index].play) << '\t'
-             << fixed << setprecision(3) << topPlays[index].score << '\t'
-             << fixed << setprecision(3) << topPlays[index].sampleScore << '\t'
-             << fixed << setprecision(3) << totalWeight << '\t'
-             << fixed << setprecision(3) << sampleWeight << '\t'
-             << fixed << setprecision(3) << finalScore << '\n';
+        cout << (rank + 1) << '\t'
+             << comboSummary(scored.play) << '\t'
+             << fixed << setprecision(3) << scored.score << '\t'
+             << fixed << setprecision(3) << row.avgSampleScore << '\t'
+             << scored.visits << '\t'
+             << fixed << setprecision(3) << row.trust << '\t'
+             << fixed << setprecision(3) << totalDealWeight << '\t'
+             << fixed << setprecision(3) << row.sampleWeight << '\t'
+             << fixed << setprecision(3) << row.finalScore << '\n';
     }
 
-    CardCombo bestPlay = decidePlay(state, validPlays);
+    CardCombo bestPlay;
+    if (!topPlays.empty())
+        bestPlay = topPlays[bestIndex].play;
     cout << "bestPlay=" << comboSummary(bestPlay) << '\n';
     return 0;
 }
